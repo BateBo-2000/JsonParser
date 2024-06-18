@@ -1,7 +1,6 @@
 #include "Receiver.hpp"
 #include "FileReader.hpp"
 #include "FileWriter.hpp"
-#include "FileUtil.hpp"
 
 /*
     To do: do it with logger

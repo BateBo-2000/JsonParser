@@ -20,6 +20,7 @@ public:
 private:
     ofstream outputFile;
 
+    bool isGoodLocation(const std::string& path);
     void open(const string& path);
     void write(const string& content);
     void close();

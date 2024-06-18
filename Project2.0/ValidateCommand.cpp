@@ -5,7 +5,7 @@ ValidateCommand::ValidateCommand(const std::string& name, Receiver& receiver)
     : receiver(receiver), Command(name) {}
 
 void ValidateCommand::execute() {
-    if (receiver.validateJson()) {
+    if (receiver.isValidJson()) {
         std::cout << "JSON is valid." << std::endl;
     }
     else {

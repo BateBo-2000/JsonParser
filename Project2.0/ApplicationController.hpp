@@ -1,3 +1,4 @@
+#pragma once
 #ifndef APP_CONTROLLER_HPP
 #define APP_CONTROLLER_HPP
 

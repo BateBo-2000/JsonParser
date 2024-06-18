@@ -1,11 +1,15 @@
 #include "ApplicationController.hpp"
 #include "OpenCommand.hpp"
 #include "PrintCommand.hpp"
+#include "SaveCommand.hpp"
+#include "SaveAsCommand.hpp"
 
 AppController::AppController() {
     // Register commands with the Invoker
     invoker.registerCommand(new OpenCommand("open",jsonEditor));
     invoker.registerCommand(new PrintCommand("print", jsonEditor));
+    invoker.registerCommand(new SaveCommand("save", jsonEditor));
+    invoker.registerCommand(new SaveAsCommand("saveas", jsonEditor));
 }
 
 void AppController::run() {

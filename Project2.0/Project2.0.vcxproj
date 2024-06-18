@@ -134,8 +134,6 @@
     <ClCompile Include="ExitCommand.cpp" />
     <ClCompile Include="FileReader.cpp" />
     <ClCompile Include="FileReader.hpp" />
-    <ClCompile Include="FileUtil.cpp" />
-    <ClCompile Include="FileUtil.hpp" />
     <ClCompile Include="FileWriter.cpp" />
     <ClCompile Include="Invoker.cpp" />
     <ClCompile Include="MoveCommand.cpp" />

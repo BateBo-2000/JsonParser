@@ -1,10 +1,11 @@
-// Receiver.hpp
+#pragma once
 #ifndef RECEIVER_HPP
 #define RECEIVER_HPP
 
 #include <string>
 #include <vector>
 #include <stdexcept>
+#include <iostream>
 
 class Receiver {
 public:

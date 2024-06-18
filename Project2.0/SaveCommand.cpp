@@ -1,10 +1,43 @@
 // SaveCommand.cpp
 #include "SaveCommand.hpp"
-#include <iostream>
 
 SaveCommand::SaveCommand(const std::string& name, Receiver& receiver)
     : receiver(receiver), Command(name) {}
 
-void SaveCommand::execute() {
-    receiver.saveJsonToFile(filePath);
+void SaveCommand::setArguemnts(const std::vector<std::string>& args) {
+    if (args.size() < 1) {
+        throw std::invalid_argument("Save/ Missing arguments.");
+    }
+    else if (args.size() == 1) {
+        //default path
+        filePath = receiver.getFileLocation();
+    }
+    else{  
+        if (args.size() > 2) {
+            //warning
+            std::cerr << "Save/ Too many arguments." << std::endl;
+        }
+        try
+        {
+            filePath = args[1];
+        }
+        catch (const std::exception& e)
+        {
+            throw e;
+        }
+        
+    }
 }
+
+void SaveCommand::execute() {
+    try
+    {
+        if (filePath == "") throw std::invalid_argument("Save/Invalid argument/ File path is empty.");
+        receiver.writeFile(filePath);
+    }
+    catch (const std::exception& e)
+    {
+        throw e;
+    }
+}
+

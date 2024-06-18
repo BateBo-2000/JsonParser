@@ -1,3 +1,4 @@
+#pragma once
 #ifndef INVOKER_HPP
 #define INVOKER_HPP
 

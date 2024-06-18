@@ -39,13 +39,7 @@
     <ClCompile Include="FileReader.hpp">
       <Filter>Header Files\File Handling</Filter>
     </ClCompile>
-    <ClCompile Include="FileUtil.hpp">
-      <Filter>Header Files\File Handling</Filter>
-    </ClCompile>
     <ClCompile Include="FileReader.cpp">
-      <Filter>Source Files\File Handling</Filter>
-    </ClCompile>
-    <ClCompile Include="FileUtil.cpp">
       <Filter>Source Files\File Handling</Filter>
     </ClCompile>
     <ClCompile Include="FileWriter.cpp">

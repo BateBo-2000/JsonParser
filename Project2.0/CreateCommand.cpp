@@ -6,5 +6,5 @@ CreateCommand::CreateCommand(const std::string& name, Receiver& receiver)
     : receiver(receiver), Command(name) {}
 
 void CreateCommand::execute() {
-    receiver.createJsonValue(path, value);
+    
 }
