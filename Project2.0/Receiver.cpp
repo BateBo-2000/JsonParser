@@ -43,47 +43,6 @@ void Receiver::printJson() const {
     std::cout << jsonContent << std::endl;
 }
 
-void Receiver::setJsonValue(std::string& json, const std::string& path, const std::string& value) {
-    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
-    size_t pos = 0;
-    while ((pos = json.find(path, pos)) != std::string::npos) {
-        size_t startQuote = json.rfind('\"', pos);
-        if (startQuote == std::string::npos) {
-            pos += path.length();
-            continue;
-        }
-
-        size_t endQuote = json.find('\"', startQuote + 1);
-        if (endQuote == std::string::npos) {
-            pos += path.length();
-            continue;
-        }
-
-        std::string quotedPath = json.substr(startQuote, endQuote - startQuote + 1);
-        if (quotedPath.find(path) != std::string::npos) {
-            size_t colonPos = json.find(':', endQuote);
-            if (colonPos == std::string::npos) {
-                throw std::runtime_error("Failed to set value: Invalid path");
-            }
-
-            // Determine if the value is quoted or not
-            size_t startValue = json.find_first_not_of(" \n\t\r", colonPos + 1);
-            if (json[startValue] == '\"') {
-                size_t endValue = json.find_last_of('\"');
-                json.replace(startValue, endValue - startValue + 1, value);
-            }
-            else {
-                size_t endValue = json.find_first_of(" ,}\n\t\r", startValue);
-                json.replace(startValue, endValue - startValue, value);
-            }
-            return;
-        }
-        pos = endQuote + 1;
-    }
-
-    throw std::runtime_error("Failed to set value: Path not found");
-}
-
 bool Receiver::isValidJson() const {
     if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
 
@@ -127,198 +86,35 @@ bool Receiver::isValidJson() const {
     return braceCount == 0 && !inString;
 }
 
+
+
+void Receiver::setJsonValue(std::string& json, const std::string& path, const std::string& value) {
+    
+}
+
 void Receiver::deleteJsonValue(std::string& json, const std::string& path) {
-    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
-
-    size_t pos = 0;
-    while ((pos = json.find(path, pos)) != std::string::npos) {
-        size_t startQuote = json.rfind('\"', pos);
-        if (startQuote == std::string::npos) {
-            pos += path.length();
-            continue;
-        }
-
-        size_t endQuote = json.find('\"', startQuote + 1);
-        if (endQuote == std::string::npos) {
-            pos += path.length();
-            continue;
-        }
-
-        std::string quotedPath = json.substr(startQuote, endQuote - startQuote + 1);
-        if (quotedPath.find(path) != std::string::npos) {
-            size_t colonPos = json.find(':', endQuote);
-            if (colonPos == std::string::npos) {
-                throw std::runtime_error("Failed to delete value: Invalid path");
-            }
-
-            size_t startValue = json.find_first_not_of(" \n\t\r", colonPos + 1);
-            size_t endValue = json.find_first_of(" ,}\n\t\r", startValue);
-            if (endValue == std::string::npos) {
-                endValue = json.length();
-            }
-
-            // Remove key-value pair
-            json.erase(startQuote, endValue - startQuote);
-            return;
-        }
-        pos = endQuote + 1;
-    }
-
-    throw std::runtime_error("Failed to delete value: Path not found");
+   
 }
 
 void Receiver::moveJsonValue(std::string& json, const std::string& from, const std::string& to) {
-    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
-    std::string value;
-    try {
-        value = getJsonValue(json, from);
-    }
-    catch (const std::exception& e) {
-        throw std::runtime_error("Failed to move value: " + std::string(e.what()));
-    }
 
-    try {
-        deleteJsonValue(json, from);
-        setJsonValue(json, to, value);
-    }
-    catch (const std::exception& e) {
-        throw std::runtime_error("Failed to move value: " + std::string(e.what()));
-    }
 }
 
 void Receiver::createJsonValue(std::string& json, const std::string& path, const std::string& value) {
-    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
-    size_t pos = 0;
-    while ((pos = json.find(path, pos)) != std::string::npos) {
-        size_t startQuote = json.rfind('\"', pos);
-        if (startQuote == std::string::npos) {
-            pos += path.length();
-            continue;
-        }
-
-        size_t endQuote = json.find('\"', startQuote + 1);
-        if (endQuote == std::string::npos) {
-            pos += path.length();
-            continue;
-        }
-
-        std::string quotedPath = json.substr(startQuote, endQuote - startQuote + 1);
-        if (quotedPath.find(path) != std::string::npos) {
-            size_t colonPos = json.find(':', endQuote);
-            if (colonPos == std::string::npos) {
-                throw std::runtime_error("Failed to create value: Invalid path");
-            }
-
-            size_t startValue = json.find_first_not_of(" \n\t\r", colonPos + 1);
-            size_t endValue = json.find_first_of(" ,}\n\t\r", startValue);
-            if (endValue == std::string::npos) {
-                endValue = json.length();
-            }
-
-            // Insert new key-value pair
-            json.insert(endValue, ", \"" + value + "\"");
-            return;
-        }
-        pos = endQuote + 1;
-    }
-
-    throw std::runtime_error("Failed to create value: Path not found");
+   
 }
 
-
-
-
-//To do:
 void Receiver::searchJson(const std::string& json, const std::string& key) {
-    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
-    std::vector<std::string> results;
-    size_t pos = 0;
 
-    while ((pos = json.find(key, pos)) != std::string::npos) {
-        size_t startQuote = json.rfind('\"', pos);
-        if (startQuote == std::string::npos) {
-            break;  // invalid JSON
-        }
-
-        size_t endQuote = json.find('\"', startQuote + 1);
-        if (endQuote == std::string::npos) {
-            break;  // invalid JSON
-        }
-
-        size_t colonPos = json.find(':', endQuote);
-        if (colonPos == std::string::npos || colonPos > pos) {
-            pos = endQuote + 1;
-            continue;
-        }
-
-        size_t valueStart = json.find_first_not_of(' ', colonPos + 1);
-        if (valueStart == std::string::npos) {
-            break;  // invalid JSON
-        }
-
-        size_t valueEnd = json.find_first_of(",}", valueStart);
-        if (valueEnd == std::string::npos) {
-            throw std::runtime_error("Invalid JSON format.");
-        }
-
-        std::string value = trim(json.substr(valueStart, valueEnd - valueStart));
-        results.push_back(value);
-
-        // Move to the next position to continue searching
-        pos = valueEnd + 1;
-    }
-
-    if (results.empty()) {
-        std::cout << "Key not found: " << key << std::endl;
-    }
-    else {
-        std::cout << "Found key '" << key << "' with values:" << std::endl;
-        for (const auto& value : results) {
-            std::cout << value << std::endl;
-        }
-    }
 }
 
 void Receiver::containsValue(const std::string& json, const std::string& value) {
-    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
-    std::vector<std::string> results;
 
-    size_t pos = 0;
-    while ((pos = json.find(value, pos)) != std::string::npos) {
-        // Check if the value is quoted
-        size_t startQuote = json.rfind('\"', pos);
-        if (startQuote == std::string::npos) {
-            pos += value.length();
-            continue;
-        }
-
-        size_t endQuote = json.find('\"', startQuote + 1);
-        if (endQuote == std::string::npos) {
-            pos += value.length();
-            continue;
-        }
-
-        // Extract the quoted value
-        std::string quotedValue = json.substr(startQuote, endQuote - startQuote + 1);
-        if (quotedValue.find(value) != std::string::npos) {
-            results.push_back(trim(quotedValue));
-        }
-
-        // Move to the next position to continue searching
-        pos = endQuote + 1;
-    }
-
-    if (results.empty()) {
-        std::cout << "No value containing '" << value << "' found in the JSON." << std::endl;
-    }
-    else {
-        std::cout << "Found values containing '" << value << "' in the JSON:" << std::endl;
-        for (const auto& val : results) {
-            std::cout << val << std::endl;
-        }
-    }
 }
 
+void Receiver::followPathToDir(std::vector<std::string>& path, size_t& dirStart, size_t& dirEnd) {
+
+}
 
 
 
@@ -349,3 +145,4 @@ std::string Receiver::trim(const std::string& str) {
     size_t last = str.find_last_not_of(' ');
     return str.substr(first, (last - first + 1));
 }
+
