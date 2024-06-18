@@ -34,7 +34,7 @@ void Invoker::executeCommand(const std::string& commandLine) {
             }
             catch (const std::exception& e)
             {
-                throw std::runtime_error(std::string("Invoker error:") + e.what());
+                throw std::runtime_error(std::string("Invoker error: ") + e.what());
             }
         }
     }

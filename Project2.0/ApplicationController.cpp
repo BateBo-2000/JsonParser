@@ -4,6 +4,7 @@
 #include "SaveCommand.hpp"
 #include "SaveAsCommand.hpp"
 #include "ExitCommand.hpp"
+#include "ValidateCommand.hpp"
 
 AppController::AppController() {
     // Register commands with the Invoker
@@ -12,6 +13,7 @@ AppController::AppController() {
     invoker.registerCommand(new SaveCommand("save", jsonEditor));
     invoker.registerCommand(new SaveAsCommand("saveas", jsonEditor));
     invoker.registerCommand(new ExitCommand("exit", jsonEditor));
+    invoker.registerCommand(new ValidateCommand("validate", jsonEditor));
 }
 
 void AppController::run() {
@@ -25,5 +27,12 @@ void AppController::run() {
 }
 
 void AppController::processCommand(const std::string& commandLine) {
-    invoker.executeCommand(commandLine);
+    try
+    {
+        invoker.executeCommand(commandLine);
+    }
+    catch (const std::exception& e)
+    {
+        std::cout << e.what() << std::endl;
+    }
 }

@@ -12,3 +12,9 @@ void ValidateCommand::execute() {
         std::cerr << "JSON is not valid." << std::endl;
     }
 }
+
+void ValidateCommand::setArguemnts(const std::vector<std::string>& args) {
+    if (args.size() > 1) std::cerr << "Too many arguments."<< std::endl;
+    //no need for arguments
+    //might be usefull in future
+}

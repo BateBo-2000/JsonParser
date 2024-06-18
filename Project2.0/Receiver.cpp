@@ -23,6 +23,7 @@ void Receiver::readFile(const std::string& filePath) {
 }
 
 void Receiver::writeFile(const std::string& newFilePath) {
+    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
     FileWriter fileWriter;
     try {
         fileWriter.writeFile(newFilePath, jsonContent);
@@ -38,10 +39,12 @@ std::string Receiver::getFileLocation() const {
 }
 
 void Receiver::printJson() const {
+    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
     std::cout << jsonContent << std::endl;
 }
 
 void Receiver::setJsonValue(std::string& json, const std::string& path, const std::string& value) {
+    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
     size_t pos = 0;
     while ((pos = json.find(path, pos)) != std::string::npos) {
         size_t startQuote = json.rfind('\"', pos);
@@ -82,9 +85,7 @@ void Receiver::setJsonValue(std::string& json, const std::string& path, const st
 }
 
 bool Receiver::isValidJson() const {
-    if (jsonContent.empty()) {
-        return false;
-    }
+    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
 
     int braceCount = 0;
     bool inString = false;
@@ -127,6 +128,8 @@ bool Receiver::isValidJson() const {
 }
 
 void Receiver::deleteJsonValue(std::string& json, const std::string& path) {
+    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
+
     size_t pos = 0;
     while ((pos = json.find(path, pos)) != std::string::npos) {
         size_t startQuote = json.rfind('\"', pos);
@@ -165,6 +168,7 @@ void Receiver::deleteJsonValue(std::string& json, const std::string& path) {
 }
 
 void Receiver::moveJsonValue(std::string& json, const std::string& from, const std::string& to) {
+    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
     std::string value;
     try {
         value = getJsonValue(json, from);
@@ -183,6 +187,7 @@ void Receiver::moveJsonValue(std::string& json, const std::string& from, const s
 }
 
 void Receiver::createJsonValue(std::string& json, const std::string& path, const std::string& value) {
+    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
     size_t pos = 0;
     while ((pos = json.find(path, pos)) != std::string::npos) {
         size_t startQuote = json.rfind('\"', pos);
@@ -225,6 +230,7 @@ void Receiver::createJsonValue(std::string& json, const std::string& path, const
 
 //To do:
 void Receiver::searchJson(const std::string& json, const std::string& key) {
+    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
     std::vector<std::string> results;
     size_t pos = 0;
 
@@ -274,6 +280,7 @@ void Receiver::searchJson(const std::string& json, const std::string& key) {
 }
 
 void Receiver::containsValue(const std::string& json, const std::string& value) {
+    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
     std::vector<std::string> results;
 
     size_t pos = 0;
