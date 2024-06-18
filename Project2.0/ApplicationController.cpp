@@ -3,6 +3,7 @@
 #include "PrintCommand.hpp"
 #include "SaveCommand.hpp"
 #include "SaveAsCommand.hpp"
+#include "ExitCommand.hpp"
 
 AppController::AppController() {
     // Register commands with the Invoker
@@ -10,6 +11,7 @@ AppController::AppController() {
     invoker.registerCommand(new PrintCommand("print", jsonEditor));
     invoker.registerCommand(new SaveCommand("save", jsonEditor));
     invoker.registerCommand(new SaveAsCommand("saveas", jsonEditor));
+    invoker.registerCommand(new ExitCommand("exit", jsonEditor));
 }
 
 void AppController::run() {
