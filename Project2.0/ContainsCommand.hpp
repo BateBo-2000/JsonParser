@@ -9,12 +9,12 @@
 class ContainsCommand : public Command {
 public:
     ContainsCommand(const std::string& name, Receiver& receiver);
+    void setArguemnts(const std::vector<std::string>& args) override;
     virtual void execute() override;
 
 private:
     Receiver& receiver;
-    std::string json;
-    std::string value;
+    std::string searchValue;
 };
 
 #endif // CONTAINS_COMMAND_HPP

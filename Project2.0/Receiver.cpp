@@ -65,14 +65,29 @@ void Receiver::searchJson(const std::string& key, std::string& searchResult) {
 
     // Search for the key and collect results
     std::vector<Jvalue*> jValues;
-    searchForKey(root, key, jValues);
+    searchJsonKey(root, key, jValues);
 
-    // Convert found values to string and store in results
-    for (Jvalue* value : jValues) {
-        searchResult += value->toString();
-    }
-    //prettify the results
-    searchResult = Utility::prettifyJson(searchResult);
+    //convert from objects to string
+    formatSearchResult(searchResult, jValues);
+
+    //clean up
+    delete root;
+}
+
+void Receiver::containsValue(const std::string& searchValue, std::string& searchResult) {
+    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
+
+    //parse the JSON string
+    JsonParser parser(jsonContent);
+    Jvalue* root = parser.parse();
+
+    //search for the value and collect results
+    std::vector<Jvalue*> jValues;
+    searchJsonValue(root, searchValue, jValues);
+    
+    //convert from objects to string
+    formatSearchResult(searchResult, jValues);
+
     //clean up
     delete root;
 }
@@ -109,6 +124,7 @@ void Receiver::deleteJsonValue(const std::string& path) {
     delete root;
 }
 
+
 void Receiver::setJsonValue(const std::string& path, const std::string& key) {
 
 }
@@ -121,50 +137,70 @@ void Receiver::createJsonValue(std::string& json, const std::string& path, const
    
 }
 
-void Receiver::containsValue(const std::string& json, const std::string& value) {
-
-}
 
 //internals
+void Receiver::searchJsonKey(Jvalue* root, const std::string& searchKey, std::vector<Jvalue*>& jValues) {
+    if (root->getType() == JSONObject) {
+        JsonObject* obj = static_cast<JsonObject*>(root);
+        if (obj) {
+            std::vector<Jvalue*> result = obj->getByKey(searchKey);
+            jValues.insert(jValues.end(), result.begin(), result.end());
 
-void Receiver::searchForKey(Jvalue* value, const std::string& key, std::vector<Jvalue*>& results) {
-    switch (value->getType()) {
-    case JSONObject: {
-        JsonObject* obj = dynamic_cast<JsonObject*>(value);
-        if (!obj) {
-            throw std::runtime_error("Failed to cast to JsonObject");
+            const std::vector<Jvalue*>* objValue = obj->getValue();
+            for (Jvalue* value : *objValue) {
+                searchJsonKey(value, searchKey, jValues);
+            }
         }
-        Jvalue* result = obj->getByKey(key);
-        if (result) {
-            results.push_back(result);
-        }
-
-        const std::vector<Jvalue*>* objValue = obj->getValue();
-        for (size_t i = 0; i < objValue->size(); i++) {
-            searchForKey((*objValue)[i], key, results);
-        }
-        break;
     }
-    case JSONArray: {
-        JsonArray* arr = dynamic_cast<JsonArray*>(value);
-        if (!arr) {
-            throw std::runtime_error("Failed to cast to JsonArray");
+    else if (root->getType() == JSONArray) {
+        JsonArray* arr = static_cast<JsonArray*>(root);
+        if (arr) {
+            const std::vector<Jvalue*>& values = arr->getValue();
+            for (Jvalue* value : values) {
+                searchJsonKey(value, searchKey, jValues);
+            }
         }
-
-        vector<Jvalue*> values = arr->getValue();
-        for (Jvalue* val : values) {
-            searchForKey(val, key, results);
-        }
-        break;
     }
-    case JSONString:
-    case JSONNumber:
-    case JSONBool:
-    case JSONNull:
-        //they dont have keys
-        break;
-    default:
-        throw std::runtime_error("Unknown JsonType encountered");
+}
+
+void Receiver::searchJsonValue(Jvalue* root, const std::string& searchValue, std::vector<Jvalue*>& jValues) {
+    if (root->getType() == JSONObject) {
+        JsonObject* obj = static_cast<JsonObject*>(root);
+        if (obj) {
+            std::vector<Jvalue*> result = obj->getByValue(searchValue);
+            jValues.insert(jValues.end(), result.begin(), result.end());
+
+            const std::vector<Jvalue*>* objValue = obj->getValue();
+            for (Jvalue* value : *objValue) {
+                searchJsonValue(value, searchValue, jValues);
+            }
+        }
+    }
+    else if (root->getType() == JSONArray) {
+        JsonArray* arr = static_cast<JsonArray*>(root);
+        if (arr) {
+            const std::vector<Jvalue*>& values = arr->getValue();
+            for (Jvalue* value : values) {
+                searchJsonValue(value, searchValue, jValues);
+            }
+        }
+    }
+}
+
+void Receiver::formatSearchResult(std::string& searchResult, const std::vector<Jvalue*>& jValues) {
+    if (jValues.empty()) {
+        //return empty array
+        searchResult = "[]";
+    }
+    else {
+        //format the found data
+        searchResult += "[";
+        for (size_t i = 0; i < jValues.size(); ++i) {
+            searchResult += "\"" + jValues[i]->getKey() +"\" : "+ jValues[i]->toString() + ",";
+        }
+        searchResult.pop_back(); //remove the last comma 
+        searchResult += "]";
+        searchResult = Utility::prettifyJson(searchResult);
     }
 }
 
@@ -180,7 +216,7 @@ void Receiver::deleteJsonPairAtTarget(Jvalue* parent, const std::string& path) {
     // Delete the key/value pair or array element
     if (parent->getType() == JSONObject) {
         JsonObject* obj = static_cast<JsonObject*>(parent);
-        Jvalue* target = obj->getByKey(keyOrIndexToDelete);
+        Jvalue* target = obj->getByExactKey(keyOrIndexToDelete);
         if (target) {
             obj->removeByKey(keyOrIndexToDelete); // Remove the element from the container
             delete target; // Delete the element to free memory
@@ -239,7 +275,7 @@ Jvalue* Receiver::followPath(Jvalue* root, std::vector<std::string> pathArs) {
     for (int i = 0; i < pathArs.size(); i++) {
         if (current->getType() == JSONObject) {
             JsonObject* obj = static_cast<JsonObject*>(current);
-            current = obj->getByKey(pathArs[i]);
+            current = obj->getByExactKey(pathArs[i]);
             if (!current) {
                 throw std::runtime_error("Path not found in JSON object: " + pathArs[i]);
             }

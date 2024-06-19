@@ -49,13 +49,51 @@ public:
 	void add(Jvalue* val) {
 		value.push_back(val);
 	}
-	Jvalue* getByKey(const std::string& key) {
+	Jvalue* getByExactKey(const std::string& key) {
+		bool useExact = key.back() != '*';
 		for (size_t i = 0; i < value.size(); ++i) {
-			if (value[i]->getKey() == key) {
+			if (useExact && value[i]->getKey() == key) {
+				//it can return on the first found because a key duplication is error in json
+				return value[i];
+			}
+			else if (!useExact && value[i]->getKey().find(key.substr(0, key.size() - 1)) != std::string::npos) {
 				return value[i];
 			}
 		}
-		return nullptr; // Return nullptr if key is not found
+		return nullptr;
+	}
+	std::vector<Jvalue*> getByKey(const std::string& key) {
+		std::vector<Jvalue*> results;
+		bool beExact = key.back() != '*';
+
+		for (size_t i = 0; i < value.size(); ++i) {
+			const std::string& currentKey = value[i]->getKey();
+
+			if (beExact && currentKey == key) {
+				results.push_back(value[i]);
+			}
+			else if (!beExact && currentKey.find(key.substr(0, key.size() - 1)) != std::string::npos) {
+				results.push_back(value[i]);
+			}
+		}
+		return results;
+	}
+	std::vector<Jvalue*> getByValue(const std::string& searchValue) {
+		std::vector<Jvalue*> results;
+		bool beExact = searchValue.back() != '*';
+
+		for (size_t i = 0; i < value.size(); ++i) {
+			// to avoid stringifying and returning whole objects and arrays
+			if (value[i]->getType() != JSONArray && value[i]->getType() != JSONObject) { 
+				if (beExact && value[i]->toString() == searchValue) {
+					results.push_back(value[i]);
+				}
+				else if (!beExact && value[i]->toString().find(searchValue.substr(0, searchValue.size() - 1)) != std::string::npos) {
+					results.push_back(value[i]);
+				}
+			}	
+		}
+		return results;
 	}
 	void removeByKey(const std::string& key) {
 		for (size_t i = 0; i < value.size(); ++i) {
@@ -118,6 +156,22 @@ public:
 		else {
 			throw std::runtime_error("Index out of range: cannot erase element");
 		}
+	}
+	std::vector<Jvalue*> getByValue(const std::string& searchValue) {
+		std::vector<Jvalue*> results;
+		bool beExact = searchValue.back() != '*';
+
+		for (size_t i = 0; i < value.size(); ++i) {
+			if (value[i]->getType() != JSONArray && value[i]->getType() != JSONObject) {
+				if (beExact && value[i]->toString() == searchValue) {
+					results.push_back(value[i]);
+				}
+				else if (!beExact && value[i]->toString().find(searchValue.substr(0, searchValue.size() - 1)) != std::string::npos) {
+					results.push_back(value[i]);
+				}
+			}
+		}
+		return results;
 	}
 	Jvalue* operator[](size_t index) {
 		if (index >= value.size()) {
@@ -241,4 +295,5 @@ public:
 private:
 	string key;
 };
+
 #endif // !JSON_TYPES_HDD
