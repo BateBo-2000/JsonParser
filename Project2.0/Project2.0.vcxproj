@@ -136,6 +136,7 @@
     <ClCompile Include="FileReader.hpp" />
     <ClCompile Include="FileWriter.cpp" />
     <ClCompile Include="Invoker.cpp" />
+    <ClCompile Include="JsonParser.cpp" />
     <ClCompile Include="MoveCommand.cpp" />
     <ClCompile Include="OpenCommand.cpp" />
     <ClCompile Include="PrintCommand.cpp" />
@@ -159,6 +160,8 @@
     <ClInclude Include="ExitCommand.hpp" />
     <ClInclude Include="FileWriter.hpp" />
     <ClInclude Include="Invoker.hpp" />
+    <ClInclude Include="JsonParser.hpp" />
+    <ClInclude Include="JsonTypes.hpp" />
     <ClInclude Include="MoveCommand.hpp" />
     <ClInclude Include="OpenCommand.hpp" />
     <ClInclude Include="PrintCommand.hpp" />

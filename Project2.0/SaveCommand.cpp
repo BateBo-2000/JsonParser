@@ -32,6 +32,7 @@ void SaveCommand::setArguemnts(const std::vector<std::string>& args) {
 void SaveCommand::execute() {
     try
     {
+        //dont throw print
         if (filePath == "") throw std::invalid_argument("Save/Invalid argument/ File path is empty.");
         receiver.writeFile(filePath);
     }

@@ -7,6 +7,11 @@
 #include <stdexcept>
 #include <iostream>
 
+
+#include "FileReader.hpp"
+#include "FileWriter.hpp"
+#include "JsonParser.hpp"
+
 class Receiver {
 public:
     Receiver();
@@ -15,13 +20,14 @@ public:
     void writeFile(const std::string& newFilePath);
     std::string getFileLocation() const;
     bool isValidJson() const;
-    void setJsonValue(std::string& json, const std::string& path, const std::string& value);
+    void setJsonValue(const std::string& path, const std::string& value);
     void printJson() const;
+    void searchJson(const std::string& key, std::vector<std::string>& searchResult);
 
     //TO DO
-    void followPathToDir(std::vector<std::string>& path, size_t& dirStart, size_t& dirEnd);
+    
     //TODO:
-    void searchJson(const std::string& json, const std::string& key);
+    
     void containsValue(const std::string& json, const std::string& value);
     std::string getJsonValue(const std::string& json, const std::string& path);
     void createJsonValue(std::string& json, const std::string& path, const std::string& value);
@@ -30,9 +36,8 @@ public:
 
 
 private:
-    
-
-    std::string trim(const std::string& str);
+    void splitPathArgs(const std::string& path, std::vector<std::string>& components);
+    Jvalue* followPath(Jvalue* root, const std::string& path);
 
     std::string jsonContent;
     std::string currentFileLocation;

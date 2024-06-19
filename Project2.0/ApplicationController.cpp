@@ -5,15 +5,23 @@
 #include "SaveAsCommand.hpp"
 #include "ExitCommand.hpp"
 #include "ValidateCommand.hpp"
-
+#include "SearchCommand.hpp"
 AppController::AppController() {
-    // Register commands with the Invoker
-    invoker.registerCommand(new OpenCommand("open",jsonEditor));
-    invoker.registerCommand(new PrintCommand("print", jsonEditor));
-    invoker.registerCommand(new SaveCommand("save", jsonEditor));
-    invoker.registerCommand(new SaveAsCommand("saveas", jsonEditor));
-    invoker.registerCommand(new ExitCommand("exit", jsonEditor));
-    invoker.registerCommand(new ValidateCommand("validate", jsonEditor));
+    //Register commands with the Invoker
+    try
+    {
+        invoker.registerCommand(new(std::nothrow) OpenCommand("open", jsonEditor));
+        invoker.registerCommand(new(std::nothrow) PrintCommand("print", jsonEditor));
+        invoker.registerCommand(new(std::nothrow) SaveCommand("save", jsonEditor));
+        invoker.registerCommand(new(std::nothrow) SaveAsCommand("saveas", jsonEditor));
+        invoker.registerCommand(new(std::nothrow) ExitCommand("exit", jsonEditor));
+        invoker.registerCommand(new(std::nothrow) ValidateCommand("validate", jsonEditor));
+        invoker.registerCommand(new(std::nothrow) SearchCommand("search", jsonEditor));
+    }
+    catch (const std::invalid_argument& e)
+    {
+        std::cout << "Couldn't setup all commands properly. \nPlease restart the app." << std::endl;
+    } 
 }
 
 void AppController::run() {

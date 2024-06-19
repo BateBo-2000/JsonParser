@@ -4,9 +4,16 @@ void printAppName();
 
 int main() {
 	
-    AppController appController;
-	printAppName();
-    appController.run();
+	try
+	{
+		AppController appController;
+		printAppName();
+		appController.run();
+	}
+	catch (const std::exception&)
+	{
+		//handle
+	}
     
     return 0;
 }
