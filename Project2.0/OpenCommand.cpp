@@ -18,5 +18,5 @@ void OpenCommand::execute() {
         std::cerr << "No file path provided." << std::endl;
         return;
     }
-    receiver.readFile(filePath);
+    receiver.loadFile(filePath);
 }

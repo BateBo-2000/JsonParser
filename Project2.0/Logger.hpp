@@ -13,7 +13,7 @@ public:
     static void logCritical(const std::string& message);
 
 private:
-    void log(const std::string& message, const std::string& level);
+    static void log(const std::string& message, const std::string& level);
 };
 
 #endif // !LOGGER_HDD

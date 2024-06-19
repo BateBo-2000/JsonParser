@@ -1,8 +1,8 @@
 // get a string and parse it into structure and output a structure
 // get a structure and parse it into string
 #pragma once
-#ifndef JSONPARSER_HPP
-#define JSONPARSER_HPP
+#ifndef JSON_PARSER_HPP
+#define JSON_PARSER_HPP
 
 #include <string>
 #include <stdexcept>
@@ -14,6 +14,7 @@ public:
 	JsonParser(const string& file);
 
 	Jvalue* parse(const string& key = ""); //default arg
+	std::string deparse(Jvalue* root);
 
 private:
 	size_t index; //really important
@@ -38,6 +39,8 @@ private:
 	Jvalue* parseArray(const string& key);
 	//parses objects and handles the keys
 	Jvalue* parseObject(const string& key);
+	//adds the new lines and tabs to make the string human readible
+	std::string prettify(const std::string& input);
 };
 
-#endif // JSONPARSER_HPP
+#endif // JSON_PARSER_HPP

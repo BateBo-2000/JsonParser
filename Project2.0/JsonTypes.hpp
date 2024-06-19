@@ -1,3 +1,7 @@
+#pragma once
+#ifndef JSON_TYPES_HDD
+#define JSON_TYPES_HDD
+
 #include <vector>
 #include <string>
 #include <stdexcept>
@@ -107,7 +111,7 @@ public:
 	void add(Jvalue* val) {
 		value.push_back(val);
 	}
-	void remove(const size_t index) {
+	void removeByIndex(const size_t index) {
 		if (index < value.size()) {
 			value.erase(value.begin() + index);
 		}
@@ -237,4 +241,4 @@ public:
 private:
 	string key;
 };
-
+#endif // !JSON_TYPES_HDD

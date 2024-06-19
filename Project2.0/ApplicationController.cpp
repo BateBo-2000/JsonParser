@@ -6,6 +6,8 @@
 #include "ExitCommand.hpp"
 #include "ValidateCommand.hpp"
 #include "SearchCommand.hpp"
+#include "DeleteCommand.hpp"
+
 AppController::AppController() {
     //Register commands with the Invoker
     try
@@ -17,8 +19,9 @@ AppController::AppController() {
         invoker.registerCommand(new(std::nothrow) ExitCommand("exit", jsonEditor));
         invoker.registerCommand(new(std::nothrow) ValidateCommand("validate", jsonEditor));
         invoker.registerCommand(new(std::nothrow) SearchCommand("search", jsonEditor));
+        invoker.registerCommand(new(std::nothrow) DeleteCommand("delete", jsonEditor));
     }
-    catch (const std::invalid_argument& e)
+    catch (const std::invalid_argument&)
     {
         std::cout << "Couldn't setup all commands properly. \nPlease restart the app." << std::endl;
     } 

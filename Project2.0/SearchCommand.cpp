@@ -12,9 +12,8 @@ void SearchCommand::setArguemnts(const std::vector<std::string>& args) {
     else{
         if (args.size() > 2) {
             //warning
-            std::cerr << "Save/ Too many arguments." << std::endl;
+            std::cerr << "Search/ Too many arguments." << std::endl;
         }
-        //default path
         searchKey = args[1];
     }
 }
@@ -30,7 +29,7 @@ void SearchCommand::execute() {
     {
         throw std::runtime_error(string("Error while searching: ") + e.what());
     }
-    
+
     for (size_t i = 0; i < results.size(); i++)
     {
         std::cout << results[i] << std::endl;
