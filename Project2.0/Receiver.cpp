@@ -16,6 +16,7 @@ void Receiver::loadFile(const std::string& filePath) {
     }
     catch (const std::exception& e) {
         std::cerr << "Error opening file: " << e.what() << std::endl;
+        if (!filePath.empty() && !jsonContent.empty())  std::cerr << "Still working with file: " << filePath << std::endl;
     }
 }
 
@@ -41,6 +42,7 @@ void Receiver::printJson() const {
 }
 
 bool Receiver::isValidJson(std::string* errorMsg) const { //to make it optional to get the error
+    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
     try {
         JsonParser parser(jsonContent);
         Jvalue* root = parser.parse();
@@ -56,6 +58,7 @@ bool Receiver::isValidJson(std::string* errorMsg) const { //to make it optional 
 }
 
 void Receiver::searchJson(const std::string& key, std::string& searchResult) {
+    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
     //parse the JSON string
     JsonParser parser(jsonContent);
     Jvalue* root = parser.parse();
@@ -68,12 +71,14 @@ void Receiver::searchJson(const std::string& key, std::string& searchResult) {
     for (Jvalue* value : jValues) {
         searchResult += value->toString();
     }
-    searchResult = parser.prettify(searchResult);
+    //prettify the results
+    searchResult = Utility::prettifyJson(searchResult);
     //clean up
     delete root;
 }
 
 void Receiver::deleteJsonValue(const std::string& path) {
+    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
     //parse the JSON string
     JsonParser parser(jsonContent);
     Jvalue* root = parser.parse();
@@ -96,6 +101,9 @@ void Receiver::deleteJsonValue(const std::string& path) {
 
     //deparse the structure to string
     jsonContent = parser.deparse(root);
+
+    //prettify
+    jsonContent = Utility::prettifyJson(jsonContent);
 
     //clean up
     delete root;

@@ -11,6 +11,7 @@
 #include "FileReader.hpp"
 #include "FileWriter.hpp"
 #include "JsonParser.hpp"
+#include "Utility.hpp"
 
 class Receiver {
 public:

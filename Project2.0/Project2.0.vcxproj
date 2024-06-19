@@ -149,6 +149,7 @@
     <ClCompile Include="SaveCommand.cpp" />
     <ClCompile Include="SearchCommand.cpp" />
     <ClCompile Include="SetCommand.cpp" />
+    <ClCompile Include="Utility.cpp" />
     <ClCompile Include="ValidateCommand.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +170,7 @@
     <ClInclude Include="SaveCommand.hpp" />
     <ClInclude Include="SearchCommand.hpp" />
     <ClInclude Include="SetCommand.hpp" />
+    <ClInclude Include="Utility.hpp" />
     <ClInclude Include="ValidateCommand.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
