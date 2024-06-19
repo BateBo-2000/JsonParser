@@ -19,7 +19,7 @@ void SearchCommand::setArguemnts(const std::vector<std::string>& args) {
 }
 
 void SearchCommand::execute() {
-    std::vector<std::string> results;
+    std::string results;
     try
     {
         receiver.searchJson(searchKey, results);
@@ -29,11 +29,6 @@ void SearchCommand::execute() {
     {
         throw std::runtime_error(string("Error while searching: ") + e.what());
     }
-
-    for (size_t i = 0; i < results.size(); i++)
-    {
-        std::cout << results[i] << std::endl;
-
-    }
+    std::cout << results << std::endl;
     
 }

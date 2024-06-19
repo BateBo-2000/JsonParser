@@ -15,6 +15,8 @@ public:
 
 	Jvalue* parse(const string& key = ""); //default arg
 	std::string deparse(Jvalue* root);
+	//adds the new lines and tabs to make the string human readible
+	std::string prettify(const std::string& input);
 
 private:
 	size_t index; //really important
@@ -39,8 +41,7 @@ private:
 	Jvalue* parseArray(const string& key);
 	//parses objects and handles the keys
 	Jvalue* parseObject(const string& key);
-	//adds the new lines and tabs to make the string human readible
-	std::string prettify(const std::string& input);
+	
 };
 
 #endif // JSON_PARSER_HPP

@@ -22,7 +22,7 @@ public:
     bool isValidJson(std::string* errorMsg = nullptr) const;
     void setJsonValue(const std::string& path, const std::string& value);
     void printJson() const;
-    void searchJson(const std::string& key, std::vector<std::string>& searchResult);
+    void searchJson(const std::string& key, std::string& searchResult);
     void deleteJsonValue(const std::string& path);
 
     //TODO:

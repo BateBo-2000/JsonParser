@@ -55,7 +55,7 @@ bool Receiver::isValidJson(std::string* errorMsg) const { //to make it optional 
     }
 }
 
-void Receiver::searchJson(const std::string& key, std::vector<std::string>& searchResult) {
+void Receiver::searchJson(const std::string& key, std::string& searchResult) {
     //parse the JSON string
     JsonParser parser(jsonContent);
     Jvalue* root = parser.parse();
@@ -66,48 +66,11 @@ void Receiver::searchJson(const std::string& key, std::vector<std::string>& sear
 
     // Convert found values to string and store in results
     for (Jvalue* value : jValues) {
-        searchResult.push_back(value->toString());
+        searchResult += value->toString();
     }
+    searchResult = parser.prettify(searchResult);
     //clean up
     delete root;
-}
-
-void Receiver::deleteJsonPairAtTarget(Jvalue* parent, const std::string& path) {
-    std::vector<std::string> pathArgs;
-    splitPathArgs(path, pathArgs);
-    if (pathArgs.empty()) {
-        throw std::runtime_error("Invalid path");
-    }
-
-    std::string keyOrIndexToDelete = pathArgs.back();
-
-    // Delete the key/value pair or array element
-    if (parent->getType() == JSONObject) {
-        JsonObject* obj = static_cast<JsonObject*>(parent);
-        Jvalue* target = obj->getByKey(keyOrIndexToDelete);
-        if (target) {
-            obj->removeByKey(keyOrIndexToDelete); // Remove the element from the container
-            delete target; // Delete the element to free memory
-        }
-        else {
-            throw std::runtime_error("Key not found: cannot delete element.");
-        }
-    }
-    else if (parent->getType() == JSONArray) {
-        JsonArray* arr = static_cast<JsonArray*>(parent);
-        size_t indexToDelete = std::stoi(keyOrIndexToDelete);
-        if (indexToDelete < arr->getValue().size()) {
-            Jvalue* target = arr->getValue()[indexToDelete];
-            arr->removeByIndex(indexToDelete); // Remove the element from the container
-            delete target; // Delete the element to free memory
-        }
-        else {
-            throw std::runtime_error("Index out of range: cannot delete element");
-        }
-    }
-    else {
-        throw std::runtime_error("Invalid path or unsupported JSON type at path");
-    }
 }
 
 void Receiver::deleteJsonValue(const std::string& path) {
@@ -154,6 +117,7 @@ void Receiver::containsValue(const std::string& json, const std::string& value) 
 
 }
 
+//internals
 
 void Receiver::searchForKey(Jvalue* value, const std::string& key, std::vector<Jvalue*>& results) {
     switch (value->getType()) {
@@ -196,9 +160,43 @@ void Receiver::searchForKey(Jvalue* value, const std::string& key, std::vector<J
     }
 }
 
+void Receiver::deleteJsonPairAtTarget(Jvalue* parent, const std::string& path) {
+    std::vector<std::string> pathArgs;
+    splitPathArgs(path, pathArgs);
+    if (pathArgs.empty()) {
+        throw std::runtime_error("Invalid path");
+    }
 
+    std::string keyOrIndexToDelete = pathArgs.back();
 
-//internals
+    // Delete the key/value pair or array element
+    if (parent->getType() == JSONObject) {
+        JsonObject* obj = static_cast<JsonObject*>(parent);
+        Jvalue* target = obj->getByKey(keyOrIndexToDelete);
+        if (target) {
+            obj->removeByKey(keyOrIndexToDelete); // Remove the element from the container
+            delete target; // Delete the element to free memory
+        }
+        else {
+            throw std::runtime_error("Key not found: cannot delete element.");
+        }
+    }
+    else if (parent->getType() == JSONArray) {
+        JsonArray* arr = static_cast<JsonArray*>(parent);
+        size_t indexToDelete = std::stoi(keyOrIndexToDelete);
+        if (indexToDelete < arr->getValue().size()) {
+            Jvalue* target = arr->getValue()[indexToDelete];
+            arr->removeByIndex(indexToDelete); // Remove the element from the container
+            delete target; // Delete the element to free memory
+        }
+        else {
+            throw std::runtime_error("Index out of range: cannot delete element");
+        }
+    }
+    else {
+        throw std::runtime_error("Invalid path or unsupported JSON type at path");
+    }
+}
 
 void Receiver::splitPathArgs(const std::string& path, std::vector<std::string>& components) {
     size_t pos = 0;
