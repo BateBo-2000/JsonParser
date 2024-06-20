@@ -10,6 +10,7 @@
 #include "ContainsCommand.hpp"
 #include "SetCommand.hpp"
 #include "CreateCommand.hpp"
+#include "MoveCommand.hpp"
 
 AppController::AppController() {
     //Register commands with the Invoker
@@ -26,6 +27,7 @@ AppController::AppController() {
         invoker.registerCommand(new(std::nothrow) ContainsCommand("contains", jsonEditor));
         invoker.registerCommand(new(std::nothrow) SetCommand("set", jsonEditor));
         invoker.registerCommand(new(std::nothrow) CreateCommand("create", jsonEditor));
+        invoker.registerCommand(new(std::nothrow) MoveCommand("move", jsonEditor));
     }
     catch (const std::invalid_argument&)
     {

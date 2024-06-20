@@ -26,10 +26,10 @@ public:
     void deleteJsonValue(const std::string& path);
     void containsValue(const std::string& value, std::string& searchResult);
     void setJsonValue(const std::string& path, const std::string& value);
+    void create(const std::string& path, const std::string& value);
 
     //TODO:
-    void create(const std::string& path, const std::string& value);
-    void moveJsonValue(std::string& json, const std::string& from, const std::string& to);
+    void move(const std::string& from, const std::string& to);
 
 
 private:
@@ -47,6 +47,10 @@ private:
     void createNewPairInObject(Jvalue* target, const std::string& key, const std::string& value);
     void addToArray(Jvalue* target, const std::string& value);
     bool isNumber(const std::string& str);
+    void moveValue(Jvalue* root, Jvalue* fromValue, Jvalue* toValue, const std::vector<std::string>& toArgs);
+    void moveToArray(Jvalue* array, Jvalue* valueToAdd);
+    Jvalue* copyPair(const std::string& key, Jvalue* value, JsonObject* obj);
+    void clearValue(Jvalue* root, std::vector<std::string>& pathArgs);
 };
 
 #endif // RECEIVER_HPP

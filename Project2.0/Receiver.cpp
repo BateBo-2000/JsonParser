@@ -126,6 +126,7 @@ void Receiver::deleteJsonValue(const std::string& path) {
 
 void Receiver::setJsonValue(const std::string& path, const std::string& value) {
     if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
+    if(path.empty()) throw std::runtime_error("There is no path provided.");
     //parse the JSON string
     JsonParser parser(jsonContent);
     Jvalue* root = parser.parse();
@@ -165,7 +166,7 @@ void Receiver::create(const std::string& path, const std::string& value) {
     pathArgs.pop_back();
     Jvalue* target = followPath(root, pathArgs);
 
-    if (target->getType() == JSONObject) {
+    if (target->getType() == JSONObject || target->getType() == JSONArray) {
         //check if there isnt such key
         std::vector<Jvalue*> foundDuplicates;
         searchJsonKey(target, key, foundDuplicates);
@@ -178,9 +179,10 @@ void Receiver::create(const std::string& path, const std::string& value) {
             }
             else 
             {
-                //if all is good and is not array add it to object
                 createNewPairInObject(target, key, value);
             }
+        }else{
+            createNewPairInObject(target, key, value);
         }
     }else {
         throw std::runtime_error("Cannot add key-value pair to a non-object.");
@@ -196,10 +198,38 @@ void Receiver::create(const std::string& path, const std::string& value) {
     delete root;
 }
 
-void Receiver::moveJsonValue(std::string& json, const std::string& from, const std::string& to) {
-
+void Receiver::move(const std::string& from, const std::string& to) {
+    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
+    //parse the JSON string
+    JsonParser parser(jsonContent);
+    Jvalue* root = parser.parse();
+    //from path
+    std::vector<std::string> fromArgs;
+    splitPathArgs(from, fromArgs);
+    if (fromArgs.empty()) {
+        throw std::runtime_error("Invalid from path.");
+    }
+    //to path
+    std::vector<std::string> toArgs;
+    splitPathArgs(to, toArgs);
+    if (toArgs.empty()) {
+        throw std::runtime_error("Invalid to path.");
+    }
+    //follow path "from"
+    Jvalue* fromValue = followPath(root, fromArgs);
+    //follow path "to"
+    Jvalue* toValue = followPath(root, toArgs);
+    //move from fromValue to toValue
+    moveValue(root, fromValue, toValue, fromArgs);
+    //clears the from location
+    clearValue(root, fromArgs);
+    //deparse the structure to string
+    jsonContent = parser.deparse(root);
+    //prettify
+    jsonContent = Utility::prettifyJson(jsonContent);
+    //clean up
+    delete root;
 }
-
 
 //internals
 void Receiver::searchJsonKey(Jvalue* root, const std::string& searchKey, std::vector<Jvalue*>& jValues) {
@@ -281,8 +311,7 @@ void Receiver::deleteJsonPairAtTarget(Jvalue* parent, const std::string& path) {
         JsonObject* obj = static_cast<JsonObject*>(parent);
         Jvalue* target = obj->getByExactKey(keyOrIndexToDelete);
         if (target) {
-            obj->removeByKey(keyOrIndexToDelete); // Remove the element from the container
-            delete target; // Delete the element to free memory
+            obj->removeByKey(keyOrIndexToDelete);
         }
         else {
             throw std::runtime_error("Key not found: cannot delete element.");
@@ -293,8 +322,7 @@ void Receiver::deleteJsonPairAtTarget(Jvalue* parent, const std::string& path) {
         size_t indexToDelete = std::stoi(keyOrIndexToDelete);
         if (indexToDelete < arr->getValue().size()) {
             Jvalue* target = arr->getValue()[indexToDelete];
-            arr->removeByIndex(indexToDelete); // Remove the element from the container
-            delete target; // Delete the element to free memory
+            arr->removeByIndex(indexToDelete);
         }
         else {
             throw std::runtime_error("Index out of range: cannot delete element");
@@ -389,7 +417,10 @@ void Receiver::createNewPairInObject(Jvalue* target, const std::string& key, con
         }
         if (obj == nullptr) throw std::runtime_error("Something went wrong while creating the key-value pair.\n Please try again.");
         obj->add(pair);
-    }  
+    }
+    else {
+        throw std::runtime_error("Failed to cast to JsonObject.");
+    }
 }
 
 void Receiver::addToArray(Jvalue* target, const std::string& value) {
@@ -418,6 +449,107 @@ void Receiver::addToArray(Jvalue* target, const std::string& value) {
         }
         if (pair == nullptr) throw std::runtime_error("Something went wrong while creating the value to the array.\n Please try again.");
         array->add(pair);
+    }
+}
+
+void Receiver::moveToArray(Jvalue* array, Jvalue* valueToAdd) {
+    if (array->getType() != JSONArray) {
+        throw std::invalid_argument("Expected JSONArray type.");
+    }
+
+    JsonArray* jsonArray = static_cast<JsonArray*>(array);
+
+    //clone the value to add
+    Jvalue* clonedValue = valueToAdd->clone();
+
+    //add the cloned value to the array
+    jsonArray->add(clonedValue);
+}
+
+Jvalue* Receiver::copyPair(const std::string& key, Jvalue* value, JsonObject* obj) {
+    Jvalue* pair = nullptr;
+
+    if (value == nullptr) {
+        pair = new(std::nothrow) JsonNull(key);
+    }
+    else if (value->getType() == JSONBool) {
+        pair = new(std::nothrow) JsonBool(*static_cast<JsonBool*>(value));
+    }
+    else if (value->getType() == JSONNumber) {
+        pair = new(std::nothrow) JsonNumber(*static_cast<JsonNumber*>(value));
+    }
+    else if (value->getType() == JSONString) {
+        pair = new(std::nothrow) JsonString(*static_cast<JsonString*>(value));
+    }
+    else if (value->getType() == JSONArray) {
+        pair = new(std::nothrow) JsonArray(*static_cast<JsonArray*>(value));
+    }
+    else if (value->getType() == JSONObject) {
+        pair = new(std::nothrow) JsonObject(*static_cast<JsonObject*>(value));
+    }
+    else {
+        throw std::invalid_argument("Unsupported value type.");
+    }
+
+    if (pair == nullptr) {
+        throw std::runtime_error("Failed to create key-value pair.");
+    }
+
+    // Set the key for the new pair
+    pair->setKey(key);
+
+    // Add the pair to the object if provided
+    if (obj != nullptr) {
+        obj->add(pair);
+    }
+
+    return pair;
+}
+
+void Receiver::moveValue(Jvalue* root, Jvalue* fromValue, Jvalue* toValue, const std::vector<std::string>& fromArgs) {
+    //check if toValue exists and is not null
+    if (!toValue) {
+        throw std::runtime_error("Cannot move: Destination path does not exist.");
+    }
+
+    //check if destination is array or object
+    if (toValue->getType() == JSONArray) {
+        //if the destination is an array, add the value to it
+        moveToArray(toValue, fromValue);
+    }
+    else if (toValue->getType() == JSONObject) {
+        //if the destination is an object, create a new key-value pair and add it
+        std::string key = fromArgs.back();
+        copyPair(key, fromValue, static_cast<JsonObject*>(toValue));
+    }
+    else {
+        throw std::runtime_error("Cannot move: Destination must be an array or object.");
+    }
+}
+
+void Receiver::clearValue(Jvalue* root, std::vector<std::string>& pathArgs) {
+    if (pathArgs.empty()) {
+        throw std::runtime_error("Invalid path.");
+    }
+
+    std::string key = pathArgs.back();
+    std::vector<std::string> parentPathArgs = pathArgs;
+    parentPathArgs.pop_back();
+    Jvalue* parent = followPath(root, parentPathArgs);
+
+    if (isNumber(key) && parent->getType() == JSONArray) {
+        //parent is array 
+        size_t index = stoi(key);
+        
+        JsonArray* arrayParent = static_cast<JsonArray*>(parent);
+        arrayParent->removeByIndex(index);
+    }
+    else if (parent->getType() == JSONObject) {
+        JsonObject* objectParent = static_cast<JsonObject*>(parent);
+        objectParent->removeByKey(key);
+    }
+    else {
+        throw std::runtime_error("Something went wrond while clearing after moving.");
     }
 }
 

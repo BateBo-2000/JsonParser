@@ -27,17 +27,28 @@ public:
 	virtual JsonType getType() const = 0;
 	virtual const string& getKey() const = 0;
 	virtual string toString() const = 0;
+	virtual Jvalue* clone() const = 0;
+	virtual void setKey(const string& newKey) = 0;
 };
 
 class JsonObject : public Jvalue {
 public:
 	JsonObject(const string& key) : key(key) {}
+	JsonObject(const JsonObject& other) {
+		for (size_t i = 0; i < other.value.size(); ++i) {
+			Jvalue* clonedValue = other.value[i]->clone();
+			value.push_back(clonedValue);
+		}
+	}
+	JsonObject* clone() const override {
+		return new JsonObject(*this);
+	}
 	~JsonObject() {
 		for (Jvalue* val : value) {
 			delete val;
 		}
 	}
-	void setKey(string& newKey) {
+	void setKey(const string& newKey) {
 		key = newKey;
 	}
 	const string& getKey() const override {
@@ -101,6 +112,7 @@ public:
 	void removeByKey(const std::string& key) {
 		for (size_t i = 0; i < value.size(); ++i) {
 			if (value[i]->getKey() == key) {
+				delete value[i];
 				value.erase(value.begin() + i);
 				return;
 			}
@@ -126,12 +138,27 @@ private:
 class JsonArray : public Jvalue {
 public:
 	JsonArray(const string& key) : key(key), vectorType(JSONNull) {}
-	~JsonArray() {
-		for (Jvalue* val : value) {
-			delete val;
+	JsonArray(const JsonArray& other) : key(other.key), vectorType(other.vectorType) {
+		for (size_t i = 0; i < other.value.size(); ++i) {
+			if (other.value[i]) {
+				value.push_back(other.value[i]->clone());
+			}
+			else {
+				value.push_back(nullptr);
+			}
 		}
 	}
-	void setKey(const string& newKey) {
+	JsonArray* clone() const override {
+		return new JsonArray(*this);
+	}
+	~JsonArray() {
+		for (size_t i = 0; i < value.size(); i++)
+		{
+			delete value[i];
+		}
+		value.clear();
+	}
+	void setKey(const string& newKey) override{
 		key = newKey;
 	}
 	const string& getKey() const override {
@@ -154,15 +181,16 @@ public:
 			vectorType = val->getType();
 		}
 		else {
-			throw std::runtime_error("Value does not match the array type.");
+			throw std::invalid_argument("Value does not match the array type.");
 		}
 	}
 	void removeByIndex(const size_t index) {
 		if (index < value.size()) {
+			delete value[index];
 			value.erase(value.begin() + index);
 		}
 		else {
-			throw std::runtime_error("Index out of range: cannot erase element");
+			throw std::out_of_range("Index out of range: cannot erase element.");
 		}
 	}
 	std::vector<Jvalue*> getByValue(const std::string& searchValue) {
@@ -205,7 +233,11 @@ private:
 class JsonString : public Jvalue {
 public:
 	JsonString(const string& key, string value) : key(key), value(value) {}
-	void setKey(string& newKey) {
+	JsonString(const JsonString& other) : value(other.value) {}
+	JsonString* clone() const override {
+		return new JsonString(*this);
+	}
+	void setKey(const string& newKey) override {
 		key = newKey;
 	}
 	const string& getKey() const override {
@@ -232,7 +264,11 @@ private:
 class JsonNumber : public Jvalue {
 public:
 	JsonNumber(const string& key, double value) : key(key), value(value) {}
-	void setKey(string& newKey) {
+	JsonNumber(const JsonNumber& other) : value(other.value) {}
+	JsonNumber* clone() const override {
+		return new JsonNumber(*this);
+	}
+	void setKey(const string& newKey) override {
 		key = newKey;
 	}
 	const string& getKey() const override {
@@ -259,7 +295,11 @@ private:
 class JsonBool : public Jvalue {
 public:
 	JsonBool(const string& key, bool value) : key(key), value(value) {}
-	void setKey(string& newKey) {
+	JsonBool(const JsonBool& other) : value(other.value) {}
+	JsonBool* clone() const override {
+		return new JsonBool(*this);
+	}
+	void setKey(const string& newKey) override {
 		key = newKey;
 	}
 	const string& getKey() const override {
@@ -287,7 +327,11 @@ class JsonNull : public Jvalue {
 public:
 	JsonNull(const string& key) : key(key) {
 	}
-	void setKey(string& newKey) {
+	JsonNull(const JsonNull& other) {}
+	JsonNull* clone() const override {
+		return new JsonNull(*this);
+	}
+	void setKey(const string& newKey) override {
 		key = newKey;
 	}
 	const string& getKey() const override {
