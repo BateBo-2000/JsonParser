@@ -159,27 +159,33 @@ void Receiver::create(const std::string& path, const std::string& value) {
 
     std::vector<std::string> pathArgs;
     splitPathArgs(path, pathArgs);
-
     
     if (pathArgs.empty()) throw std::runtime_error("Invalid path.");
     std::string key = pathArgs.back();
     pathArgs.pop_back();
     Jvalue* target = followPath(root, pathArgs);
 
-    if (target->getType() != JSONObject) {
-        throw std::runtime_error("Cannot add key-value pair to a non object.");
+    if (target->getType() == JSONObject) {
+        //check if there isnt such key
+        std::vector<Jvalue*> foundDuplicates;
+        searchJsonKey(target, key, foundDuplicates);
+        if (!foundDuplicates.empty()) {
+            //search for array
+            pathArgs.push_back(key); //adding the key to check if its an array
+            Jvalue* arr = followPath(root, pathArgs);
+            if (arr->getType() == JSONArray) {
+                addToArray(arr, value);
+            }
+            else 
+            {
+                //if all is good and is not array add it to object
+                createNewPairInObject(target, key, value);
+            }
+        }
+    }else {
+        throw std::runtime_error("Cannot add key-value pair to a non-object.");
     }
 
-    //check if there isnt such key
-    std::vector<Jvalue*> foundDuplicates;
-    searchJsonKey(root, key, foundDuplicates);
-    if (!foundDuplicates.empty()) {
-        throw std::runtime_error("Key already exists at the specified path.");
-    }
-    //if all is good add it to object
-    createNewPairInObject(target, key, value);
-    //Works
-    
     //deparse the structure to string
     jsonContent = parser.deparse(root);
 

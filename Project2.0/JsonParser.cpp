@@ -129,19 +129,23 @@ Jvalue* JsonParser::parseString(const string& key) {
 }
 
 Jvalue* JsonParser::parseArray(const string& key) {
+
 	JsonArray* arr = new JsonArray(key); //create a new JsonArray object
 
 	if (file[index] == '[') {
 		++index;
 	}
+	skipWhitespace();
 	bool firstElement = true;	//for tracking ","
 	while (index < file.size() && file[index] != ']') {
 		//no need to handle names because the values are accessed with indexing
+		skipWhitespace();
 		if (!firstElement) {
 			if (file[index] != ',') {
 				throw std::invalid_argument("Invalid JSON format: expected ','. Line:" + std::to_string(getCurrentLineNumber()));
 			}
 			++index;
+			skipWhitespace();
 		}
 		firstElement = false;
 
@@ -154,7 +158,7 @@ Jvalue* JsonParser::parseArray(const string& key) {
 		{
 			throw std::invalid_argument("Invalid JSON format: "+ string(e.what()) + " Line:" + std::to_string(getCurrentLineNumber()));
 		}
-		
+		skipWhitespace();
 	}
 
 	if (index >= file.size()) {
