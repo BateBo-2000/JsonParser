@@ -1,7 +1,4 @@
-// CreateCommand.cpp
 #include "CreateCommand.hpp"
-#include "Logger.hpp"
-#include <iostream>
 
 CreateCommand::CreateCommand(const std::string& name, Receiver& receiver)
     : receiver(receiver), Command(name) {}

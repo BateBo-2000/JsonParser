@@ -1,10 +1,11 @@
-// SaveAsCommand.hpp
 #ifndef SAVE_AS_COMMAND_HPP
 #define SAVE_AS_COMMAND_HPP
 
+#include <string>
+#include <stdexcept>
 #include "Receiver.hpp"
 #include "Command.hpp"
-#include <iostream>
+#include "Logger.hpp"
 
 class SaveAsCommand : public Command {
 public:

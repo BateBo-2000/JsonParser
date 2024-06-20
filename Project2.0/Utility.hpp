@@ -1,6 +1,6 @@
 #pragma once
-#ifndef UTILITY_HDD
-#define UTILITY_HDD
+#ifndef UTILITY_HPP
+#define UTILITY_HPP
 
 #include <string>
 class Utility {
@@ -8,7 +8,7 @@ public:
     static std::string prettifyJson(const std::string& jsonString);
 };
 
-#endif // !UTILITY_HDD
+#endif // !UTILITY_HPP
 
 
 

@@ -1,4 +1,3 @@
-// read the file and output string
 #pragma once
 #ifndef FILE_READER_
 #define FILE_READER_

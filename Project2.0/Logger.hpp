@@ -1,6 +1,6 @@
 #pragma once
-#ifndef LOGGER_HDD
-#define LOGGER_HDD
+#ifndef LOGGER_HPP
+#define LOGGER_HPP
 
 #include <iostream>
 #include <string>
@@ -19,5 +19,5 @@ private:
     static void log(const std::string& message, const std::string& level);
 };
 
-#endif // !LOGGER_HDD
+#endif // !LOGGER_HPP
 

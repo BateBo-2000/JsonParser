@@ -1,12 +1,11 @@
-// SetCommand.hpp
 #ifndef SET_COMMAND_HPP
 #define SET_COMMAND_HPP
 
 #include <string>
+#include <stdexcept>
 #include "Receiver.hpp"
 #include "Command.hpp"
-#include <iostream>
-
+#include "Logger.hpp"
 class SetCommand : public Command {
 public:
     SetCommand(const std::string& name, Receiver& receiver);

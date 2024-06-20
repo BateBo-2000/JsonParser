@@ -1,10 +1,11 @@
-// MoveCommand.hpp
 #ifndef MOVE_COMMAND_HPP
 #define MOVE_COMMAND_HPP
 
+#include <string>
+#include <stdexcept>
 #include "Receiver.hpp"
 #include "Command.hpp"
-#include <iostream>
+#include "Logger.hpp"
 
 class MoveCommand : public Command {
 public:

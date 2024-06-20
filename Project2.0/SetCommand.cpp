@@ -1,6 +1,4 @@
-// SetCommand.cpp
 #include "SetCommand.hpp"
-#include "Logger.hpp"
 
 SetCommand::SetCommand(const std::string& name, Receiver& receiver)
     : receiver(receiver), Command(name) {}

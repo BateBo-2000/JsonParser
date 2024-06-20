@@ -1,9 +1,10 @@
-// ExitCommand.hpp
 #ifndef EXIT_COMMAND_HPP
 #define EXIT_COMMAND_HPP
 
-#include "Command.hpp"
+#include <string>
 #include "Receiver.hpp"
+#include "Command.hpp"
+#include "Logger.hpp"
 
 class ExitCommand : public Command {
 public:

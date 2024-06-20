@@ -1,5 +1,5 @@
 #include "PrintCommand.hpp"
-#include "Logger.hpp"
+
 PrintCommand::PrintCommand(const std::string& name, Receiver& receiver)
     : receiver(receiver), Command(name) {}
 

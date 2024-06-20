@@ -1,7 +1,4 @@
 #include "Receiver.hpp"
-/*
-    To do: do it with logger
-*/
 
 bool Receiver::loadFile(const std::string& filePath, std::string& message) {
     FileReader fileReader;
@@ -152,7 +149,7 @@ void Receiver::deleteJsonValue(const std::string& path) {
         delete root;
         root = nullptr;
     }
-    catch (const std::exception& e)
+    catch (const std::exception&)
     {
         delete root;
         root = nullptr;
@@ -192,7 +189,7 @@ void Receiver::setJsonValue(const std::string& path, const std::string& value) {
         delete root;
         root = nullptr;
     }
-    catch (const std::exception& e)
+    catch (const std::exception&)
     {
         delete root;
         root = nullptr;

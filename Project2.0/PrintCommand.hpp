@@ -1,10 +1,10 @@
-// PrintCommand.hpp
 #ifndef PRINT_COMMAND_HPP
 #define PRINT_COMMAND_HPP
 
+#include <string>
 #include "Receiver.hpp"
 #include "Command.hpp"
-#include <iostream>
+#include "Logger.hpp"
 
 class PrintCommand : public Command {
 public:

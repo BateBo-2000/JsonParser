@@ -6,7 +6,14 @@
 
 #include <string>
 #include <stdexcept>
-#include "JsonTypes.hpp"
+#include "JValue.hpp"
+#include "JsonNull.hpp"
+#include "JsonBool.hpp"
+#include "JsonNumber.hpp"
+#include "JsonString.hpp"
+#include "JsonArray.hpp"
+#include "JsonObject.hpp"
+
 using std::string;
 
 class JsonParser {

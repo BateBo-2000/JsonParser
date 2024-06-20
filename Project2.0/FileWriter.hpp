@@ -1,4 +1,3 @@
-//get string and write a file
 #pragma once
 #ifndef FILE_WRITER_
 #define FILE_WRITER_

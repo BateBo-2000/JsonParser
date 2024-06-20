@@ -1,9 +1,11 @@
 #ifndef OPENCOMMAND_HPP
 #define OPENCOMMAND_HPP
 
-#include "Command.hpp"
+#include <string>
+#include <stdexcept>
 #include "Receiver.hpp"
-#include <iostream>
+#include "Command.hpp"
+#include "Logger.hpp"
 
 class OpenCommand : public Command {
 private:

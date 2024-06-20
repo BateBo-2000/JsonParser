@@ -1,6 +1,4 @@
 #include "ContainsCommand.hpp"
-#include "Logger.hpp"
-#include <iostream>
 
 ContainsCommand::ContainsCommand(const std::string& name, Receiver& receiver)
     : receiver(receiver), Command(name) {}

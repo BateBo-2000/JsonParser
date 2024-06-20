@@ -1,10 +1,11 @@
-// DeleteCommand.hpp
 #ifndef DELETE_COMMAND_HPP
 #define DELETE_COMMAND_HPP
 
+#include <string>
+#include <stdexcept>
 #include "Receiver.hpp"
 #include "Command.hpp"
-#include <iostream>
+#include "Logger.hpp"
 
 class DeleteCommand : public Command {
 public:

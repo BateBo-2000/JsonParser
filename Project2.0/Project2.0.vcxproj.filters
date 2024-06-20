@@ -25,6 +25,9 @@
     <Filter Include="Source Files\Commands">
       <UniqueIdentifier>{e9459560-f70a-493b-8b7d-968801bfaa53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\JsonTypes">
+      <UniqueIdentifier>{6496db3c-1204-4bc1-8cd9-08fbdf5c9eae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Project2.0.cpp">
@@ -99,6 +102,9 @@
     <ClCompile Include="Utility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="JsonString.hpp">
+      <Filter>Header Files\JsonTypes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileWriter.hpp">
@@ -149,14 +155,29 @@
     <ClInclude Include="OpenCommand.hpp">
       <Filter>Header Files\Commands</Filter>
     </ClInclude>
-    <ClInclude Include="JsonTypes.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="JsonParser.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utility.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JValue.hpp">
+      <Filter>Header Files\JsonTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonNull.hpp">
+      <Filter>Header Files\JsonTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonBool.hpp">
+      <Filter>Header Files\JsonTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonNumber.hpp">
+      <Filter>Header Files\JsonTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonArray.hpp">
+      <Filter>Header Files\JsonTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonObject.hpp">
+      <Filter>Header Files\JsonTypes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,11 +1,11 @@
-// SearchCommand.hpp
 #ifndef SEARCH_COMMAND_HPP
 #define SEARCH_COMMAND_HPP
 
+#include <string>
+#include <stdexcept>
 #include "Receiver.hpp"
 #include "Command.hpp"
-#include <iostream>
-
+#include "Logger.hpp"
 class SearchCommand : public Command {
 public:
     SearchCommand(const std::string& name, Receiver& receiver);

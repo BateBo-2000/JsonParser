@@ -1,8 +1,10 @@
 #ifndef VALIDATECOMMAND_HPP
 #define VALIDATECOMMAND_HPP
 
-#include "Command.hpp"
+#include <string>
 #include "Receiver.hpp"
+#include "Command.hpp"
+#include "Logger.hpp"
 
 class ValidateCommand : public Command {
 public:

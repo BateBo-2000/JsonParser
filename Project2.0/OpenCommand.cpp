@@ -1,6 +1,4 @@
 #include "OpenCommand.hpp"
-#include "Logger.hpp"
-#include <stdexcept>
 
 OpenCommand::OpenCommand(const std::string& name ,Receiver& receiver) : receiver(receiver), Command(name){}
 

@@ -1,7 +1,4 @@
-// MoveCommand.cpp
 #include "MoveCommand.hpp"
-#include "Logger.hpp"
-#include <iostream>
 
 MoveCommand::MoveCommand(const std::string& name, Receiver& receiver)
     : receiver(receiver), Command(name) {}

@@ -1,5 +1,5 @@
 #include "Invoker.hpp"
-#include <iostream> // For std::cout and std::cerr
+#include <iostream>
 #include <stdexcept>
 
 Invoker::Invoker() {}

@@ -1,6 +1,4 @@
-// SaveCommand.cpp
 #include "SaveCommand.hpp"
-#include "Logger.hpp"
 
 SaveCommand::SaveCommand(const std::string& name, Receiver& receiver)
     : receiver(receiver), Command(name) {}

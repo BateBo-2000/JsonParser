@@ -7,7 +7,6 @@
 #include <stdexcept>
 #include <iostream>
 
-
 #include "FileReader.hpp"
 #include "FileWriter.hpp"
 #include "JsonParser.hpp"
