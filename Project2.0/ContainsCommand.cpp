@@ -1,4 +1,3 @@
-// ContainsCommand.cpp
 #include "ContainsCommand.hpp"
 #include <iostream>
 

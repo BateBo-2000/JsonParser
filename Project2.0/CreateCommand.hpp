@@ -9,6 +9,7 @@
 class CreateCommand : public Command {
 public:
     CreateCommand(const std::string& name, Receiver& receiver);
+    void setArguemnts(const std::vector<std::string>& args);
     virtual void execute() override;
 
 private:

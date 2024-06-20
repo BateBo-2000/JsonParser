@@ -5,6 +5,9 @@
 #include <vector>
 #include <string>
 #include <stdexcept>
+
+#include <iostream>
+
 using std::string;
 using std::vector;
 
@@ -134,9 +137,6 @@ public:
 	const string& getKey() const override {
 		return key;
 	}
-	void setType(JsonType type) {
-		vectorType = type;
-	}
 	JsonType getType() const override {
 		return JSONArray;
 	}
@@ -147,7 +147,15 @@ public:
 		return value;
 	}
 	void add(Jvalue* val) {
-		value.push_back(val);
+		if (!value.empty() && val->getType() == vectorType) {
+			value.push_back(val);
+		} else if (value.empty()) {
+			value.push_back(val);
+			vectorType = val->getType();
+		}
+		else {
+			throw std::runtime_error("Value does not match the array type.");
+		}
 	}
 	void removeByIndex(const size_t index) {
 		if (index < value.size()) {
@@ -209,7 +217,7 @@ public:
 	string& getValue() {
 		return value;
 	}
-	void setValue(string& newValue) {
+	void setValue(const string& newValue) {
 		value = newValue;
 	}
 	string toString() const override {
@@ -236,7 +244,7 @@ public:
 	double getValue() {
 		return value;
 	}
-	void setValue(double newValue) {
+	void setValue(const double newValue) {
 		value = newValue;
 	}
 	string toString() const override {
@@ -263,7 +271,7 @@ public:
 	bool getValue() {
 		return value;
 	}
-	void setValue(bool newValue) {
+	void setValue(const bool newValue) {
 		value = newValue;
 	}
 	string toString() const override {

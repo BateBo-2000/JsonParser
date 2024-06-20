@@ -124,17 +124,74 @@ void Receiver::deleteJsonValue(const std::string& path) {
     delete root;
 }
 
+void Receiver::setJsonValue(const std::string& path, const std::string& value) {
+    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
+    //parse the JSON string
+    JsonParser parser(jsonContent);
+    Jvalue* root = parser.parse();
 
-void Receiver::setJsonValue(const std::string& path, const std::string& key) {
+    //split the path arguments
+    std::vector<std::string> pathArgs;
+    splitPathArgs(path, pathArgs);
+    if (pathArgs.empty()) throw std::runtime_error("Invalid path.");
+        
+    //followThePath
+    Jvalue* target = followPath(root, pathArgs);
 
+    // Set the new value
+    setValue(target, value);
+
+    //deparse the structure to string
+    jsonContent = parser.deparse(root);
+
+    //prettify
+    jsonContent = Utility::prettifyJson(jsonContent);
+
+    //clean up
+    delete root;
+}
+
+void Receiver::create(const std::string& path, const std::string& value) {
+    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
+    //parse the JSON string
+    JsonParser parser(jsonContent);
+    Jvalue* root = parser.parse();
+
+    std::vector<std::string> pathArgs;
+    splitPathArgs(path, pathArgs);
+
+    
+    if (pathArgs.empty()) throw std::runtime_error("Invalid path.");
+    std::string key = pathArgs.back();
+    pathArgs.pop_back();
+    Jvalue* target = followPath(root, pathArgs);
+
+    if (target->getType() != JSONObject) {
+        throw std::runtime_error("Cannot add key-value pair to a non object.");
+    }
+
+    //check if there isnt such key
+    std::vector<Jvalue*> foundDuplicates;
+    searchJsonKey(root, key, foundDuplicates);
+    if (!foundDuplicates.empty()) {
+        throw std::runtime_error("Key already exists at the specified path.");
+    }
+    //if all is good add it to object
+    createNewPairInObject(target, key, value);
+    //Works
+    
+    //deparse the structure to string
+    jsonContent = parser.deparse(root);
+
+    //prettify
+    jsonContent = Utility::prettifyJson(jsonContent);
+
+    //clean up
+    delete root;
 }
 
 void Receiver::moveJsonValue(std::string& json, const std::string& from, const std::string& to) {
 
-}
-
-void Receiver::createJsonValue(std::string& json, const std::string& path, const std::string& value) {
-   
 }
 
 
@@ -239,6 +296,122 @@ void Receiver::deleteJsonPairAtTarget(Jvalue* parent, const std::string& path) {
     }
     else {
         throw std::runtime_error("Invalid path or unsupported JSON type at path");
+    }
+}
+
+void Receiver::setValue(Jvalue* target, const std::string& value) {
+    if (!target) {
+        throw std::invalid_argument("Target value not found.");
+    }
+
+    switch (target->getType())
+    {
+    case JSONNull: {
+        if (value != "null")
+            throw std::invalid_argument("Cannot change the type of null.");
+    }
+    case JSONBool: {
+        if (value != "true" && value != "false") {
+            throw std::invalid_argument("Invalid boolean value: " + value);
+        }
+        static_cast<JsonBool*>(target)->setValue(value == "true");
+        break;
+    }
+    case JSONNumber: {
+        if (isNumber(value)) {
+            try {
+                double numValue = std::stod(value);
+                static_cast<JsonNumber*>(target)->setValue(numValue);
+            }
+            catch (const std::exception&) {
+                throw std::invalid_argument("Failed while coverting to number: " + value);
+            }
+        }
+        else {
+            throw std::invalid_argument("Invalid number value: " + value);
+        }
+        
+        break;
+    }
+    case JSONString: {
+        static_cast<JsonString*>(target)->setValue(value);
+        break;
+    }
+    case JSONArray: {
+        throw std::invalid_argument("Cannot set the value of array to a primitive type.");
+    }
+    case JSONObject: {
+        throw std::invalid_argument("Cannot set the value of object to a primitive type.");
+    }
+    default:
+        throw std::runtime_error("Unsupported value type for set operation.");
+    }
+}
+
+bool Receiver::isNumber(const std::string& str) {
+    bool foundDot = false;
+    for (size_t i = 0; i < str.size(); i++)
+    {
+        if (str[i] == '.' && !foundDot) {
+            continue;
+        }
+        else if (str[i] < '0' || str[i] > '9') {
+            return false;
+        }
+    }
+    return true;
+}
+
+void Receiver::createNewPairInObject(Jvalue* target, const std::string& key, const std::string& value) {
+    if (target->getType() == JSONObject) {
+        JsonObject* obj = static_cast<JsonObject*>(target);
+        if (!obj) throw std::runtime_error("Failed to cast to JsonObject.");
+
+        Jvalue* pair = nullptr;
+        if (value == "null") {
+            pair = new(std::nothrow) JsonNull(key);
+        }
+        else if (value == "true" || value == "false") {
+            pair = new(std::nothrow) JsonBool(key, value == "true");
+        }
+        else if (isNumber(value)){
+            double number = std::stod(value);
+            pair = new(std::nothrow) JsonNumber(key, number);
+        }
+        else {
+            pair = new(std::nothrow) JsonString(key, value);
+        }
+        if (obj == nullptr) throw std::runtime_error("Something went wrong while creating the key-value pair.\n Please try again.");
+        obj->add(pair);
+    }  
+}
+
+void Receiver::addToArray(Jvalue* target, const std::string& value) {
+    if (target->getType() == JSONArray) {
+        JsonArray* array = static_cast<JsonArray*>(target);
+        if (!array) throw std::runtime_error("Failed to cast to JsonObject.");
+
+        Jvalue* pair = nullptr;
+        if (array->getArrayType() == JSONNull) {
+            pair = new(std::nothrow) JsonNull("");
+        }
+        else if (array->getArrayType() == JSONBool) {
+            pair = new(std::nothrow) JsonBool("", value == "true");
+        }
+        else if (array->getArrayType() == JSONNumber && isNumber(value)) {
+            double number = std::stod(value);
+            pair = new(std::nothrow) JsonNumber("", number);
+        }
+        else if (array->getArrayType() == JSONString) {
+            pair = new(std::nothrow) JsonString("", value);
+        }
+        else if (array->getArrayType() == JSONArray) {
+            throw std::invalid_argument("Cannot add value with type String to array with type array");
+        }else{
+            throw std::invalid_argument("Cannot add value with type String to array with type object");
+        }
+        if (pair == nullptr) throw std::runtime_error("Something went wrong while creating the value to the array.\n Please try again.");
+        array->add(pair);
     }
 }
 

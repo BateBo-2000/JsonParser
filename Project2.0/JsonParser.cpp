@@ -137,7 +137,6 @@ Jvalue* JsonParser::parseArray(const string& key) {
 	bool firstElement = true;	//for tracking ","
 	while (index < file.size() && file[index] != ']') {
 		//no need to handle names because the values are accessed with indexing
-
 		if (!firstElement) {
 			if (file[index] != ',') {
 				throw std::invalid_argument("Invalid JSON format: expected ','. Line:" + std::to_string(getCurrentLineNumber()));
@@ -147,11 +146,19 @@ Jvalue* JsonParser::parseArray(const string& key) {
 		firstElement = false;
 
 		Jvalue* val = parse();
-		arr->add(val);
+		try
+		{
+			arr->add(val);
+		}
+		catch (const std::exception& e)
+		{
+			throw std::invalid_argument("Invalid JSON format: "+ string(e.what()) + " Line:" + std::to_string(getCurrentLineNumber()));
+		}
+		
 	}
 
 	if (index >= file.size()) {
-		throw std::invalid_argument("Invalid JSON format: unterminated array. Line:" + std::to_string(getCurrentLineNumber()));
+		throw std::invalid_argument("Invalid JSON format: unterminated array. Expected ']' Line:" + std::to_string(getCurrentLineNumber()));
 	}
 	++index; //move past the closing bracket "]"
 	skipWhitespace();

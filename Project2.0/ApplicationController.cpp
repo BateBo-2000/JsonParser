@@ -8,6 +8,8 @@
 #include "SearchCommand.hpp"
 #include "DeleteCommand.hpp"
 #include "ContainsCommand.hpp"
+#include "SetCommand.hpp"
+#include "CreateCommand.hpp"
 
 AppController::AppController() {
     //Register commands with the Invoker
@@ -22,6 +24,8 @@ AppController::AppController() {
         invoker.registerCommand(new(std::nothrow) SearchCommand("search", jsonEditor));
         invoker.registerCommand(new(std::nothrow) DeleteCommand("delete", jsonEditor));
         invoker.registerCommand(new(std::nothrow) ContainsCommand("contains", jsonEditor));
+        invoker.registerCommand(new(std::nothrow) SetCommand("set", jsonEditor));
+        invoker.registerCommand(new(std::nothrow) CreateCommand("create", jsonEditor));
     }
     catch (const std::invalid_argument&)
     {
