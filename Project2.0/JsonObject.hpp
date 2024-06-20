@@ -18,6 +18,8 @@ public:
 			value.push_back(clonedValue);
 		}
 	}
+	//it is not used
+	JsonObject& operator=(const JsonObject& other) = delete;
 	JsonObject* clone() const override {
 		return new JsonObject(*this);
 	}

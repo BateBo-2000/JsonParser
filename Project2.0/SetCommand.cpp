@@ -3,7 +3,7 @@
 SetCommand::SetCommand(const std::string& name, Receiver& receiver)
     : receiver(receiver), Command(name) {}
 
-void SetCommand::setArguemnts(const std::vector<std::string>& args) {
+void SetCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 3) {
         throw std::invalid_argument(name + ": Missing arguments.");
     }

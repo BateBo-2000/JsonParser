@@ -8,7 +8,7 @@ class Command {
 public:
     Command(const std::string& name): name(name){}
     virtual ~Command() = default;
-    virtual void setArguemnts(const std::vector<std::string>& args) = 0;
+    virtual void setArguments(const std::vector<std::string>& args) = 0;
     virtual void execute() = 0;
     std::string& getName() {
         return name;

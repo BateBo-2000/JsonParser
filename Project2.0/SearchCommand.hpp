@@ -9,7 +9,7 @@
 class SearchCommand : public Command {
 public:
     SearchCommand(const std::string& name, Receiver& receiver);
-    void setArguemnts(const std::vector<std::string>& args);
+    void setArguments(const std::vector<std::string>& args);
     virtual void execute() override;
 
 private:

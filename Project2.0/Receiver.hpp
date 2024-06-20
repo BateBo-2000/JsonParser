@@ -25,6 +25,7 @@ public:
     void setJsonValue(const std::string& path, const std::string& value);
     void create(const std::string& path, const std::string& value);
     void move(const std::string& from, const std::string& to);
+    const bool isChanged() const;
 
 private:
     std::string jsonContent;

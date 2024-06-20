@@ -3,7 +3,7 @@
 MoveCommand::MoveCommand(const std::string& name, Receiver& receiver)
     : receiver(receiver), Command(name) {}
 
-void MoveCommand::setArguemnts(const std::vector<std::string>& args) {
+void MoveCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 3) {
         throw std::invalid_argument(name + ": Missing arguments.");
     }

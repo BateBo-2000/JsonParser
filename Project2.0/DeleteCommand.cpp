@@ -3,7 +3,7 @@
 DeleteCommand::DeleteCommand(const std::string& name, Receiver& receiver)
     : receiver(receiver), Command(name) {}
 
-void DeleteCommand::setArguemnts(const std::vector<std::string>& args) {
+void DeleteCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 2) {
         throw std::invalid_argument(name + ": Missing arguments.");
     }

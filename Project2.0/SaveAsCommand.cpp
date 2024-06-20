@@ -19,7 +19,7 @@ void SaveAsCommand::changeName(std::string& path, const std::string& newName) {
     path += updatedName;
 }
 
-void SaveAsCommand::setArguemnts(const std::vector<std::string>& args) {
+void SaveAsCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 2) {
         throw std::invalid_argument(name+": Missing arguments.");
     }

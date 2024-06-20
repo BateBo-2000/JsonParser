@@ -3,7 +3,7 @@
 SearchCommand::SearchCommand(const std::string& name, Receiver& receiver)
     : receiver(receiver), Command(name) {}
 
-void SearchCommand::setArguemnts(const std::vector<std::string>& args) {
+void SearchCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 2) {
         throw std::invalid_argument(name + ": Missing arguments.");
     }

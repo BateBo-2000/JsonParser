@@ -22,6 +22,8 @@ public:
 			}
 		}
 	}
+	//it is not used
+	JsonArray& operator=(const JsonArray& other) = delete;
 	JsonArray* clone() const override {
 		return new JsonArray(*this);
 	}

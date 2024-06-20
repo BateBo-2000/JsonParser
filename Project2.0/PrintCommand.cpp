@@ -15,7 +15,7 @@ void PrintCommand::execute() {
 	}
 }
 
-void PrintCommand::setArguemnts(const std::vector<std::string>& args) {
+void PrintCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() > 1) Logger::logWarning(name + ": Too many arguments.");
     //no need for arguments
     //might be usefull in future

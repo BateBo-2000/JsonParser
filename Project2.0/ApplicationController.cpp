@@ -38,11 +38,11 @@ AppController::AppController() {
 void AppController::run() {
     std::string commandLine;
 
-    do {
+    for(;;){
         std::cout << "\nEnter a command: ";
         std::getline(std::cin, commandLine);
         processCommand(commandLine);
-    } while (commandLine != "exit");
+    }
 }
 
 void AppController::processCommand(const std::string& commandLine) {

@@ -3,7 +3,7 @@
 ContainsCommand::ContainsCommand(const std::string& name, Receiver& receiver)
     : receiver(receiver), Command(name) {}
 
-void ContainsCommand::setArguemnts(const std::vector<std::string>& args) {
+void ContainsCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 2) {
         throw std::invalid_argument(name + ": Missing arguments.");
     }

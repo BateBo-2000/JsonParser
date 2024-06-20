@@ -3,7 +3,7 @@
 SaveCommand::SaveCommand(const std::string& name, Receiver& receiver)
     : receiver(receiver), Command(name) {}
 
-void SaveCommand::setArguemnts(const std::vector<std::string>& args) {
+void SaveCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 1) {
         throw std::invalid_argument(name + ": Missing arguments.");
     }

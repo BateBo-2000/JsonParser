@@ -13,7 +13,7 @@ void ValidateCommand::execute() {
     }
 }
 
-void ValidateCommand::setArguemnts(const std::vector<std::string>& args) {
+void ValidateCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() > 1) Logger::logWarning(name + ": Too many arguments.");
     //no need for arguments
     //might be usefull in future

@@ -1,12 +1,14 @@
 #include "Receiver.hpp"
 
 bool Receiver::loadFile(const std::string& filePath, std::string& message) {
+   
     FileReader fileReader;
     try {
         fileReader.readFile(filePath, jsonContent);
         //auto saving the location
         currentFileLocation = filePath;
         message = "File opened successfully: " + filePath;
+        hasChanges = false;
         return true;
     }
     catch (const std::exception& e) {
@@ -25,6 +27,7 @@ bool Receiver::writeFile(const std::string& newFilePath, std::string& message) {
     try {
         fileWriter.writeFile(newFilePath, jsonContent);
         message = "JSON saved to file: " + newFilePath;
+        hasChanges = false;
         return true;
     }
     catch (const std::exception& e) {
@@ -141,7 +144,7 @@ void Receiver::deleteJsonValue(const std::string& path) {
 
         //deparse the structure to string
         jsonContent = parser.deparse(root);
-
+        hasChanges = true;
         //prettify
         jsonContent = Utility::prettifyJson(jsonContent);
 
@@ -181,7 +184,7 @@ void Receiver::setJsonValue(const std::string& path, const std::string& value) {
 
         //deparse the structure to string
         jsonContent = parser.deparse(root);
-
+        hasChanges = true;
         //prettify
         jsonContent = Utility::prettifyJson(jsonContent);
 
@@ -242,7 +245,7 @@ void Receiver::create(const std::string& path, const std::string& value) {
 
         //deparse the structure to string
         jsonContent = parser.deparse(root);
-
+        hasChanges = true;
         //prettify
         jsonContent = Utility::prettifyJson(jsonContent);
 
@@ -290,6 +293,7 @@ void Receiver::move(const std::string& from, const std::string& to) {
         //deparse the structure to string
         jsonContent = parser.deparse(root);
         //prettify
+        hasChanges = true;
         jsonContent = Utility::prettifyJson(jsonContent);
         //clean up
         delete root;
@@ -301,6 +305,10 @@ void Receiver::move(const std::string& from, const std::string& to) {
         root = nullptr;
         throw;
     } 
+}
+
+const bool Receiver::isChanged() const{
+    return hasChanges;
 }
 
 //internals

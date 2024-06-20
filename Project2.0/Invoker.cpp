@@ -29,7 +29,7 @@ void Invoker::executeCommand(const std::string& commandLine) {
         if (commandName == commandObjects[i]->getName()) {
             try
             {
-                commandObjects[i]->setArguemnts(args);
+                commandObjects[i]->setArguments(args);
                 commandObjects[i]->execute();
                 return;
             }

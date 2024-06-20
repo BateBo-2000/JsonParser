@@ -2,7 +2,7 @@
 
 OpenCommand::OpenCommand(const std::string& name ,Receiver& receiver) : receiver(receiver), Command(name){}
 
-void OpenCommand::setArguemnts(const std::vector<std::string>& args) {
+void OpenCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 2) {
         throw std::invalid_argument(name + ": Missing arguments.");
     }else if (args.size() > 2) {
