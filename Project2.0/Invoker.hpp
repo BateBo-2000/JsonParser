@@ -10,7 +10,7 @@ class Invoker {
 public:
     Invoker();
     ~Invoker();
-
+    //todo copy const + op=
     void registerCommand(Command* cmd);
     void executeCommand(const std::string& commandLine);
 

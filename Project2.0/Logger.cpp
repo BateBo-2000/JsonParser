@@ -19,4 +19,7 @@ void Logger::logError(const std::string& message) {
 void Logger::logCritical(const std::string& message) {
     log(message, "CRITICAL");
 }
+void Logger::logJson(const std::string& jsonContent) {
+    log("\n" + jsonContent, "PRINT");
+}
 

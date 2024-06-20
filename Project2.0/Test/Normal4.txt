@@ -1,0 +1,8 @@
+{
+    "postId": 567,
+    "title": "Exploring JSON",
+    "author": "John Doe",
+    "tags": ["json", "programming", "tutorial"],
+    "published": "2023-03-21T10:00:00Z",
+    "content": "This is a blog post about JSON..."
+}

@@ -15,6 +15,8 @@ public:
 private:
     Receiver& receiver;
     std::string newFilePath;
+    //helper function
+    void changeName(std::string& path, const std::string& newName);
 };
 
 #endif // SAVE_AS_COMMAND_HPP

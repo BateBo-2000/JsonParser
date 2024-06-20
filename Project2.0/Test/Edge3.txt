@@ -1,0 +1,9 @@
+{
+    "user": {
+        "id": null,
+        "name": null,
+        "email": null,
+        "isActive": null,
+        "createdAt": null
+    }
+}

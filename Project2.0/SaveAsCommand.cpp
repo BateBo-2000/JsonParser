@@ -1,13 +1,13 @@
 // SaveAsCommand.cpp
 #include "SaveAsCommand.hpp"
+#include "Logger.hpp"
 #include <iostream>
 
 SaveAsCommand::SaveAsCommand(const std::string& name, Receiver& receiver)
     : receiver(receiver), Command(name) {}
 
 //helper function
-void changeName(std::string& path, const std::string& newName) {
-    // for now doesn't support Unix's "/"
+void SaveAsCommand::changeName(std::string& path, const std::string& newName) {
     size_t nameStart = path.find_last_of('\\');
     std::string updatedName = newName;
 
@@ -22,21 +22,9 @@ void changeName(std::string& path, const std::string& newName) {
     path += updatedName;
 }
 
-void SaveAsCommand::execute() {
-    try
-    {
-        if (newFilePath == "") throw std::invalid_argument("Save/Invalid argument/ File path is empty.");
-        receiver.writeFile(newFilePath);
-    }
-    catch (const std::exception& e)
-    {
-        throw e;
-    }
-}
-
 void SaveAsCommand::setArguemnts(const std::vector<std::string>& args) {
     if (args.size() < 2) {
-        throw std::invalid_argument("Save/ Missing arguments.");
+        throw std::invalid_argument(name+": Missing arguments.");
     }
     else if (args.size() == 2) {
         //default path
@@ -45,12 +33,11 @@ void SaveAsCommand::setArguemnts(const std::vector<std::string>& args) {
     }
     else {
         if (args.size() > 3) {
-            //warning
-            std::cerr << "Save/ Too many arguments." << std::endl;
+            Logger::logWarning(name + ": Too many arguments.");
         }
         try
         {
-            newFilePath = args[2]; 
+            newFilePath = args[2];
             changeName(newFilePath, args[1]);
         }
         catch (const std::exception& e)
@@ -60,4 +47,21 @@ void SaveAsCommand::setArguemnts(const std::vector<std::string>& args) {
 
     }
 }
+
+void SaveAsCommand::execute() {
+    std::string message;
+
+    if (newFilePath.empty()) {
+        throw std::invalid_argument(name + ": Invalid argument: File path is empty.");
+    }
+    bool success = receiver.writeFile(newFilePath, message);
+    if (success) {
+        Logger::logInfo(message);
+    }
+    else {
+        Logger::logError(message);
+    }
+}
+
+
 

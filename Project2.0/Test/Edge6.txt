@@ -1,0 +1,3 @@
+{
+    "text": "Special characters: \n \t \r \" ' \\ / < > & %"
+}

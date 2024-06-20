@@ -8,7 +8,7 @@ FileReader:: ~FileReader() {
 
 void FileReader::readFile(const string& path, string& fileContents) {
 	open(path);
-	if (!inputFile) throw std::runtime_error(string("File is not open.") + path);
+	if (!inputFile) throw std::runtime_error(string("File is not open.\nFile path: ") + path);
 	load(fileContents, path);
 	close();
 }
@@ -36,7 +36,7 @@ void FileReader::open(const string& path) {
 	inputFile.open(path, std::ios::in);
 	if (!inputFile.is_open())
 	{
-		throw std::runtime_error(string("The file cannot be opened for reading!\n") + path);
+		throw std::runtime_error(string("The file cannot be opened for reading!\nFile path: ") + path);
 	}
 }
 

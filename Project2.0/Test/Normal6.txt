@@ -1,0 +1,39 @@
+{
+    "products": [
+        {
+            "id": 101,
+            "name": "Laptop",
+            "price": 899.99,
+            "inStock": true,
+            "features": [
+                "15-inch display",
+                "8GB RAM",
+                "256GB SSD",
+                "Intel i5 Processor"
+            ],
+            "nums": [
+                123,
+                231,
+                444,
+                555
+            ],
+            "bools": [
+                true,
+                false
+            ],
+            "nulls": [
+                null,
+                null
+            ]
+        },
+        {
+            "id": 102,
+            "name": "Smartphone",
+            "price": 699.99,
+		"nums": [
+                1,2,3,4
+            ],
+            "inStock": false
+        }
+    ]
+}

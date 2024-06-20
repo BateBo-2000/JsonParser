@@ -1,12 +1,13 @@
 // SaveCommand.cpp
 #include "SaveCommand.hpp"
+#include "Logger.hpp"
 
 SaveCommand::SaveCommand(const std::string& name, Receiver& receiver)
     : receiver(receiver), Command(name) {}
 
 void SaveCommand::setArguemnts(const std::vector<std::string>& args) {
     if (args.size() < 1) {
-        throw std::invalid_argument("Save/ Missing arguments.");
+        throw std::invalid_argument(name + ": Missing arguments.");
     }
     else if (args.size() == 1) {
         //default path
@@ -14,8 +15,7 @@ void SaveCommand::setArguemnts(const std::vector<std::string>& args) {
     }
     else{  
         if (args.size() > 2) {
-            //warning
-            std::cerr << "Save/ Too many arguments." << std::endl;
+            Logger::logWarning(name + ": Too many arguments.");
         }
         try
         {
@@ -30,15 +30,17 @@ void SaveCommand::setArguemnts(const std::vector<std::string>& args) {
 }
 
 void SaveCommand::execute() {
-    try
-    {
-        //dont throw print
-        if (filePath == "") throw std::invalid_argument("Save/Invalid argument/ File path is empty.");
-        receiver.writeFile(filePath);
+    std::string message;
+
+    if (filePath.empty()) {
+        throw std::invalid_argument(name + ": Invalid argument: File path is empty.");
     }
-    catch (const std::exception& e)
-    {
-        throw e;
+    bool success = receiver.writeFile(filePath, message);
+    if (success) {
+        Logger::logInfo(message);
+    }
+    else {
+        Logger::logError(message);
     }
 }
 

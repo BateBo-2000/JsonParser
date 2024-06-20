@@ -1,0 +1,78 @@
+open Test\Normal1.txt
+
+
+open C:\Users\PC\Desktop\project\Test\Normal1.txt
+save C:\Users\PC\Desktop\project\Test\test.txt
+saveas test2.json C:\Users\PC\Desktop\project\Test\test.txt
+
+open C:\Users\PC\Desktop\project\Test\Invalid1.txt
+validate
+
+open C:\Users\PC\Desktop\project\Test\Normal2.txt
+print
+search products
+contains 699*
+
+open C:\Users\PC\Desktop\project\Test\Normal6.txt
+print
+delete products[1].id
+print
+
+open C:\Users\PC\Desktop\project\Test\Normal2.txt
+print
+contains 699*
+
+open C:\Users\PC\Desktop\project\Test\Normal2.txt
+print
+set products[1].id 5
+print
+set products[1].id true
+print
+set products asdf
+print
+set products[1].inStock false
+print
+
+open C:\Users\PC\Desktop\project\Test\Normal6.txt
+print
+create products[1].ime boyankata
+create products[1].chislo 5
+create products[0].buleva true
+create products[0].nula null
+create asdf asdf
+print
+create products[0].nums 5
+create products[0].bools true
+create products[0].features asdfasdfasdfasdf
+create products[0].nulls asdfasdfasfd
+print
+
+delete products[1].ime 
+delete products[1].chislo 
+delete products[0].buleva 
+delete products[0].nula 
+delete asdf 
+delete products[0].nums[4]
+delete products[0].bools[2]
+delete products[0].features[4] 
+delete products[0].nulls[2] 
+print
+
+
+open C:\Users\PC\Desktop\project\Test\Normal6.txt
+print
+validate
+
+open C:\Users\PC\Desktop\project\Test\Normal6.txt
+print
+move products[0].nums products[1]
+create products[1].ime boyankata
+move products[1].ime products[0]
+print
+move products[1].ime products[0]
+print
+
+open C:\Users\PC\Desktop\project\Test\Normal6.txt
+print
+move products[1].nums[0] products[0].nums
+print

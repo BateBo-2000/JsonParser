@@ -1,21 +1,22 @@
 #include "PrintCommand.hpp"
-
+#include "Logger.hpp"
 PrintCommand::PrintCommand(const std::string& name, Receiver& receiver)
     : receiver(receiver), Command(name) {}
 
 void PrintCommand::execute() {
 	try
 	{
-		receiver.printJson();
+		const std::string& jsonContent = receiver.getJson();
+		Logger::logJson(jsonContent);
 	}
 	catch (const std::exception& e)
 	{
-		throw std::runtime_error(std::string("Error while printing: ") + e.what());
+		Logger::logError("Error while printing: " + std::string(e.what()));
 	}
 }
 
 void PrintCommand::setArguemnts(const std::vector<std::string>& args) {
-    if (args.size() > 1) std::cerr << "Too many arguments." << std::endl;
+    if (args.size() > 1) Logger::logWarning(name + ": Too many arguments.");
     //no need for arguments
     //might be usefull in future
 }

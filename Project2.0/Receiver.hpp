@@ -15,26 +15,22 @@
 
 class Receiver {
 public:
-    Receiver();
-
-    void loadFile(const std::string& filePath);
-    void writeFile(const std::string& newFilePath);
+    bool loadFile(const std::string& filePath, std::string& message);
+    bool writeFile(const std::string& newFilePath, std::string& message);
     std::string getFileLocation() const;
     bool isValidJson(std::string* errorMsg = nullptr) const;
-    void printJson() const;
+    const std::string& getJson() const;
     void searchJson(const std::string& key, std::string& searchResult);
     void deleteJsonValue(const std::string& path);
     void containsValue(const std::string& value, std::string& searchResult);
     void setJsonValue(const std::string& path, const std::string& value);
     void create(const std::string& path, const std::string& value);
-
-    //TODO:
     void move(const std::string& from, const std::string& to);
-
 
 private:
     std::string jsonContent;
     std::string currentFileLocation;
+    bool hasChanges;
 
     //internal helper functions
     void deleteJsonPairAtTarget(Jvalue* target, const std::string& path);

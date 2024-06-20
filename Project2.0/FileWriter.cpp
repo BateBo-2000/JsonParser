@@ -19,7 +19,7 @@ void FileWriter::writeFile(const string& path, const string& content) {
 void FileWriter::open(const string& path) {
     outputFile.open(path, std::ios::out);
     if (!outputFile.is_open()) {
-        throw std::runtime_error("The file cannot be opened for writing: " + path);
+        throw std::runtime_error("The file cannot be opened for writing:\nFile path: " + path);
     }
 }
 

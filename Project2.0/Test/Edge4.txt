@@ -1,0 +1,12 @@
+{
+    "data": [
+        42,
+        "text",
+        true,
+        null,
+        {
+            "nested": "object"
+        },
+        [1, 2, 3]
+    ]
+}

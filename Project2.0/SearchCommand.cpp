@@ -1,5 +1,6 @@
 // SearchCommand.cpp
 #include "SearchCommand.hpp"
+#include "Logger.hpp"
 #include <iostream>
 
 SearchCommand::SearchCommand(const std::string& name, Receiver& receiver)
@@ -7,12 +8,12 @@ SearchCommand::SearchCommand(const std::string& name, Receiver& receiver)
 
 void SearchCommand::setArguemnts(const std::vector<std::string>& args) {
     if (args.size() < 2) {
-        throw std::invalid_argument("Search/ Missing arguments.");
+        throw std::invalid_argument(name + ": Missing arguments.");
     }
     else{
         if (args.size() > 2) {
             //warning
-            std::cerr << "Search/ Too many arguments." << std::endl;
+            Logger::logWarning(name + ": Too many arguments.");
         }
         searchKey = args[1];
     }

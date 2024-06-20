@@ -1,4 +1,5 @@
 #include "ValidateCommand.hpp"
+#include "Logger.hpp"
 #include <iostream>
 
 ValidateCommand::ValidateCommand(const std::string& name, Receiver& receiver)
@@ -7,16 +8,16 @@ ValidateCommand::ValidateCommand(const std::string& name, Receiver& receiver)
 void ValidateCommand::execute() {
     std::string errorMsg;
     if (receiver.isValidJson(&errorMsg)) {
-        std::cout << "JSON is valid." << std::endl;
+        Logger::logInfo("JSON is valid.");
     }
     else {
-        std::cerr << "JSON is not valid." << std::endl;
+        Logger::logError("JSON is not valid.");
         if (!errorMsg.empty()) std::cerr << errorMsg << std::endl;
     }
 }
 
 void ValidateCommand::setArguemnts(const std::vector<std::string>& args) {
-    if (args.size() > 1) std::cerr << "Too many arguments."<< std::endl;
+    if (args.size() > 1) Logger::logWarning(name + ": Too many arguments.");
     //no need for arguments
     //might be usefull in future
 }

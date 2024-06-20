@@ -1,4 +1,5 @@
 #include "ContainsCommand.hpp"
+#include "Logger.hpp"
 #include <iostream>
 
 ContainsCommand::ContainsCommand(const std::string& name, Receiver& receiver)
@@ -6,12 +7,12 @@ ContainsCommand::ContainsCommand(const std::string& name, Receiver& receiver)
 
 void ContainsCommand::setArguemnts(const std::vector<std::string>& args) {
     if (args.size() < 2) {
-        throw std::invalid_argument("Conatins/ Missing arguments.");
+        throw std::invalid_argument(name + ": Missing arguments.");
     }
     else {
         if (args.size() > 2) {
             //warning
-            std::cerr << "Conatins/ Too many arguments." << std::endl;
+            Logger::logWarning(name + ": Too many arguments.");
         }
         searchValue = args[1];
     }
@@ -22,11 +23,11 @@ void ContainsCommand::execute() {
     try
     {
         receiver.containsValue(searchValue, results);
-        if (results.empty()) std::cout << "Coundn't find any results";
+        if (results.empty()) Logger::logInfo("Coundn't find any results that match "+searchValue);
+        Logger::logJson(results);
     }
     catch (const std::exception& e)
     {
-        throw std::runtime_error(string("Error while searching: ") + e.what());
+        Logger::logInfo("Error while searching: " + string(e.what()));
     }
-    std::cout << results << std::endl;
 }
