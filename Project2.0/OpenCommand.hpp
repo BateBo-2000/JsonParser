@@ -11,6 +11,7 @@ class OpenCommand : public Command {
 private:
     Receiver& receiver;
     std::string filePath;
+    bool dontSave;
 
 public:
     OpenCommand(const std::string& name, Receiver& receiver);

@@ -219,6 +219,9 @@ void Receiver::create(const std::string& path, const std::string& value) {
         pathArgs.pop_back();
         Jvalue* target = followPath(root, pathArgs);
 
+        
+
+
         if (target->getType() == JSONObject || target->getType() == JSONArray) {
             //check if there isnt such key
             std::vector<Jvalue*> foundDuplicates;
@@ -228,15 +231,21 @@ void Receiver::create(const std::string& path, const std::string& value) {
                 pathArgs.push_back(key); //adding the key to check if its an array
                 Jvalue* arr = followPath(root, pathArgs);
                 if (arr->getType() == JSONArray) {
-                    addToArray(arr, value);
+                    JsonParser valueParser(value);
+                    Jvalue* parsedValue = valueParser.parse(key);
+                    static_cast<JsonArray*>(arr)->add(parsedValue);
                 }
                 else
                 {
-                    createNewPairInObject(target, key, value);
+                    JsonParser valueParser(value);
+                    Jvalue* parsedValue = valueParser.parse(key);
+                    static_cast<JsonObject*>(target)->add(parsedValue);
                 }
             }
             else {
-                createNewPairInObject(target, key, value);
+                JsonParser valueParser(value);
+                Jvalue* parsedValue = valueParser.parse(key);
+                static_cast<JsonObject*>(target)->add(parsedValue);
             }
         }
         else {

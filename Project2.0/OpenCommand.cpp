@@ -1,6 +1,6 @@
 #include "OpenCommand.hpp"
 
-OpenCommand::OpenCommand(const std::string& name ,Receiver& receiver) : receiver(receiver), Command(name){}
+OpenCommand::OpenCommand(const std::string& name ,Receiver& receiver) : receiver(receiver), Command(name), dontSave(false){}
 
 void OpenCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 2) {
@@ -17,11 +17,17 @@ void OpenCommand::execute() {
     if (filePath.empty()) {
         throw std::invalid_argument(name+ ": Invalid argument: File path is empty.");
     }
-    bool success = receiver.loadFile(filePath, message);
-    if (success) {
-        Logger::logInfo(message);
+    if (receiver.isChanged() && dontSave == false) {
+        Logger::logWarning("Are you sure you dont want to save the changes?\nIf you want to exit without saving type the command again.");
+        dontSave = true;
     }
     else {
-        Logger::logError(message); 
+        bool success = receiver.loadFile(filePath, message);
+        if (success) {
+            Logger::logInfo(message);
+        }
+        else {
+            Logger::logError(message);
+        }
     }
 }

@@ -41,7 +41,14 @@ public:
 		return &value;
 	}
 	void add(Jvalue* val) {
+		for (size_t i = 0; i < value.size(); i++)
+		{
+			if (value[i]->getKey() == val->getKey()) {
+				throw std::invalid_argument("Element with key "+val->getKey()+" already exists.");
+			}
+		}
 		value.push_back(val);
+
 	}
 	Jvalue* getByExactKey(const std::string& key) {
 		bool useExact = key.back() != '*';

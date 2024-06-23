@@ -29,13 +29,15 @@ public:
 		value = newValue;
 	}
 	string toString() const override {
-		return std::to_string(value);
+		std::string number = std::to_string(value);
+		size_t zeros = number.find_last_of('0');
+		size_t dot = number.find('.');
+		return (zeros > dot) ? number.substr(0,dot) : number.substr(0,zeros);
 	}
 
 private:
 	double value;
 	string key;
 };
-
 
 #endif // !JSON_NUMBER_TYPE_HDD
