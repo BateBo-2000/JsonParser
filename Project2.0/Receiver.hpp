@@ -40,8 +40,6 @@ private:
     void searchJsonValue(Jvalue* root, const std::string& searchValue, std::vector<Jvalue*>& jValues);
     void formatSearchResult(std::string& searchResult, const std::vector<Jvalue*>& jValues);
     void setValue(Jvalue* target, const std::string& value);
-    void createNewPairInObject(Jvalue* target, const std::string& key, const std::string& value);
-    void addToArray(Jvalue* target, const std::string& value);
     bool isNumber(const std::string& str);
     void moveValue(Jvalue* root, Jvalue* fromValue, Jvalue* toValue, const std::vector<std::string>& toArgs);
     void moveToArray(Jvalue* array, Jvalue* valueToAdd);

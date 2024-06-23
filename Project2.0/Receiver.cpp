@@ -485,62 +485,6 @@ bool Receiver::isNumber(const std::string& str) {
     return true;
 }
 
-void Receiver::createNewPairInObject(Jvalue* target, const std::string& key, const std::string& value) {
-    if (target->getType() == JSONObject) {
-        JsonObject* obj = static_cast<JsonObject*>(target);
-        if (!obj) throw std::runtime_error("Failed to cast to JsonObject.");
-
-        Jvalue* pair = nullptr;
-        if (value == "null") {
-            pair = new(std::nothrow) JsonNull(key);
-        }
-        else if (value == "true" || value == "false") {
-            pair = new(std::nothrow) JsonBool(key, value == "true");
-        }
-        else if (isNumber(value)){
-            double number = std::stod(value);
-            pair = new(std::nothrow) JsonNumber(key, number);
-        }
-        else {
-            pair = new(std::nothrow) JsonString(key, value);
-        }
-        if (obj == nullptr) throw std::runtime_error("Something went wrong while creating the key-value pair.\n Please try again.");
-        obj->add(pair);
-    }
-    else {
-        throw std::runtime_error("Failed to cast to JsonObject.");
-    }
-}
-
-void Receiver::addToArray(Jvalue* target, const std::string& value) {
-    if (target->getType() == JSONArray) {
-        JsonArray* array = static_cast<JsonArray*>(target);
-        if (!array) throw std::runtime_error("Failed to cast to JsonObject.");
-
-        Jvalue* pair = nullptr;
-        if (array->getArrayType() == JSONNull) {
-            pair = new(std::nothrow) JsonNull("");
-        }
-        else if (array->getArrayType() == JSONBool) {
-            pair = new(std::nothrow) JsonBool("", value == "true");
-        }
-        else if (array->getArrayType() == JSONNumber && isNumber(value)) {
-            double number = std::stod(value);
-            pair = new(std::nothrow) JsonNumber("", number);
-        }
-        else if (array->getArrayType() == JSONString) {
-            pair = new(std::nothrow) JsonString("", value);
-        }
-        else if (array->getArrayType() == JSONArray) {
-            throw std::invalid_argument("Cannot add value with type String to array with type array");
-        }else{
-            throw std::invalid_argument("Cannot add value with type String to array with type object");
-        }
-        if (pair == nullptr) throw std::runtime_error("Something went wrong while creating the value to the array.\n Please try again.");
-        array->add(pair);
-    }
-}
-
 void Receiver::moveToArray(Jvalue* array, Jvalue* valueToAdd) {
     if (array->getType() != JSONArray) {
         throw std::invalid_argument("Expected JSONArray type.");
