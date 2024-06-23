@@ -25,6 +25,6 @@ void SetCommand::execute() {
     }
     catch (const std::exception& e)
     {
-        Logger::logError("Error while setting value " + value + " to path " + path + string(e.what()));
+        Logger::logError("Error while setting value " + value + " to path " + path + ". " + string(e.what()));
     }
 }

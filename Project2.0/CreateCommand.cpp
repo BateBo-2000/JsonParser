@@ -24,6 +24,6 @@ void CreateCommand::execute() {
     }
     catch (const std::exception& e)
     {
-        Logger::logError("Error while creating and setting " + path + " to value "+ value + string(e.what()));
+        Logger::logError("Error while creating and setting " + path + " to value "+ value +". " + string(e.what()));
     }
 }
