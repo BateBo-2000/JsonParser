@@ -7,7 +7,7 @@ void OpenCommand::setArguments(const std::vector<std::string>& args) {
         throw std::invalid_argument(name + ": Missing arguments.");
     }else if (args.size() > 2) {
         //warning
-        Logger::logWarning(name + ": Too many arguments.");
+        ConsoleLogger::logWarning(name + ": Too many arguments.");
     }
     filePath = args[1];
 }
@@ -18,16 +18,16 @@ void OpenCommand::execute() {
         throw std::invalid_argument(name+ ": Invalid argument: File path is empty.");
     }
     if (receiver.isChanged() && dontSave == false) {
-        Logger::logWarning("Are you sure you dont want to save the changes?\nIf you want to exit without saving type the command again.");
+        ConsoleLogger::logWarning("Are you sure you dont want to save the changes?\nIf you want to exit without saving type the command again.");
         dontSave = true;
     }
     else {
         bool success = receiver.loadFile(filePath, message);
         if (success) {
-            Logger::logInfo(message);
+            ConsoleLogger::logInfo(message);
         }
         else {
-            Logger::logError(message);
+            ConsoleLogger::logError(message);
         }
     }
 }

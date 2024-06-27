@@ -176,6 +176,7 @@
     <ClInclude Include="SaveCommand.hpp" />
     <ClInclude Include="SearchCommand.hpp" />
     <ClInclude Include="SetCommand.hpp" />
+    <ClInclude Include="UserInterface.hpp" />
     <ClInclude Include="Utility.hpp" />
     <ClInclude Include="ValidateCommand.hpp" />
   </ItemGroup>

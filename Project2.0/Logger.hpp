@@ -2,10 +2,12 @@
 #ifndef LOGGER_HPP
 #define LOGGER_HPP
 
+#include "UserInterface.hpp"
+
 #include <iostream>
 #include <string>
 
-class Logger {
+class ConsoleLogger: public UserInterface {
 public:
     static void logInfo(const std::string& message);
     static void logWarning(const std::string& message);
@@ -14,8 +16,6 @@ public:
     static void logJson(const std::string& jsonContent);
 
 private:
-    Logger() {}
-    ~Logger() {}
     static void log(const std::string& message, const std::string& level);
 };
 

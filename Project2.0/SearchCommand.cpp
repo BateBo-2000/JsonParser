@@ -10,7 +10,7 @@ void SearchCommand::setArguments(const std::vector<std::string>& args) {
     else{
         if (args.size() > 2) {
             //warning
-            Logger::logWarning(name + ": Too many arguments.");
+            ConsoleLogger::logWarning(name + ": Too many arguments.");
         }
         searchKey = args[1];
     }
@@ -21,12 +21,16 @@ void SearchCommand::execute() {
     try
     {
         receiver.searchJson(searchKey, results);
-        if (results.empty()) std::cout << "Coundn't find any results";
+        if (results.empty()) {
+            ConsoleLogger::logInfo("Coundn't find any results");
+        }
+        else {
+            ConsoleLogger::logJson(results);
+        }
     }
     catch (const std::exception& e)
     {
         throw std::runtime_error(string("Error while searching: ") + e.what());
     }
-    std::cout << results << std::endl;
     
 }

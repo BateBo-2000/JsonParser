@@ -179,5 +179,8 @@
     <ClInclude Include="JsonObject.hpp">
       <Filter>Header Files\JsonTypes</Filter>
     </ClInclude>
+    <ClInclude Include="UserInterface.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

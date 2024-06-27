@@ -30,7 +30,7 @@ void SaveAsCommand::setArguments(const std::vector<std::string>& args) {
     }
     else {
         if (args.size() > 3) {
-            Logger::logWarning(name + ": Too many arguments.");
+            ConsoleLogger::logWarning(name + ": Too many arguments.");
         }
         try
         {
@@ -53,10 +53,10 @@ void SaveAsCommand::execute() {
     }
     bool success = receiver.writeFile(newFilePath, message);
     if (success) {
-        Logger::logInfo(message);
+        ConsoleLogger::logInfo(message);
     }
     else {
-        Logger::logError(message);
+        ConsoleLogger::logError(message);
     }
 }
 

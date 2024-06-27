@@ -10,7 +10,7 @@ void MoveCommand::setArguments(const std::vector<std::string>& args) {
     else {
         if (args.size() > 3) {
             //warning
-            Logger::logWarning(name + ": Too many arguments.");
+            ConsoleLogger::logWarning(name + ": Too many arguments.");
         }
         from = args[1];
         to = args[2];
@@ -20,7 +20,7 @@ void MoveCommand::execute() {
     try
     {
         receiver.move(from, to);
-        std::cout <<"Successfully moved to " + from + "\nto\n" + to << std::endl;
+        ConsoleLogger::logInfo("Successfully moved to " + from + "\nto\n" + to);
     }
     catch (const std::exception& e)
     {

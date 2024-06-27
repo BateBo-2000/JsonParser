@@ -10,7 +10,7 @@ void DeleteCommand::setArguments(const std::vector<std::string>& args) {
     else {
         if (args.size() > 2) {
             //warning
-            Logger::logWarning(name + ": Too many arguments.");
+            ConsoleLogger::logWarning(name + ": Too many arguments.");
         }
         path = args[1];
     }
@@ -19,9 +19,9 @@ void DeleteCommand::setArguments(const std::vector<std::string>& args) {
 void DeleteCommand::execute() {
     try {
         receiver.deleteJsonValue(path);
-        Logger::logInfo(path+" was deleted and successfully.");
+        ConsoleLogger::logInfo(path+" was deleted and successfully.");
     }
     catch (const std::exception& e) {
-        Logger::logError(std::string("Exception caught: ") + e.what());
+        ConsoleLogger::logError(std::string("Exception caught: ") + e.what());
     }
 }

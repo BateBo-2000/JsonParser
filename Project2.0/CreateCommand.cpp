@@ -9,7 +9,7 @@ void CreateCommand::setArguments(const std::vector<std::string>& args) {
     }
     else {
         if (args.size() > 3) {
-            Logger::logWarning(name + ": Too many arguments.");
+            ConsoleLogger::logWarning(name + ": Too many arguments.");
         }
         path = args[1];
         value = args[2];
@@ -20,10 +20,10 @@ void CreateCommand::execute() {
     try
     {
         receiver.create(path, value);
-        Logger::logInfo(path + " was created and set successfully and set to " + value + "." );
+        ConsoleLogger::logInfo(path + " was created and set successfully and set to " + value + "." );
     }
     catch (const std::exception& e)
     {
-        Logger::logError("Error while creating and setting " + path + " to value "+ value +". " + string(e.what()));
+        ConsoleLogger::logError("Error while creating and setting " + path + " to value "+ value +". " + string(e.what()));
     }
 }

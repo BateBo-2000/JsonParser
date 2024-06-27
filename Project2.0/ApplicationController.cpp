@@ -31,7 +31,7 @@ AppController::AppController() {
     }
     catch (const std::invalid_argument&)
     {
-        std::cout << "Couldn't setup all commands properly. \nPlease restart the app." << std::endl;
+        ConsoleLogger::logCritical("Couldn't setup all commands properly. \nPlease restart the app.");
     } 
 }
 
@@ -39,7 +39,7 @@ void AppController::run() {
     std::string commandLine;
 
     for(;;){
-        std::cout << "\nEnter a command: ";
+        ConsoleLogger::logInfo("Enter a command:");
         std::getline(std::cin, commandLine);
         processCommand(commandLine);
     }
@@ -52,6 +52,6 @@ void AppController::processCommand(const std::string& commandLine) {
     }
     catch (const std::exception& e)
     {
-        std::cout << e.what() << std::endl;
+        ConsoleLogger::logInfo(e.what());
     }
 }

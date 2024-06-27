@@ -10,7 +10,7 @@ void ContainsCommand::setArguments(const std::vector<std::string>& args) {
     else {
         if (args.size() > 2) {
             //warning
-            Logger::logWarning(name + ": Too many arguments.");
+            ConsoleLogger::logWarning(name + ": Too many arguments.");
         }
         searchValue = args[1];
     }
@@ -21,11 +21,11 @@ void ContainsCommand::execute() {
     try
     {
         receiver.containsValue(searchValue, results);
-        if (results.empty()) Logger::logInfo("Coundn't find any results that match "+searchValue);
-        Logger::logJson(results);
+        if (results.empty()) ConsoleLogger::logInfo("Coundn't find any results that match "+searchValue);
+        ConsoleLogger::logJson(results);
     }
     catch (const std::exception& e)
     {
-        Logger::logInfo("Error while searching: " + string(e.what()));
+        ConsoleLogger::logInfo("Error while searching: " + string(e.what()));
     }
 }
