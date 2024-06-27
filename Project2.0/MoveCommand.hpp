@@ -9,7 +9,7 @@
 
 class MoveCommand : public Command {
 public:
-    MoveCommand(const std::string& name, Receiver& receiver);
+    MoveCommand(Receiver& receiver);
     void setArguments(const std::vector<std::string>& args);
     virtual void execute() override;
 

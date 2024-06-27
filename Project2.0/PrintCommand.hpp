@@ -8,7 +8,7 @@
 
 class PrintCommand : public Command {
 public:
-    PrintCommand(const std::string& name, Receiver& receiver);
+    PrintCommand(Receiver& receiver);
     void setArguments(const std::vector<std::string>& args) override;
     void execute() override;
 

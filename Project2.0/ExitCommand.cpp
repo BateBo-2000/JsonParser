@@ -1,9 +1,9 @@
 #include "ExitCommand.hpp"
 
-ExitCommand::ExitCommand(const std::string& name, Receiver& receiver): receiver(receiver), Command(name), forseExit(false) {}
+ExitCommand::ExitCommand(Receiver& receiver): Command(), receiver(receiver), forseExit(false) {}
 
 void ExitCommand::setArguments(const std::vector<std::string>& args) {
-    if (args.size() > 1) ConsoleLogger::logWarning(name + ": Too many arguments.");
+    if (args.size() > 1) ConsoleLogger::logWarning("Too many arguments.");
 }
 
 void ExitCommand::execute() {

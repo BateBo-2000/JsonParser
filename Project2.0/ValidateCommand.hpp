@@ -8,7 +8,7 @@
 
 class ValidateCommand : public Command {
 public:
-    ValidateCommand(const std::string& name, Receiver& receiver);
+    ValidateCommand(Receiver& receiver);
     void setArguments(const std::vector<std::string>& args) override;
     virtual void execute() override;
 

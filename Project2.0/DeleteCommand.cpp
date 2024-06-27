@@ -1,16 +1,16 @@
 #include "DeleteCommand.hpp"
 
-DeleteCommand::DeleteCommand(const std::string& name, Receiver& receiver)
-    : receiver(receiver), Command(name) {}
+DeleteCommand::DeleteCommand(Receiver& receiver)
+    :Command(), receiver(receiver) {}
 
 void DeleteCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 2) {
-        throw std::invalid_argument(name + ": Missing arguments.");
+        throw std::invalid_argument("Missing arguments.");
     }
     else {
         if (args.size() > 2) {
             //warning
-            ConsoleLogger::logWarning(name + ": Too many arguments.");
+            ConsoleLogger::logWarning("Too many arguments.");
         }
         path = args[1];
     }

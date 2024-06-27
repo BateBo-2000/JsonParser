@@ -9,7 +9,7 @@
 
 class DeleteCommand : public Command {
 public:
-    DeleteCommand(const std::string& name, Receiver& receiver);
+    DeleteCommand(Receiver& receiver);
     void setArguments(const std::vector<std::string>& args);
     virtual void execute() override;
 

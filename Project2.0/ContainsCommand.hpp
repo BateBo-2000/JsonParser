@@ -9,7 +9,7 @@
 
 class ContainsCommand : public Command {
 public:
-    ContainsCommand(const std::string& name, Receiver& receiver);
+    ContainsCommand(Receiver& receiver);
     void setArguments(const std::vector<std::string>& args) override;
     virtual void execute() override;
 

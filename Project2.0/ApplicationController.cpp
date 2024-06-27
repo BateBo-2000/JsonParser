@@ -16,18 +16,18 @@ AppController::AppController() {
     //Register commands with the Invoker
     try
     {
-        invoker.registerCommand(new(std::nothrow) OpenCommand("open", jsonEditor));
-        invoker.registerCommand(new(std::nothrow) PrintCommand("print", jsonEditor));
-        invoker.registerCommand(new(std::nothrow) SaveCommand("save", jsonEditor));
-        invoker.registerCommand(new(std::nothrow) SaveAsCommand("saveas", jsonEditor));
-        invoker.registerCommand(new(std::nothrow) ExitCommand("exit", jsonEditor));
-        invoker.registerCommand(new(std::nothrow) ValidateCommand("validate", jsonEditor));
-        invoker.registerCommand(new(std::nothrow) SearchCommand("search", jsonEditor));
-        invoker.registerCommand(new(std::nothrow) DeleteCommand("delete", jsonEditor));
-        invoker.registerCommand(new(std::nothrow) ContainsCommand("contains", jsonEditor));
-        invoker.registerCommand(new(std::nothrow) SetCommand("set", jsonEditor));
-        invoker.registerCommand(new(std::nothrow) CreateCommand("create", jsonEditor));
-        invoker.registerCommand(new(std::nothrow) MoveCommand("move", jsonEditor));
+        invoker.registerCommand("open", new OpenCommand(jsonEditor));
+        invoker.registerCommand("print", new PrintCommand(jsonEditor));
+        invoker.registerCommand("save", new SaveCommand(jsonEditor));
+        invoker.registerCommand("saveas", new SaveAsCommand(jsonEditor));
+        invoker.registerCommand("exit", new ExitCommand(jsonEditor));
+        invoker.registerCommand("validate", new ValidateCommand(jsonEditor));
+        invoker.registerCommand("search", new SearchCommand(jsonEditor));
+        invoker.registerCommand("delete", new DeleteCommand(jsonEditor));
+        invoker.registerCommand("contains", new ContainsCommand(jsonEditor));
+        invoker.registerCommand("set", new SetCommand(jsonEditor));
+        invoker.registerCommand("create", new CreateCommand(jsonEditor));
+        invoker.registerCommand("move", new MoveCommand(jsonEditor));
     }
     catch (const std::invalid_argument&)
     {

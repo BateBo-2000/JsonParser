@@ -9,7 +9,7 @@
 
 class CreateCommand : public Command {
 public:
-    CreateCommand(const std::string& name, Receiver& receiver);
+    CreateCommand(Receiver& receiver);
     void setArguments(const std::vector<std::string>& args);
     virtual void execute() override;
 

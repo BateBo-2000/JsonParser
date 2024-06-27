@@ -8,11 +8,14 @@ Invoker::~Invoker() {
     for (Command* cmd : commandObjects) {
         delete cmd;
     }
+    commandNames.clear();
 }
 
-void Invoker::registerCommand(Command* cmd) {
+void Invoker::registerCommand(const std::string& name, Command* cmd) {
     if (cmd == nullptr) throw std::invalid_argument("Command cannot be nullptr.");
+    //map the command to its name
     commandObjects.push_back(cmd);
+    commandNames.push_back(name);
 }
 
 void Invoker::executeCommand(const std::string& commandLine) {
@@ -21,12 +24,12 @@ void Invoker::executeCommand(const std::string& commandLine) {
     if (args.empty()) {
         throw std::invalid_argument("Invalid argument/s.");
     }
-    std::string& commandName = args[0];
+    std::string& cmdName = args[0];
     
     //find the command and invoke it
     for (size_t i = 0; i < commandObjects.size(); i++)
     {
-        if (commandName == commandObjects[i]->getName()) {
+        if (cmdName == commandNames[i]) {
             try
             {
                 commandObjects[i]->setArguments(args);

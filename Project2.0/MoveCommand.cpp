@@ -1,16 +1,16 @@
 #include "MoveCommand.hpp"
 
-MoveCommand::MoveCommand(const std::string& name, Receiver& receiver)
-    : receiver(receiver), Command(name) {}
+MoveCommand::MoveCommand(Receiver& receiver)
+    : Command(), receiver(receiver) {}
 
 void MoveCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 3) {
-        throw std::invalid_argument(name + ": Missing arguments.");
+        throw std::invalid_argument("Missing arguments.");
     }
     else {
         if (args.size() > 3) {
             //warning
-            ConsoleLogger::logWarning(name + ": Too many arguments.");
+            ConsoleLogger::logWarning("Too many arguments.");
         }
         from = args[1];
         to = args[2];

@@ -8,7 +8,7 @@
 #include "Logger.hpp"
 class SetCommand : public Command {
 public:
-    SetCommand(const std::string& name, Receiver& receiver);
+    SetCommand(Receiver& receiver);
     void setArguments(const std::vector<std::string>& args) override;
     virtual void execute() override;
 

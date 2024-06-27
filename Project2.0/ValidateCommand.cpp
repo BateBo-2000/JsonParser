@@ -1,7 +1,7 @@
 #include "ValidateCommand.hpp"
 
-ValidateCommand::ValidateCommand(const std::string& name, Receiver& receiver)
-    : receiver(receiver), Command(name) {}
+ValidateCommand::ValidateCommand(Receiver& receiver)
+    : Command(), receiver(receiver) {}
 
 void ValidateCommand::execute() {
     std::string errorMsg;
@@ -14,7 +14,7 @@ void ValidateCommand::execute() {
 }
 
 void ValidateCommand::setArguments(const std::vector<std::string>& args) {
-    if (args.size() > 1) ConsoleLogger::logWarning(name + ": Too many arguments.");
+    if (args.size() > 1) ConsoleLogger::logWarning("Too many arguments.");
     //no need for arguments
     //might be usefull in future
 }

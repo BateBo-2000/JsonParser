@@ -1,7 +1,7 @@
 #include "PrintCommand.hpp"
 
-PrintCommand::PrintCommand(const std::string& name, Receiver& receiver)
-    : receiver(receiver), Command(name) {}
+PrintCommand::PrintCommand(Receiver& receiver)
+    :Command(), receiver(receiver) {}
 
 void PrintCommand::execute() {
 	try
@@ -16,7 +16,7 @@ void PrintCommand::execute() {
 }
 
 void PrintCommand::setArguments(const std::vector<std::string>& args) {
-    if (args.size() > 1) ConsoleLogger::logWarning(name + ": Too many arguments.");
+    if (args.size() > 1) ConsoleLogger::logWarning("Too many arguments.");
     //no need for arguments
     //might be usefull in future
 }

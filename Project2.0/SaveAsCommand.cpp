@@ -1,7 +1,7 @@
 #include "SaveAsCommand.hpp"
 
-SaveAsCommand::SaveAsCommand(const std::string& name, Receiver& receiver)
-    : receiver(receiver), Command(name) {}
+SaveAsCommand::SaveAsCommand(Receiver& receiver)
+    :Command(), receiver(receiver)  {}
 
 //helper function
 void SaveAsCommand::changeName(std::string& path, const std::string& newName) {
@@ -21,7 +21,7 @@ void SaveAsCommand::changeName(std::string& path, const std::string& newName) {
 
 void SaveAsCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 2) {
-        throw std::invalid_argument(name+": Missing arguments.");
+        throw std::invalid_argument("Missing arguments.");
     }
     else if (args.size() == 2) {
         //default path
@@ -30,7 +30,7 @@ void SaveAsCommand::setArguments(const std::vector<std::string>& args) {
     }
     else {
         if (args.size() > 3) {
-            ConsoleLogger::logWarning(name + ": Too many arguments.");
+            ConsoleLogger::logWarning("Too many arguments.");
         }
         try
         {
@@ -49,7 +49,7 @@ void SaveAsCommand::execute() {
     std::string message;
 
     if (newFilePath.empty()) {
-        throw std::invalid_argument(name + ": Invalid argument: File path is empty.");
+        throw std::invalid_argument("Invalid argument: File path is empty.");
     }
     bool success = receiver.writeFile(newFilePath, message);
     if (success) {

@@ -8,7 +8,7 @@
 #include "Logger.hpp"
 class SearchCommand : public Command {
 public:
-    SearchCommand(const std::string& name, Receiver& receiver);
+    SearchCommand(Receiver& receiver);
     void setArguments(const std::vector<std::string>& args);
     virtual void execute() override;
 

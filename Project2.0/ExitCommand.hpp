@@ -8,7 +8,7 @@
 
 class ExitCommand : public Command {
 public:
-    ExitCommand(const std::string& name, Receiver& receiver);
+    ExitCommand(Receiver& receiver);
     void setArguments(const std::vector<std::string>& args) override;
     void execute() override;
 private: 

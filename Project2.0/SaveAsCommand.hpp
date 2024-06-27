@@ -9,7 +9,7 @@
 
 class SaveAsCommand : public Command {
 public:
-    SaveAsCommand(const std::string& name, Receiver& receiver);
+    SaveAsCommand(Receiver& receiver);
     void setArguments(const std::vector<std::string>& args) override;
     virtual void execute() override;
 

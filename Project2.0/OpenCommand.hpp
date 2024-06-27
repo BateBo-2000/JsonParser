@@ -14,7 +14,7 @@ private:
     bool dontSave;
 
 public:
-    OpenCommand(const std::string& name, Receiver& receiver);
+    OpenCommand(Receiver& receiver);
     void setArguments(const std::vector<std::string>& args) override;
     void execute() override;
 };

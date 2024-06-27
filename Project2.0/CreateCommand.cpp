@@ -1,15 +1,15 @@
 #include "CreateCommand.hpp"
 
-CreateCommand::CreateCommand(const std::string& name, Receiver& receiver)
-    : receiver(receiver), Command(name) {}
+CreateCommand::CreateCommand(Receiver& receiver)
+    : Command(), receiver(receiver) {}
 
 void CreateCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 3) {
-        throw std::invalid_argument(name + ": Missing arguments.");
+        throw std::invalid_argument("Missing arguments.");
     }
     else {
         if (args.size() > 3) {
-            ConsoleLogger::logWarning(name + ": Too many arguments.");
+            ConsoleLogger::logWarning("Too many arguments.");
         }
         path = args[1];
         value = args[2];
