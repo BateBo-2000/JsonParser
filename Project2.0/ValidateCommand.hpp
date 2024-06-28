@@ -8,12 +8,13 @@
 
 class ValidateCommand : public Command {
 public:
-    ValidateCommand(Receiver& receiver);
+    ValidateCommand(ConsoleLogger& console, Receiver& receiver);
     void setArguments(const std::vector<std::string>& args) override;
     virtual void execute() override;
 
 private:
     Receiver& receiver;
+    ConsoleLogger& console;
 };
 
 #endif // VALIDATECOMMAND_HPP

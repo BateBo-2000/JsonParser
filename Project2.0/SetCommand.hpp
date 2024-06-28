@@ -8,12 +8,13 @@
 #include "Logger.hpp"
 class SetCommand : public Command {
 public:
-    SetCommand(Receiver& receiver);
+    SetCommand(ConsoleLogger& console, Receiver& receiver);
     void setArguments(const std::vector<std::string>& args) override;
     virtual void execute() override;
 
 private:
     Receiver& receiver;
+    ConsoleLogger& console;
     std::string path;
     std::string value;
 };

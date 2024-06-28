@@ -8,15 +8,16 @@
 #include "Logger.hpp"
 
 class OpenCommand : public Command {
-private:
-    Receiver& receiver;
-    std::string filePath;
-    bool dontSave;
-
 public:
-    OpenCommand(Receiver& receiver);
+    OpenCommand(ConsoleLogger& console, Receiver& receiver);
     void setArguments(const std::vector<std::string>& args) override;
     void execute() override;
+private:
+    Receiver& receiver;
+    ConsoleLogger& console;
+    std::string filePath;
+    bool dontSave;
 };
+
 
 #endif // OPENCOMMAND_HPP

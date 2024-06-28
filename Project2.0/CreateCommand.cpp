@@ -1,7 +1,7 @@
 #include "CreateCommand.hpp"
 
-CreateCommand::CreateCommand(Receiver& receiver)
-    : Command(), receiver(receiver) {}
+CreateCommand::CreateCommand(ConsoleLogger& console, Receiver& receiver)
+    : Command(), receiver(receiver), console(console) {}
 
 void CreateCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 3) {
@@ -9,7 +9,7 @@ void CreateCommand::setArguments(const std::vector<std::string>& args) {
     }
     else {
         if (args.size() > 3) {
-            ConsoleLogger::logWarning("Too many arguments.");
+            console.logWarning("Too many arguments.");
         }
         path = args[1];
         value = args[2];
@@ -20,10 +20,10 @@ void CreateCommand::execute() {
     try
     {
         receiver.create(path, value);
-        ConsoleLogger::logInfo(path + " was created and set successfully and set to " + value + "." );
+        console.logInfo(path + " was created and set successfully and set to " + value + "." );
     }
     catch (const std::exception& e)
     {
-        ConsoleLogger::logError("Error while creating and setting " + path + " to value "+ value +". " + string(e.what()));
+        console.logError("Error while creating and setting " + path + " to value "+ value +". " + string(e.what()));
     }
 }

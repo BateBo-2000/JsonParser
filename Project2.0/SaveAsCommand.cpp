@@ -1,7 +1,7 @@
 #include "SaveAsCommand.hpp"
 
-SaveAsCommand::SaveAsCommand(Receiver& receiver)
-    :Command(), receiver(receiver)  {}
+SaveAsCommand::SaveAsCommand(ConsoleLogger& console, Receiver& receiver)
+    :Command(), receiver(receiver), console(console) {}
 
 //helper function
 void SaveAsCommand::changeName(std::string& path, const std::string& newName) {
@@ -30,7 +30,7 @@ void SaveAsCommand::setArguments(const std::vector<std::string>& args) {
     }
     else {
         if (args.size() > 3) {
-            ConsoleLogger::logWarning("Too many arguments.");
+            console.logWarning("Too many arguments.");
         }
         try
         {
@@ -53,10 +53,10 @@ void SaveAsCommand::execute() {
     }
     bool success = receiver.writeFile(newFilePath, message);
     if (success) {
-        ConsoleLogger::logInfo(message);
+        console.logInfo(message);
     }
     else {
-        ConsoleLogger::logError(message);
+        console.logError(message);
     }
 }
 

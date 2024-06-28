@@ -1,7 +1,7 @@
 #include "MoveCommand.hpp"
 
-MoveCommand::MoveCommand(Receiver& receiver)
-    : Command(), receiver(receiver) {}
+MoveCommand::MoveCommand(ConsoleLogger& console, Receiver& receiver)
+    : Command(), receiver(receiver), console(console) {}
 
 void MoveCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 3) {
@@ -10,7 +10,7 @@ void MoveCommand::setArguments(const std::vector<std::string>& args) {
     else {
         if (args.size() > 3) {
             //warning
-            ConsoleLogger::logWarning("Too many arguments.");
+            console.logWarning("Too many arguments.");
         }
         from = args[1];
         to = args[2];
@@ -20,7 +20,7 @@ void MoveCommand::execute() {
     try
     {
         receiver.move(from, to);
-        ConsoleLogger::logInfo("Successfully moved to " + from + "\nto\n" + to);
+        console.logInfo("Successfully moved to " + from + "\nto\n" + to);
     }
     catch (const std::exception& e)
     {

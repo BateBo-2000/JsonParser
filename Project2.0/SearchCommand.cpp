@@ -1,7 +1,7 @@
 #include "SearchCommand.hpp"
 
-SearchCommand::SearchCommand(Receiver& receiver)
-    :Command(), receiver(receiver)  {}
+SearchCommand::SearchCommand(ConsoleLogger& console, Receiver& receiver)
+    :Command(), receiver(receiver), console(console) {}
 
 void SearchCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 2) {
@@ -10,7 +10,7 @@ void SearchCommand::setArguments(const std::vector<std::string>& args) {
     else{
         if (args.size() > 2) {
             //warning
-            ConsoleLogger::logWarning("Too many arguments.");
+            console.logWarning("Too many arguments.");
         }
         searchKey = args[1];
     }
@@ -22,10 +22,10 @@ void SearchCommand::execute() {
     {
         receiver.searchJson(searchKey, results);
         if (results.empty()) {
-            ConsoleLogger::logInfo("Coundn't find any results");
+            console.logInfo("Coundn't find any results");
         }
         else {
-            ConsoleLogger::logJson(results);
+            console.logJson(results);
         }
     }
     catch (const std::exception& e)

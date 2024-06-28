@@ -8,11 +8,12 @@
 
 class ExitCommand : public Command {
 public:
-    ExitCommand(Receiver& receiver);
+    ExitCommand(ConsoleLogger& console, Receiver& receiver);
     void setArguments(const std::vector<std::string>& args) override;
     void execute() override;
 private: 
     Receiver& receiver;
+    ConsoleLogger& console;
     bool forseExit;
 };
 

@@ -7,6 +7,7 @@
 #include <vector>
 #include "Invoker.hpp"
 #include "Receiver.hpp"
+#include "Logger.hpp"
 
 class AppController {
 public:
@@ -17,6 +18,7 @@ public:
 private:
     Invoker invoker;
     Receiver jsonEditor;
+    ConsoleLogger consoleLogger;
 
     void processCommand(const std::string& commandLine);
 };

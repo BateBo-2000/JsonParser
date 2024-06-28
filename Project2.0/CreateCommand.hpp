@@ -9,12 +9,13 @@
 
 class CreateCommand : public Command {
 public:
-    CreateCommand(Receiver& receiver);
+    CreateCommand(ConsoleLogger& console, Receiver& receiver);
     void setArguments(const std::vector<std::string>& args);
     virtual void execute() override;
 
 private:
     Receiver& receiver;
+    ConsoleLogger& console;
     std::string path;
     std::string value;
 };

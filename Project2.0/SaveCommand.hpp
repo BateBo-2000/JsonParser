@@ -8,12 +8,13 @@
 #include "Logger.hpp"
 class SaveCommand : public Command {
 public:
-    SaveCommand(Receiver& receiver);
+    SaveCommand(ConsoleLogger& console, Receiver& receiver);
     void setArguments(const std::vector<std::string>& args) override;
     virtual void execute() override;
 
 private:
     Receiver& receiver;
+    ConsoleLogger& console;
     std::string filePath;
 };
 

@@ -1,7 +1,7 @@
 #include "SaveCommand.hpp"
 
-SaveCommand::SaveCommand(Receiver& receiver)
-    :Command(), receiver(receiver) {}
+SaveCommand::SaveCommand(ConsoleLogger& console, Receiver& receiver)
+    :Command(), receiver(receiver), console(console) {}
 
 void SaveCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 1) {
@@ -13,7 +13,7 @@ void SaveCommand::setArguments(const std::vector<std::string>& args) {
     }
     else{  
         if (args.size() > 2) {
-            ConsoleLogger::logWarning("Too many arguments.");
+            console.logWarning("Too many arguments.");
         }
         try
         {
@@ -35,10 +35,10 @@ void SaveCommand::execute() {
     }
     bool success = receiver.writeFile(filePath, message);
     if (success) {
-        ConsoleLogger::logInfo(message);
+        console.logInfo(message);
     }
     else {
-        ConsoleLogger::logError(message);
+        console.logError(message);
     }
 }
 

@@ -8,12 +8,13 @@
 
 class PrintCommand : public Command {
 public:
-    PrintCommand(Receiver& receiver);
+    PrintCommand(ConsoleLogger& console, Receiver& receiver);
     void setArguments(const std::vector<std::string>& args) override;
     void execute() override;
 
 private:
     Receiver& receiver;
+    ConsoleLogger& console;
     std::string json;
 };
 

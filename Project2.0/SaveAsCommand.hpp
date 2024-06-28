@@ -9,12 +9,13 @@
 
 class SaveAsCommand : public Command {
 public:
-    SaveAsCommand(Receiver& receiver);
+    SaveAsCommand(ConsoleLogger& console, Receiver& receiver);
     void setArguments(const std::vector<std::string>& args) override;
     virtual void execute() override;
 
 private:
     Receiver& receiver;
+    ConsoleLogger& console;
     std::string newFilePath;
     //helper function
     void changeName(std::string& path, const std::string& newName);

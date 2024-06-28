@@ -1,7 +1,7 @@
 #include "DeleteCommand.hpp"
 
-DeleteCommand::DeleteCommand(Receiver& receiver)
-    :Command(), receiver(receiver) {}
+DeleteCommand::DeleteCommand(ConsoleLogger& console, Receiver& receiver)
+    :Command(), receiver(receiver), console(console) {}
 
 void DeleteCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 2) {
@@ -10,7 +10,7 @@ void DeleteCommand::setArguments(const std::vector<std::string>& args) {
     else {
         if (args.size() > 2) {
             //warning
-            ConsoleLogger::logWarning("Too many arguments.");
+            console.logWarning("Too many arguments.");
         }
         path = args[1];
     }
@@ -19,9 +19,9 @@ void DeleteCommand::setArguments(const std::vector<std::string>& args) {
 void DeleteCommand::execute() {
     try {
         receiver.deleteJsonValue(path);
-        ConsoleLogger::logInfo(path+" was deleted and successfully.");
+        console.logInfo(path+" was deleted and successfully.");
     }
     catch (const std::exception& e) {
-        ConsoleLogger::logError(std::string("Exception caught: ") + e.what());
+        console.logError(std::string("Exception caught: ") + e.what());
     }
 }

@@ -16,22 +16,22 @@ AppController::AppController() {
     //Register commands with the Invoker
     try
     {
-        invoker.registerCommand("open", new OpenCommand(jsonEditor));
-        invoker.registerCommand("print", new PrintCommand(jsonEditor));
-        invoker.registerCommand("save", new SaveCommand(jsonEditor));
-        invoker.registerCommand("saveas", new SaveAsCommand(jsonEditor));
-        invoker.registerCommand("exit", new ExitCommand(jsonEditor));
-        invoker.registerCommand("validate", new ValidateCommand(jsonEditor));
-        invoker.registerCommand("search", new SearchCommand(jsonEditor));
-        invoker.registerCommand("delete", new DeleteCommand(jsonEditor));
-        invoker.registerCommand("contains", new ContainsCommand(jsonEditor));
-        invoker.registerCommand("set", new SetCommand(jsonEditor));
-        invoker.registerCommand("create", new CreateCommand(jsonEditor));
-        invoker.registerCommand("move", new MoveCommand(jsonEditor));
+        invoker.registerCommand("open", new OpenCommand(consoleLogger ,jsonEditor)); //the opertor new returns pointer
+        invoker.registerCommand("print", new PrintCommand(consoleLogger, jsonEditor));
+        invoker.registerCommand("save", new SaveCommand(consoleLogger, jsonEditor));
+        invoker.registerCommand("saveas", new SaveAsCommand(consoleLogger, jsonEditor));
+        invoker.registerCommand("exit", new ExitCommand(consoleLogger, jsonEditor));
+        invoker.registerCommand("validate", new ValidateCommand(consoleLogger, jsonEditor));
+        invoker.registerCommand("search", new SearchCommand(consoleLogger, jsonEditor));
+        invoker.registerCommand("delete", new DeleteCommand(consoleLogger, jsonEditor));
+        invoker.registerCommand("contains", new ContainsCommand(consoleLogger, jsonEditor));
+        invoker.registerCommand("set", new SetCommand(consoleLogger, jsonEditor));
+        invoker.registerCommand("create", new CreateCommand(consoleLogger, jsonEditor));
+        invoker.registerCommand("move", new MoveCommand(consoleLogger, jsonEditor));
     }
     catch (const std::invalid_argument&)
     {
-        ConsoleLogger::logCritical("Couldn't setup all commands properly. \nPlease restart the app.");
+        consoleLogger.logCritical("Couldn't setup all commands properly. \nPlease restart the app.");
     } 
 }
 
@@ -39,7 +39,7 @@ void AppController::run() {
     std::string commandLine;
 
     for(;;){
-        ConsoleLogger::logInfo("Enter a command:");
+        consoleLogger.logInfo("Enter a command:");
         std::getline(std::cin, commandLine);
         processCommand(commandLine);
     }
@@ -52,6 +52,6 @@ void AppController::processCommand(const std::string& commandLine) {
     }
     catch (const std::exception& e)
     {
-        ConsoleLogger::logInfo(e.what());
+        consoleLogger.logInfo(e.what());
     }
 }

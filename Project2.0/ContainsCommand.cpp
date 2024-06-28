@@ -1,7 +1,7 @@
 #include "ContainsCommand.hpp"
 
-ContainsCommand::ContainsCommand(Receiver& receiver)
-    :Command(), receiver(receiver) {}
+ContainsCommand::ContainsCommand(ConsoleLogger& console, Receiver& receiver)
+    :Command(), receiver(receiver), console(console) {}
 
 void ContainsCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 2) {
@@ -10,7 +10,7 @@ void ContainsCommand::setArguments(const std::vector<std::string>& args) {
     else {
         if (args.size() > 2) {
             //warning
-            ConsoleLogger::logWarning("Too many arguments.");
+            console.logWarning("Too many arguments.");
         }
         searchValue = args[1];
     }
@@ -21,11 +21,11 @@ void ContainsCommand::execute() {
     try
     {
         receiver.containsValue(searchValue, results);
-        if (results.empty()) ConsoleLogger::logInfo("Coundn't find any results that match "+searchValue);
-        ConsoleLogger::logJson(results);
+        if (results.empty()) console.logInfo("Coundn't find any results that match "+searchValue);
+        console.logJson(results);
     }
     catch (const std::exception& e)
     {
-        ConsoleLogger::logInfo("Error while searching: " + string(e.what()));
+        console.logInfo("Error while searching: " + string(e.what()));
     }
 }
