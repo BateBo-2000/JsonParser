@@ -5,7 +5,8 @@ ValidateCommand::ValidateCommand(ConsoleLogger& console, Receiver& receiver)
 
 void ValidateCommand::execute() {
     std::string errorMsg;
-    if (receiver.isValidJson(&errorMsg)) {
+    if (receiver.isValidJson(errorMsg)) {
+        if (errorMsg != "") console.logInfo(errorMsg);
         console.logInfo("JSON is valid.");
     }
     else {

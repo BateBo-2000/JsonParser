@@ -79,18 +79,29 @@ const std::string& Receiver::getJson() {
     }
 }
 
-bool Receiver::isValidJson(std::string* errorMsg) const { //to make it optional to get the error
+bool Receiver::isValidJson(std::string& errorMsg) { //to make it optional to get the error
     if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
     try {
-        JsonParser parser(jsonContent);
-        if (root != nullptr) delete root;
-        Jvalue* root = parser.parse();
-        return true;
+        if (root == nullptr) {
+            //we dont have changes
+            //just try to parse and if all is good save it
+            JsonParser parser(jsonContent);
+            root = parser.parse();
+            errorMsg += "Data has been parsed.";
+            return true;  //leave it parsed for future 
+        }
+        else {
+            //there should be strong error checking and typization in the Jvalue classes so it should be fine if its already compiled.
+            //other idea: deparse then try to parse again?
+            return true;
+        }
     }
     catch (const std::exception& e) {
-        if (errorMsg) {
-            *errorMsg = e.what();
+        if (root != nullptr) {  //if not valid delete all
+            delete root;
+            root = nullptr;
         }
+        errorMsg = e.what();
         return false;
     }
 }

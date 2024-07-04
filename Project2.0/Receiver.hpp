@@ -19,7 +19,7 @@ public:
     bool loadFile(const std::string& filePath, std::string& message);
     bool writeFile(const std::string& newFilePath, std::string& message);
     std::string getFileLocation() const;
-    bool isValidJson(std::string* errorMsg = nullptr) const;
+    bool isValidJson(std::string& errorMsg);
     const std::string& getJson();
     void searchJson(const std::string& key, std::string& searchResult);
     void deleteJsonValue(const std::string& path);
