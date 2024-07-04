@@ -224,7 +224,7 @@ void Receiver::create(const std::string& path, const std::string& value) {
 
         
 
-
+        
         if (target->getType() == JSONObject || target->getType() == JSONArray) {
             //check if there isnt such key
             std::vector<Jvalue*> foundDuplicates;
@@ -569,6 +569,11 @@ void Receiver::splitPathArgs(const std::string& path, std::vector<std::string>& 
     size_t pos = 0;
     size_t start = 0;
 
+    if (path.size() == 1 && path[0] == '/') {   //this is handling root
+        components.push_back("/");
+        return;
+    }
+
     while (pos < path.size()) {
         if (path[pos] == '.' || path[pos] == '[' || path[pos] == ']' || path[pos] == '/') {
             if (pos > start) {
@@ -594,6 +599,10 @@ void Receiver::splitPathArgs(const std::string& path, std::vector<std::string>& 
 
 Jvalue* Receiver::followPath(Jvalue* root, std::vector<std::string> pathArs) {
     Jvalue* current = root;
+
+    if (pathArs.size() == 1 && pathArs[0] == "/") {
+        return root;
+    }
 
     for (int i = 0; i < pathArs.size(); i++) {
         if (current->getType() == JSONObject) {
