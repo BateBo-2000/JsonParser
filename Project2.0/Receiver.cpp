@@ -1,5 +1,14 @@
 #include "Receiver.hpp"
 
+Receiver::Receiver() : root(nullptr), hasChanges(false) {}
+
+Receiver::~Receiver() {
+    if (root!=nullptr)
+    {
+        delete root;
+    }
+}
+
 bool Receiver::loadFile(const std::string& filePath, std::string& message) {
    
     FileReader fileReader;
@@ -8,7 +17,13 @@ bool Receiver::loadFile(const std::string& filePath, std::string& message) {
         //auto saving the location
         currentFileLocation = filePath;
         message = "File opened successfully: " + filePath;
+        //clean the old data
+        if (root != nullptr) {
+            delete root;
+            root = nullptr;
+        }
         hasChanges = false;
+
         return true;
     }
     catch (const std::exception& e) {
@@ -25,8 +40,13 @@ bool Receiver::writeFile(const std::string& newFilePath, std::string& message) {
     }
     FileWriter fileWriter;
     try {
+        JsonParser parser(jsonContent);
+        jsonContent = parser.deparse(root);               //deparse
+        jsonContent = Utility::prettifyJson(jsonContent); //prettify
+
         fileWriter.writeFile(newFilePath, jsonContent);
         message = "JSON saved to file: " + newFilePath;
+
         hasChanges = false;
         return true;
     }
@@ -40,17 +60,31 @@ std::string Receiver::getFileLocation() const {
     return currentFileLocation;
 }
 
-const std::string& Receiver::getJson() const {
+const bool Receiver::isChanged() const {
+    return hasChanges;
+}
+
+const std::string& Receiver::getJson() {
     if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
-    return jsonContent;
+    
+    if (root == nullptr) {
+        return jsonContent;
+    }
+    else {
+        //do them only here and in the writeFile methods because deparse and prettify are slow
+        JsonParser parser(jsonContent);
+        jsonContent = parser.deparse(root);
+        jsonContent = Utility::prettifyJson(jsonContent);
+        return jsonContent;
+    }
 }
 
 bool Receiver::isValidJson(std::string* errorMsg) const { //to make it optional to get the error
     if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
     try {
         JsonParser parser(jsonContent);
+        if (root != nullptr) delete root;
         Jvalue* root = parser.parse();
-        delete root;
         return true;
     }
     catch (const std::exception& e) {
@@ -63,12 +97,10 @@ bool Receiver::isValidJson(std::string* errorMsg) const { //to make it optional 
 
 void Receiver::searchJson(const std::string& key, std::string& searchResult) {
     if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
-    Jvalue* root = nullptr;
     try
     {
         //parse the JSON string
-        JsonParser parser(jsonContent);
-        root = parser.parse();
+        ensureParsed();
 
         // Search for the key and collect results
         std::vector<Jvalue*> jValues;
@@ -76,27 +108,19 @@ void Receiver::searchJson(const std::string& key, std::string& searchResult) {
 
         //convert from objects to string
         formatSearchResult(searchResult, jValues);
-
-        //clean up
-        delete root;
-        root = nullptr;
     }
     catch (const std::exception&)
     {
-        delete root;
-        root = nullptr;
         throw;
     }
 }
 
 void Receiver::containsValue(const std::string& searchValue, std::string& searchResult) {
     if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
-    Jvalue* root = nullptr;
     try
     {
         //parse the JSON string
-        JsonParser parser(jsonContent);
-        root = parser.parse();
+        ensureParsed();
 
         //search for the value and collect results
         std::vector<Jvalue*> jValues;
@@ -104,27 +128,19 @@ void Receiver::containsValue(const std::string& searchValue, std::string& search
 
         //convert from objects to string
         formatSearchResult(searchResult, jValues);
-
-        //clean up
-        delete root;
-        root = nullptr;
     }
     catch (const std::exception&)
     {
-        delete root;
-        root = nullptr;
         throw;
     }
 }
 
 void Receiver::deleteJsonValue(const std::string& path) {
     if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
-    Jvalue* root = nullptr;
     try
     {
         //parse the JSON string
-        JsonParser parser(jsonContent);
-        root = parser.parse();
+        ensureParsed();
 
         //split the path arguments
         std::vector<std::string> pathArgs;
@@ -142,32 +158,20 @@ void Receiver::deleteJsonValue(const std::string& path) {
         //delete the key/value pair
         deleteJsonPairAtTarget(parent, target);
 
-        //deparse the structure to string
-        jsonContent = parser.deparse(root);
         hasChanges = true;
-        //prettify
-        jsonContent = Utility::prettifyJson(jsonContent);
-
-        //clean up
-        delete root;
-        root = nullptr;
     }
     catch (const std::exception&)
     {
-        delete root;
-        root = nullptr;
         throw;
     }
 }
 
 void Receiver::setJsonValue(const std::string& path, const std::string& value) {
     if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
-    Jvalue* root = nullptr;
     try
     {
         //parse the JSON string
-        JsonParser parser(jsonContent);
-        root = parser.parse();
+        ensureParsed();
 
         //split the path arguments
         std::vector<std::string> pathArgs;
@@ -182,32 +186,20 @@ void Receiver::setJsonValue(const std::string& path, const std::string& value) {
         // Set the new value
         setValue(target, value);
 
-        //deparse the structure to string
-        jsonContent = parser.deparse(root);
         hasChanges = true;
-        //prettify
-        jsonContent = Utility::prettifyJson(jsonContent);
-
-        //clean up
-        delete root;
-        root = nullptr;
     }
     catch (const std::exception&)
     {
-        delete root;
-        root = nullptr;
         throw;
     }
 }
 
 void Receiver::create(const std::string& path, const std::string& value) {
     if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
-    Jvalue* root = nullptr;
     try
     {
         //parse the JSON string
-        JsonParser parser(jsonContent);
-        root = parser.parse();
+        ensureParsed();
 
         std::vector<std::string> pathArgs;
         splitPathArgs(path, pathArgs);
@@ -252,33 +244,21 @@ void Receiver::create(const std::string& path, const std::string& value) {
             throw std::runtime_error("Cannot add value pair to a non-object or non-array.");
         }
 
-        //deparse the structure to string
-        jsonContent = parser.deparse(root);
         hasChanges = true;
-        //prettify
-        jsonContent = Utility::prettifyJson(jsonContent);
-
-        //clean up
-        delete root;
-        root = nullptr;
     }
     catch (const std::exception&)
     {
-        delete root;
-        root = nullptr;
         throw;
     }
 }
 
 void Receiver::move(const std::string& from, const std::string& to) {
     if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
-    Jvalue* root = nullptr;
     try
     {
 
         //parse the JSON string
-        JsonParser parser(jsonContent);
-        root = parser.parse();
+        ensureParsed();
         //from path
         std::vector<std::string> fromArgs;
         splitPathArgs(from, fromArgs);
@@ -299,25 +279,13 @@ void Receiver::move(const std::string& from, const std::string& to) {
         moveValue(root, fromValue, toValue, fromArgs);
         //clears the from location
         clearValue(root, fromArgs);
-        //deparse the structure to string
-        jsonContent = parser.deparse(root);
-        //prettify
+
         hasChanges = true;
-        jsonContent = Utility::prettifyJson(jsonContent);
-        //clean up
-        delete root;
-        root = nullptr;
     }
     catch (const std::exception&)
     {
-        delete root;
-        root = nullptr;
         throw;
     } 
-}
-
-const bool Receiver::isChanged() const{
-    return hasChanges;
 }
 
 //internals
@@ -637,4 +605,11 @@ Jvalue* Receiver::followPath(Jvalue* root, std::vector<std::string> pathArs) {
         }
     }
     return current;
+}
+
+void Receiver::ensureParsed() {
+    if (root == nullptr) {
+        JsonParser parser(jsonContent);
+        root = parser.parse();
+    }
 }

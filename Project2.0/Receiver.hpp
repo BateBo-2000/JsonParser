@@ -14,11 +14,13 @@
 
 class Receiver {
 public:
+    Receiver();
+    ~Receiver();
     bool loadFile(const std::string& filePath, std::string& message);
     bool writeFile(const std::string& newFilePath, std::string& message);
     std::string getFileLocation() const;
     bool isValidJson(std::string* errorMsg = nullptr) const;
-    const std::string& getJson() const;
+    const std::string& getJson();
     void searchJson(const std::string& key, std::string& searchResult);
     void deleteJsonValue(const std::string& path);
     void containsValue(const std::string& value, std::string& searchResult);
@@ -31,6 +33,7 @@ private:
     std::string jsonContent;
     std::string currentFileLocation;
     bool hasChanges;
+    Jvalue* root;
 
     //internal helper functions
     void deleteJsonPairAtTarget(Jvalue* target, const std::string& path);
@@ -45,6 +48,7 @@ private:
     void moveToArray(Jvalue* array, Jvalue* valueToAdd);
     Jvalue* copyPair(const std::string& key, Jvalue* value, JsonObject* obj);
     void clearValue(Jvalue* root, std::vector<std::string>& pathArgs);
+    void ensureParsed();
 };
 
 #endif // RECEIVER_HPP

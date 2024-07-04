@@ -1,4 +1,5 @@
 #include "ApplicationController.hpp"
+#include <iostream>
 
 void printAppName();
 
@@ -10,9 +11,9 @@ int main() {
 		printAppName();
 		appController.run();
 	}
-	catch (const std::exception&)
+	catch (const std::exception& e)
 	{
-		//handle
+		std::cout << e.what();
 	}
     
     return 0;
