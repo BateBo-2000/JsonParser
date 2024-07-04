@@ -73,7 +73,7 @@ public:
 			if (beExact && currentKey == key) {
 				results.push_back(value[i]);
 			}
-			else if (!beExact && currentKey.find(key.substr(0, key.size() - 1)) != std::string::npos) {
+			else if (!beExact && currentKey.find(key.substr(0, key.size() - 1)) != std::string::npos) {	//bug it is working as *a and *a* but should be a*
 				results.push_back(value[i]);
 			}
 		}
