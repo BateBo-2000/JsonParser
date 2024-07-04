@@ -570,11 +570,11 @@ void Receiver::splitPathArgs(const std::string& path, std::vector<std::string>& 
     size_t start = 0;
 
     while (pos < path.size()) {
-        if (path[pos] == '.' || path[pos] == '[' || path[pos] == ']') {
+        if (path[pos] == '.' || path[pos] == '[' || path[pos] == ']' || path[pos] == '/') {
             if (pos > start) {
                 components.push_back(path.substr(start, pos - start));
             }
-            if (path[pos] == '[' || path[pos] == ']' || path[pos] == '.') {
+            if (path[pos] == '[' || path[pos] == ']' || path[pos] == '.' || path[pos] == '/') {
                 // Skip these characters
                 start = pos + 1;
             }
