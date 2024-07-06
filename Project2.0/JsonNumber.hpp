@@ -30,9 +30,13 @@ public:
 	}
 	string toString() const override {
 		std::string number = std::to_string(value);
-		size_t zeros = number.find_last_of('0');
-		size_t dot = number.find('.');
-		return (zeros > dot) ? number.substr(0,dot) : number.substr(0,zeros);
+		size_t lastNotZero = number.find_last_not_of('0'); //find last non zero
+		if (number[lastNotZero] == '.') {
+			return number.substr(0, lastNotZero);
+		}
+		else {
+			return number.substr(0, ++lastNotZero);
+		}
 	}
 
 private:

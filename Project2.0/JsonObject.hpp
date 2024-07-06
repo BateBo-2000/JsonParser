@@ -37,8 +37,8 @@ public:
 	JsonType getType() const override {
 		return JSONObject;
 	}
-	const vector<Jvalue*>* getValue() const {
-		return &value;
+	const vector<Jvalue*>& getValue() const {
+		return value;
 	}
 	void add(Jvalue* val) {
 		for (size_t i = 0; i < value.size(); i++)
@@ -48,20 +48,6 @@ public:
 			}
 		}
 		value.push_back(val);
-
-	}
-	Jvalue* getByExactKey(const std::string& key) {
-		bool useExact = key.back() != '*';
-		for (size_t i = 0; i < value.size(); ++i) {
-			if (useExact && value[i]->getKey() == key) {
-				//it can return on the first found because a key duplication is error in json
-				return value[i];
-			}
-			else if (!useExact && value[i]->getKey().find(key.substr(0, key.size() - 1)) != std::string::npos) {
-				return value[i];
-			}
-		}
-		return nullptr;
 	}
 	std::vector<Jvalue*> getByKey(const std::string& key) {
 		std::vector<Jvalue*> results;

@@ -308,9 +308,9 @@ void Receiver::searchJsonKey(Jvalue* root, const std::string& searchKey, std::ve
             std::vector<Jvalue*> result = obj->getByKey(searchKey);
             jValues.insert(jValues.end(), result.begin(), result.end());
 
-            const std::vector<Jvalue*>* objValue = obj->getValue();
-            for (Jvalue* value : *objValue) {
-                searchJsonKey(value, searchKey, jValues);
+            const std::vector<Jvalue*>& objValue = obj->getValue();
+            for (size_t i = 0; i < objValue.size(); i++) {
+                searchJsonKey(objValue[i], searchKey, jValues);
             }
         }
     }
@@ -318,8 +318,8 @@ void Receiver::searchJsonKey(Jvalue* root, const std::string& searchKey, std::ve
         JsonArray* arr = static_cast<JsonArray*>(root);
         if (arr) {
             const std::vector<Jvalue*>& values = arr->getValue();
-            for (Jvalue* value : values) {
-                searchJsonKey(value, searchKey, jValues);
+            for (size_t i = 0; i < values.size(); i++) {
+                searchJsonKey(values[i], searchKey, jValues);
             }
         }
     }
@@ -330,11 +330,13 @@ void Receiver::searchJsonValue(Jvalue* root, const std::string& searchValue, std
         JsonObject* obj = static_cast<JsonObject*>(root);
         if (obj) {
             std::vector<Jvalue*> result = obj->getByValue(searchValue);
-            jValues.insert(jValues.end(), result.begin(), result.end());
-
-            const std::vector<Jvalue*>* objValue = obj->getValue();
-            for (Jvalue* value : *objValue) {
-                searchJsonValue(value, searchValue, jValues);
+            for (size_t i = 0; i < result.size(); i++)
+            {
+                jValues.push_back(result[i]);   //adds the results.
+            }
+            const std::vector<Jvalue*>& objValue = obj->getValue();
+            for (size_t i = 0; i < objValue.size(); i++) {
+                searchJsonValue(objValue[i], searchValue, jValues);
             }
         }
     }
@@ -342,8 +344,8 @@ void Receiver::searchJsonValue(Jvalue* root, const std::string& searchValue, std
         JsonArray* arr = static_cast<JsonArray*>(root);
         if (arr) {
             const std::vector<Jvalue*>& values = arr->getValue();
-            for (Jvalue* value : values) {
-                searchJsonValue(value, searchValue, jValues);
+            for (size_t i = 0; i < values.size(); i++) {
+                searchJsonValue(values[i], searchValue, jValues);
             }
         }
     }
@@ -378,12 +380,10 @@ void Receiver::deleteJsonPairAtTarget(Jvalue* parent, const std::string& path) {
     // Delete the key/value pair or array element
     if (parent->getType() == JSONObject) {
         JsonObject* obj = static_cast<JsonObject*>(parent);
-        Jvalue* target = obj->getByExactKey(keyOrIndexToDelete);
-        if (target) {
+        std::vector<Jvalue*> targets = obj->getByKey(keyOrIndexToDelete);
+        for (size_t i = 0; i < targets.size(); i++)
+        {
             obj->removeByKey(keyOrIndexToDelete);
-        }
-        else {
-            throw std::runtime_error("Key not found: cannot delete element.");
         }
     }
     else if (parent->getType() == JSONArray) {
@@ -608,7 +608,7 @@ Jvalue* Receiver::followPath(Jvalue* root, std::vector<std::string> pathArs) {
     for (int i = 0; i < pathArs.size(); i++) {
         if (current->getType() == JSONObject) {
             JsonObject* obj = static_cast<JsonObject*>(current);
-            current = obj->getByExactKey(pathArs[i]);
+            current = obj->getByKey(pathArs[i])[0]; //paths like /asdf*/adsf*/ are not a valid argument but the methdo handles them by deafault the first occurnance.
             if (!current) {
                 throw std::runtime_error("Path not found in JSON object: " + pathArs[i]);
             }
