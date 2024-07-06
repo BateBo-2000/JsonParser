@@ -10,7 +10,7 @@ using std::string;
 class JsonBool : public Jvalue {
 public:
 	JsonBool(const string& key, bool value) : key(key), value(value) {}
-	JsonBool(const JsonBool& other) : value(other.value) {}
+	JsonBool(const JsonBool& other) : value(other.value), key(other.key) {}
 	JsonBool* clone() const override {
 		return new JsonBool(*this);
 	}

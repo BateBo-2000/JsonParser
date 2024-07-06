@@ -8,7 +8,7 @@
 class JsonString : public Jvalue {
 public:
 	JsonString(const string& key, string value) : key(key), value(value) {}
-	JsonString(const JsonString& other) : value(other.value) {}
+	JsonString(const JsonString& other) : value(other.value), key(other.key) {}
 	JsonString* clone() const override {
 		return new JsonString(*this);
 	}

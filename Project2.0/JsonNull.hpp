@@ -10,7 +10,7 @@ class JsonNull : public Jvalue {
 public:
 	JsonNull(const string& key) : key(key) {
 	}
-	JsonNull(const JsonNull& other) {}
+	JsonNull(const JsonNull& other): key(other.key) {}
 	JsonNull* clone() const override {
 		return new JsonNull(*this);
 	}

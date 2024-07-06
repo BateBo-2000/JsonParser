@@ -9,7 +9,7 @@ using std::string;
 class JsonNumber : public Jvalue {
 public:
 	JsonNumber(const string& key, double value) : key(key), value(value) {}
-	JsonNumber(const JsonNumber& other) : value(other.value) {}
+	JsonNumber(const JsonNumber& other) : value(other.value), key(other.key) {}
 	JsonNumber* clone() const override {
 		return new JsonNumber(*this);
 	}
