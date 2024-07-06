@@ -13,6 +13,7 @@ bool Receiver::loadFile(const std::string& filePath, std::string& message) {
    
     FileReader fileReader;
     try {
+        jsonContent.clear();
         fileReader.readFile(filePath, jsonContent);
         //auto saving the location
         currentFileLocation = filePath;

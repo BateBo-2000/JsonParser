@@ -17,6 +17,10 @@ void MoveCommand::setArguments(const std::vector<std::string>& args) {
     }
 }
 void MoveCommand::execute() {
+    if (from == to) {
+        console.logWarning("Nothing has been moved.");
+        return;
+    }
     try
     {
         receiver.move(from, to);
