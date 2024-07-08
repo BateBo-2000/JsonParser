@@ -3,32 +3,29 @@
 #define JSON_NULL_TYPE_HDD
 
 #include <string>
+#include <vector>
 #include "JValue.hpp"
+#include "Utility.hpp"
 using std::string;
+using std::vector;
 
 class JsonNull : public Jvalue {
 public:
-	JsonNull(const string& key) : key(key) {
-	}
-	JsonNull(const JsonNull& other): key(other.key) {}
-	JsonNull* clone() const override {
-		return new JsonNull(*this);
-	}
-	void setKey(const string& newKey) override {
-		key = newKey;
-	}
-	const string& getKey() const override {
-		return key;
-	}
-	JsonType getType() const  override {
-		return JSONNull;
-	}
-	string toString() const override {
-		return "null";
-	}
+	JsonNull();
+
+	JsonNull(const JsonNull& other);
+
+	virtual JsonNull* clone() const override;
+
+	virtual string toString() const override;
+
+	virtual const string getType() const override;
+
+	virtual void getByValue(const string& str, vector<Jvalue*>& results) override;
+
+	virtual void getByKey(const string& str, vector<Jvalue*>& results) override;
 
 private:
-	string key;
 };
 
 #endif // !JSON_NULL_TYPE_HDD

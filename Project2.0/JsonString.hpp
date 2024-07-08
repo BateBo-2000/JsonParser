@@ -3,37 +3,36 @@
 #define JSON_STRING_TYPE_HDD
 
 #include <string>
+#include <vector>
 #include "JValue.hpp"
+#include "Utility.hpp"
+using std::string;
+using std::vector;
 
 class JsonString : public Jvalue {
 public:
-	JsonString(const string& key, string value) : key(key), value(value) {}
-	JsonString(const JsonString& other) : value(other.value), key(other.key) {}
-	JsonString* clone() const override {
-		return new JsonString(*this);
-	}
-	void setKey(const string& newKey) override {
-		key = newKey;
-	}
-	const string& getKey() const override {
-		return key;
-	}
-	JsonType getType() const override {
-		return JSONString;
-	}
-	string& getValue() {
-		return value;
-	}
-	void setValue(const string& newValue) {
-		value = newValue;
-	}
-	string toString() const override {
-		return "\"" + value + "\"";
-	}
+	JsonString(string value);
+
+	JsonString(const JsonString& other);
+
+	virtual JsonString* clone() const override;
+
+	virtual string toString() const override;
+
+	virtual const string getType() const override;
+
+	virtual void getByValue(const string& str, vector<Jvalue*>& results) override;
+
+	virtual void getByKey(const string& str, vector<Jvalue*>& results) override;
+
+	string& getValue();
+
+	void setValue(const string& newValue);
+
+	
 
 private:
 	string value;
-	string key;
 };
 
 

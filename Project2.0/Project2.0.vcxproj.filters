@@ -28,6 +28,9 @@
     <Filter Include="Header Files\JsonTypes">
       <UniqueIdentifier>{6496db3c-1204-4bc1-8cd9-08fbdf5c9eae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\JsonTypes">
+      <UniqueIdentifier>{caacb8a2-b2aa-47a9-a2a1-b47d924fc299}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Project2.0.cpp">
@@ -104,6 +107,24 @@
     </ClCompile>
     <ClCompile Include="JsonString.hpp">
       <Filter>Header Files\JsonTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonObject.cpp">
+      <Filter>Source Files\JsonTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonArray.cpp">
+      <Filter>Source Files\JsonTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonString.cpp">
+      <Filter>Source Files\JsonTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonNumber.cpp">
+      <Filter>Source Files\JsonTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonBool.cpp">
+      <Filter>Source Files\JsonTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonNull.cpp">
+      <Filter>Source Files\JsonTypes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

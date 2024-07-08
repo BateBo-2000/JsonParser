@@ -1,7 +1,7 @@
 #include "Utility.hpp"
 
-std::string Utility::prettifyJson(const std::string& input) {
-	std::string output;
+string Utility::prettifyJson(const string& input) {
+	string output;
 	bool inQuote = false;
 	int numSpaces = 0;
 
@@ -12,20 +12,20 @@ std::string Utility::prettifyJson(const std::string& input) {
 			output += c;
 			output += '\n';
 			numSpaces += 4;
-			output += std::string(numSpaces, ' ');
+			output += string(numSpaces, ' ');
 			break;
 		case '}':
 		case ']':
 			output += '\n';
 			numSpaces -= 4;
-			output += std::string(numSpaces, ' ');
+			output += string(numSpaces, ' ');
 			output += c;
 			break;
 		case ',':
 			output += c;
 			if (!inQuote) {
 				output += '\n';
-				output += std::string(numSpaces, ' ');
+				output += string(numSpaces, ' ');
 			}
 			break;
 		case '\"':
@@ -47,4 +47,16 @@ std::string Utility::prettifyJson(const std::string& input) {
 	}
 
 	return output;
+}
+
+//helper for searching
+bool Utility::matchingPattern(const string& str, const string& value){
+	bool wildCard = str.back() == '*';
+	if (!wildCard) {
+		return value == str;
+	}
+	else {
+		string pattern = str.substr(0, pattern.size() - 1);
+		return value.starts_with(pattern) == 0;
+	}
 }

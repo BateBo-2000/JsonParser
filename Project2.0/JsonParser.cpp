@@ -6,7 +6,7 @@ JsonParser::JsonParser(const string& file) : file(file), index(0), lineNumber(0)
 	}
 }
 
-Jvalue* JsonParser::parse(const string& key) {
+Jvalue* JsonParser::parse() {
 	skipWhitespace(); // Skip any whitespace characters
 
 	if (index >= file.size()) {
@@ -15,22 +15,22 @@ Jvalue* JsonParser::parse(const string& key) {
 
 	char ch = file[index];
 	if (ch == 'n') {
-		return parseNull(key);
+		return parseNull();
 	}
 	else if (ch == 't' || ch == 'f') {
-		return parseBool(key);
+		return parseBool();
 	}
 	else if (isdigit(ch) || ch == '-') {
-		return parseNumber(key);
+		return parseNumber();
 	}
 	else if (ch == '"') {
-		return parseString(key);
+		return parseString();
 	}
 	else if (ch == '[') {
-		return parseArray(key);
+		return parseArray();
 	}
 	if (ch == '{') {
-		return parseObject(key);
+		return parseObject();
 	}
 	else {
 		throw std::invalid_argument("Invalid JSON format. Line:" + std::to_string(getCurrentLineNumber()));
@@ -75,30 +75,30 @@ bool JsonParser::isDigit(char ch) {
 	return (ch >= '0' && ch <= '9');
 }
 
-Jvalue* JsonParser::parseNull(const string& key) {
+Jvalue* JsonParser::parseNull() {
 	//check if the next characters in file are "null"
 	if (file.substr(index, 4) == "null") {
 		index += 4; // Move index past "null"
-		return new JsonNull(key);
+		return new JsonNull();
 	}
 	else {
 		throw std::invalid_argument("Invalid JSON format: expected 'null'. Line:" + std::to_string(getCurrentLineNumber()));
 	}
 }
 
-Jvalue* JsonParser::parseBool(const string& key) {
+Jvalue* JsonParser::parseBool() {
 	if (file.substr(index, 4) == "true") {
 		index += 4;
-		return new JsonBool(key, true);
+		return new JsonBool(true);
 	}
 	else if (file.substr(index, 5) == "false") {
 		index += 5;
-		return new JsonBool(key, false);
+		return new JsonBool(false);
 	}
 	throw std::invalid_argument("Invalid JSON format: expected 'true' or 'false'. Line:" + std::to_string(getCurrentLineNumber()));
 }
 
-Jvalue* JsonParser::parseNumber(const string& key) {
+Jvalue* JsonParser::parseNumber() {
 	size_t start = index;
 	bool hasDecimal = false;
 	while (index < file.size() && (isDigit(file[index]) || file[index] == '.')) {
@@ -112,10 +112,10 @@ Jvalue* JsonParser::parseNumber(const string& key) {
 	}
 	std::string numberStr = file.substr(start, index - start);
 	double value = stod(numberStr);
-	return new JsonNumber(key, value);
+	return new JsonNumber(value);
 }
 
-Jvalue* JsonParser::parseString(const string& key) {
+Jvalue* JsonParser::parseString() {
 	if (file[index] != '"') {
 		throw std::invalid_argument("Invalid JSON format: expected '\"'. Line:" + std::to_string(getCurrentLineNumber()));
 	}
@@ -125,12 +125,12 @@ Jvalue* JsonParser::parseString(const string& key) {
 		throw std::invalid_argument("Invalid JSON format: expected '\"'. Line:" + std::to_string(getCurrentLineNumber()));
 	}
 	index++;
-	return new JsonString(key, value);
+	return new JsonString(value);
 }
 
-Jvalue* JsonParser::parseArray(const string& key) {
+Jvalue* JsonParser::parseArray() {
 
-	JsonArray* arr = new JsonArray(key); //create a new JsonArray object
+	JsonArray* arr = new JsonArray(); //create a new JsonArray object
 
 	if (file[index] == '[') {
 		++index;
@@ -169,8 +169,8 @@ Jvalue* JsonParser::parseArray(const string& key) {
 	return arr;
 }
 
-Jvalue* JsonParser::parseObject(const string& key) {
-	JsonObject* obj = new JsonObject(key);
+Jvalue* JsonParser::parseObject() {
+	JsonObject* obj = new JsonObject();
 	if (file[index] == '{') {
 		++index;
 	}
@@ -197,8 +197,8 @@ Jvalue* JsonParser::parseObject(const string& key) {
 
 		skipWhitespace();
 
-		Jvalue* val = parse(nestedKey);
-		obj->add(val);
+		Jvalue* val = parse();
+		obj->add(nestedKey,*val);
 
 		skipWhitespace();
 

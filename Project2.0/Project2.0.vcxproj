@@ -104,6 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -136,7 +137,13 @@
     <ClCompile Include="FileReader.hpp" />
     <ClCompile Include="FileWriter.cpp" />
     <ClCompile Include="Invoker.cpp" />
+    <ClCompile Include="JsonArray.cpp" />
+    <ClCompile Include="JsonBool.cpp" />
+    <ClCompile Include="JsonNull.cpp" />
+    <ClCompile Include="JsonNumber.cpp" />
+    <ClCompile Include="JsonObject.cpp" />
     <ClCompile Include="JsonParser.cpp" />
+    <ClCompile Include="JsonString.cpp" />
     <ClCompile Include="JsonString.hpp" />
     <ClCompile Include="MoveCommand.cpp" />
     <ClCompile Include="OpenCommand.cpp" />

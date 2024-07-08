@@ -20,7 +20,7 @@ class JsonParser {
 public:
 	JsonParser(const string& file);
 
-	Jvalue* parse(const string& key = ""); //default arg
+	Jvalue* parse(); //default arg
 	std::string deparse(Jvalue* root);
 
 private:
@@ -35,17 +35,17 @@ private:
 	string parseStringFragment();
 	bool isDigit(char ch);
 	//parses null value
-	Jvalue* parseNull(const string& key);
+	Jvalue* parseNull();
 	//parses bool value
-	Jvalue* parseBool(const string& key);
+	Jvalue* parseBool();
 	//parses numberic value
-	Jvalue* parseNumber(const string& key);
+	Jvalue* parseNumber();
 	//parses string value
-	Jvalue* parseString(const string& key);
+	Jvalue* parseString();
 	//parses array values
-	Jvalue* parseArray(const string& key);
+	Jvalue* parseArray();
 	//parses objects and handles the keys
-	Jvalue* parseObject(const string& key);
+	Jvalue* parseObject();
 	
 };
 
