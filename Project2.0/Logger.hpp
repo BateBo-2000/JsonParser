@@ -16,7 +16,11 @@ public:
     void logJson(const std::string& jsonContent) const override;
 
 private:
-    void log(const std::string& message, const std::string& level) const;
+    enum LogColor;
+    void log(const std::string& message, const std::string& level, LogColor color) const;
+    std::string consoleColorMap(LogColor color) const;
+	
+
 };
 
 #endif // !LOGGER_HPP

@@ -30,7 +30,7 @@ void SearchCommand::execute() {
     }
     catch (const std::exception& e)
     {
-        throw std::runtime_error(string("Error while searching: ") + e.what());
+        console.logError(string("Error while searching: ") + e.what());
     }
     
 }

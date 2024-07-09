@@ -52,6 +52,6 @@ void AppController::processCommand(const std::string& commandLine) {
     }
     catch (const std::exception& e)
     {
-        consoleLogger.logInfo(e.what());
+        consoleLogger.logError(e.what());
     }
 }

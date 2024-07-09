@@ -24,10 +24,10 @@ void MoveCommand::execute() {
     try
     {
         receiver.move(from, to);
-        console.logInfo("Successfully moved to " + from + "\nto\n" + to);
+        console.logInfo("Successfully moved to " + from + " to " + to);
     }
     catch (const std::exception& e)
     {
-        throw std::runtime_error("Error while moving " + from + +"\nto\n" + to +":\n " + string(e.what()));
+        console.logError("Error while moving " + from + +" to " + to +": " + string(e.what()));
     }
 }
