@@ -11,7 +11,7 @@ enum ConsoleLogger::LogColor {
 };
 
 void ConsoleLogger::log(const std::string& message, const std::string& level, LogColor color) const {
-    std::cout << consoleColorMap(color) << "[" << level << "]\t " << message << consoleColorMap(Default) << std::endl;
+    std::cout << consoleColorMap(color) << "[" << level << "] " << message << consoleColorMap(Default) << std::endl;
 }
 
 void ConsoleLogger::logInfo(const std::string& message) const {
