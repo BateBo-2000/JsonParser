@@ -12,7 +12,7 @@ Invoker::~Invoker() {
 }
 
 void Invoker::registerCommand(const std::string& name, Command* cmd) {
-    if (cmd == nullptr) throw std::invalid_argument("Command cannot be nullptr.");
+    if (cmd == nullptr) throw std::invalid_argument("Command cannot be nullptr. ");
     //map the command to its name
     commandObjects.push_back(cmd);
     commandNames.push_back(name);
@@ -22,7 +22,7 @@ void Invoker::executeCommand(const std::string& commandLine) {
     std::vector<std::string> args;
     splitCommandLine(commandLine, args);
     if (args.empty()) {
-        throw std::invalid_argument("Invalid argument/s.");
+        throw std::invalid_argument("Invalid argument/s. ");
     }
     std::string& cmdName = args[0];
     
@@ -42,7 +42,7 @@ void Invoker::executeCommand(const std::string& commandLine) {
             }
         }
     }
-    throw std::runtime_error("Command not found.");
+    throw std::runtime_error("Command not found.\nPlease make sure there are no typos.");
 }
 
 size_t Invoker::getArgEnd(const std::string str, size_t start) {

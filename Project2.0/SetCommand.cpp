@@ -5,7 +5,7 @@ SetCommand::SetCommand(ConsoleLogger& console, Receiver& receiver)
 
 void SetCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 3) {
-        throw std::invalid_argument("Missing arguments.");
+        throw std::invalid_argument("Missing arguments.\nCommand syntax: set <path> <string>");
     }
     else {
         if (args.size() > 3) {

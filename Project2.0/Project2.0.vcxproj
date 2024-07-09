@@ -136,6 +136,8 @@
     <ClCompile Include="FileReader.cpp" />
     <ClCompile Include="FileReader.hpp" />
     <ClCompile Include="FileWriter.cpp" />
+    <ClCompile Include="HelpCommand.cpp" />
+    <ClCompile Include="HelpGuide.cpp" />
     <ClCompile Include="Invoker.cpp" />
     <ClCompile Include="JsonArray.cpp" />
     <ClCompile Include="JsonBool.cpp" />
@@ -168,6 +170,7 @@
     <ClInclude Include="DeleteCommand.hpp" />
     <ClInclude Include="ExitCommand.hpp" />
     <ClInclude Include="FileWriter.hpp" />
+    <ClInclude Include="HelpCommand.hpp" />
     <ClInclude Include="Invoker.hpp" />
     <ClInclude Include="JsonArray.hpp" />
     <ClInclude Include="JsonBool.hpp" />

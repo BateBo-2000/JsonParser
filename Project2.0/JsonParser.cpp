@@ -39,7 +39,7 @@ Jvalue* JsonParser::parse() {
 
 std::string JsonParser::deparse(Jvalue* root) {
 	if (!root) {
-		throw std::runtime_error("Root is null.");
+		throw std::invalid_argument("Root is null.");
 	}
 	return root->toString();
 }

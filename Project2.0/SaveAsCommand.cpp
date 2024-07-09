@@ -21,11 +21,12 @@ void SaveAsCommand::changeName(std::string& path, const std::string& newName) {
 
 void SaveAsCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 2) {
-        throw std::invalid_argument("Missing arguments.");
+        throw std::invalid_argument("Missing arguments.\nCommand syntax: saveas <file> [<path>]");
     }
     else if (args.size() == 2) {
         //default path
         newFilePath = receiver.getFileLocation();
+        if (newFilePath.empty()) throw std::invalid_argument("Missing argument. File path has not been added yet.");
         changeName(newFilePath, args[1]);
     }
     else {

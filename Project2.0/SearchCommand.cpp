@@ -5,7 +5,7 @@ SearchCommand::SearchCommand(ConsoleLogger& console, Receiver& receiver)
 
 void SearchCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 2) {
-        throw std::invalid_argument("Missing arguments.");
+        throw std::invalid_argument("Missing arguments.\nCommand syntax: search <key>");
     }
     else{
         if (args.size() > 2) {

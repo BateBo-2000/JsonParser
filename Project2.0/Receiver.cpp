@@ -41,15 +41,21 @@ bool Receiver::writeFile(const std::string& newFilePath, std::string& message) {
     }
     FileWriter fileWriter;
     try {
-        JsonParser parser(jsonContent);
-        jsonContent = parser.deparse(root);               //deparse
-        jsonContent = Utility::prettifyJson(jsonContent); //prettify
+        if (hasChanges) {
+            JsonParser parser(jsonContent);
+            jsonContent = parser.deparse(root);               //deparse
+            jsonContent = Utility::prettifyJson(jsonContent); //prettify
 
+        }
         fileWriter.writeFile(newFilePath, jsonContent);
         message = "JSON saved to file: " + newFilePath;
 
         hasChanges = false;
         return true;
+    }
+    catch (const std::invalid_argument&) {
+        message = "There is no open file to save.";
+        return false;
     }
     catch (const std::exception& e) {
         message = "Error saving JSON to file: " + std::string(e.what());

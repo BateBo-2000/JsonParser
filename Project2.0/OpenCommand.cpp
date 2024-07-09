@@ -5,7 +5,7 @@ OpenCommand::OpenCommand(ConsoleLogger& console, Receiver& receiver)
 
 void OpenCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 2) {
-        throw std::invalid_argument("Missing arguments.");
+        throw std::invalid_argument("Missing arguments.\nCommand syntax: open <path>");
     }else if (args.size() > 2) {
         //warning
         console.logWarning("Too many arguments.");

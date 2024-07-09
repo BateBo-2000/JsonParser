@@ -5,7 +5,7 @@ ContainsCommand::ContainsCommand(ConsoleLogger& console, Receiver& receiver)
 
 void ContainsCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 2) {
-        throw std::invalid_argument("Missing arguments.");
+        throw std::invalid_argument("Missing arguments.\nCommand syntax: contains <value>.");
     }
     else {
         if (args.size() > 2) {

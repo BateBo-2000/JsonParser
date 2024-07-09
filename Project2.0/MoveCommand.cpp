@@ -5,7 +5,7 @@ MoveCommand::MoveCommand(ConsoleLogger& console, Receiver& receiver)
 
 void MoveCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 3) {
-        throw std::invalid_argument("Missing arguments.");
+        throw std::invalid_argument("Missing arguments.\nCommand syntax: move <from> <to>");
     }
     else {
         if (args.size() > 3) {

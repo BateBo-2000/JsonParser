@@ -5,11 +5,12 @@ SaveCommand::SaveCommand(ConsoleLogger& console, Receiver& receiver)
 
 void SaveCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 1) {
-        throw std::invalid_argument("Missing arguments.");
+        throw std::invalid_argument("Missing arguments.\nCommand syntax: save [<path>]");
     }
     else if (args.size() == 1) {
         //default path
         filePath = receiver.getFileLocation();
+        if(filePath.empty()) throw std::invalid_argument("Missing argument. File path has not been added yet.");
     }
     else{  
         if (args.size() > 2) {

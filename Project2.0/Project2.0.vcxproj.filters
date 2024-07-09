@@ -126,6 +126,12 @@
     <ClCompile Include="JsonNull.cpp">
       <Filter>Source Files\JsonTypes</Filter>
     </ClCompile>
+    <ClCompile Include="HelpCommand.cpp">
+      <Filter>Source Files\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="HelpGuide.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileWriter.hpp">
@@ -202,6 +208,9 @@
     </ClInclude>
     <ClInclude Include="UserInterface.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HelpCommand.hpp">
+      <Filter>Header Files\Commands</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

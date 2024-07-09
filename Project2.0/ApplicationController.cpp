@@ -11,6 +11,7 @@
 #include "SetCommand.hpp"
 #include "CreateCommand.hpp"
 #include "MoveCommand.hpp"
+#include "HelpCommand.hpp"
 
 AppController::AppController() {
     //Register commands with the Invoker
@@ -28,6 +29,7 @@ AppController::AppController() {
         invoker.registerCommand("set", new SetCommand(consoleLogger, jsonEditor));
         invoker.registerCommand("create", new CreateCommand(consoleLogger, jsonEditor));
         invoker.registerCommand("move", new MoveCommand(consoleLogger, jsonEditor));
+        invoker.registerCommand("help", new HelpCommand(consoleLogger));
     }
     catch (const std::invalid_argument&)
     {
