@@ -18,8 +18,17 @@ JsonArray::JsonArray(const JsonArray& other) {
 		}
 	}
 }
-//it is not used
-//JsonArray& JsonArray::operator=(const JsonArray& other) = delete;
+
+JsonArray& JsonArray::operator=(const JsonArray& other) {
+	if (this != &other){
+		value.clear();
+		for (size_t i = 0; i < other.value.size(); i++)
+		{
+			value.push_back(other.value[i]->clone());
+		}
+	}
+	return *this;
+}
 
 JsonArray* JsonArray::clone() const {
 	return new JsonArray(*this);
@@ -33,40 +42,76 @@ const size_t JsonArray::getSize() {
 	return value.size();
 }
 
-void JsonArray::add(Jvalue* val) {
-	if (value.size() == 0) {
-		arrayType = val->getType();
-		value.push_back(val);
-	}
-	else if (value.size() != 0 && val->getType() == arrayType) {
-		value.push_back(val);
-	}
-	else {
-		throw std::invalid_argument("Value does not match the array type.");
-	}
-}
-
-void JsonArray::removeByIndex(const size_t index) {
-	if (index < value.size()) {
-		delete value[index];
-		value.erase(value.begin() + index);
-	}
-	else {
-		throw std::out_of_range("Index out of range: cannot erase element.");
-	}
-}
 void JsonArray::getByValue(const string& str, vector<Jvalue*>& results) {
 	for (size_t i = 0; i < value.size(); i++)
 	{
 		value[i]->getByValue(str, results);
 	}
 }
-void JsonArray::getByKey(const string& str, vector<Jvalue*>& results) {
-	for (size_t i = 0; i < value.size(); i++)
+
+void JsonArray::getByKey(const string& str, vector<Jvalue*>& results, bool deepSearch) {
+	if (deepSearch) {
+		for (size_t i = 0; i < value.size(); i++)
+		{
+			value[i]->getByKey(str, results);
+		}
+	}
+	else {
+		try
+		{
+			size_t index = std::stoi(str);
+			results.push_back(value[index]);
+		}
+		catch (const std::exception&)
+		{
+			return; // cannot convert it to number
+		}
+	}
+	return; //no keys
+}
+
+bool JsonArray::deleteMember(const string& key) {
+	try
 	{
-		value[i]->getByKey(str, results);
+		size_t index = std::stoi(key);
+		if (index < value.size()) {
+			value.erase(value.begin() + index);
+			return true;
+		}
+		else {
+			throw std::out_of_range("Index out of range: cannot erase element.");
+		}
+	}
+	catch (const std::exception&)
+	{
+		throw std::invalid_argument(key + " is not a number.");
 	}
 }
+
+bool JsonArray::setValue(const string& key) {
+	return false; //cant really set value here
+}
+
+bool JsonArray::addMember(Jvalue* member, const string& key) {
+	if (value.size() == 0) {
+		value.push_back(member->clone());
+
+		delete member;			
+		member = value.back();	//now the value is pointing towards its copy in the array.
+		return true;
+	}
+	else if (value.size() != 0 && member->getType() == value[0]->getType()) {	//the type is determined by the first element
+		value.push_back(member->clone());
+
+		delete member;
+		member = value.back();
+		return true;
+	}
+	else {
+		throw std::invalid_argument("Value type does not match the array type.");
+	}
+}
+
 Jvalue* JsonArray::operator[](size_t index) {
 	if (index >= value.size()) {
 		throw std::out_of_range("Index out of range");

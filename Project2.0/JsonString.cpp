@@ -11,18 +11,30 @@ void JsonString::getByValue(const string& str, vector<Jvalue*>& results) {
 	}
 	return;
 }
-void JsonString::getByKey(const string& str, vector<Jvalue*>& results) {
+void JsonString::getByKey(const string& str, vector<Jvalue*>& results, bool deepSearch) {
 	return; //there is no key
 }
+
+bool JsonString::deleteMember(const string& key) {
+	return false; //there are no members
+}
+
+bool JsonString::setValue(const string& key) {
+	value = key;
+	return true;
+}
+
+bool JsonString::addMember(Jvalue* member, const string& key) {
+	return false;	//no members
+}
+
 const string JsonString::getType() const {
 	return "JString";
 }
 string& JsonString::getValue() {
 	return value;
 }
-void JsonString::setValue(const string& newValue) {
-	value = newValue;
-}
+
 string JsonString::toString() const {
 	return "\"" + value + "\"";
 }

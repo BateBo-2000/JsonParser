@@ -152,7 +152,7 @@ Jvalue* JsonParser::parseArray() {
 		Jvalue* val = parse();
 		try
 		{
-			arr->add(val);
+			arr->addMember(val);
 		}
 		catch (const std::exception& e)
 		{
@@ -198,7 +198,7 @@ Jvalue* JsonParser::parseObject() {
 		skipWhitespace();
 
 		Jvalue* val = parse();
-		obj->add(nestedKey,*val);
+		obj->addMember(val, nestedKey);
 
 		skipWhitespace();
 

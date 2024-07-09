@@ -56,7 +56,8 @@ bool Utility::matchingPattern(const string& str, const string& value){
 		return value == str;
 	}
 	else {
-		string pattern = str.substr(0, pattern.size() - 1);
-		return value.starts_with(pattern) == 0;
+		string pattern = str;
+		pattern.pop_back();
+		return value.starts_with(pattern);
 	}
 }

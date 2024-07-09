@@ -11,9 +11,22 @@ void JsonNull::getByValue(const string& str, vector<Jvalue*>& results) {
 	return;
 }
 
-void JsonNull::getByKey(const string& str, vector<Jvalue*>& results) {
+void JsonNull::getByKey(const string& str, vector<Jvalue*>& results, bool deepSearch) {
 	return; //there is no key
 }
+
+bool JsonNull::deleteMember(const string& key) {
+	return false; //there are no members
+}
+
+bool JsonNull::setValue(const string& key) {
+	return false;
+}
+
+bool JsonNull::addMember(Jvalue* member, const string& key) {
+	return false;	//no members
+}
+
 
 const string JsonNull::getType() const {
 	return "JNull";

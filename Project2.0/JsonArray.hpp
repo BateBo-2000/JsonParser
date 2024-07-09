@@ -17,7 +17,7 @@ public:
 	
 	JsonArray(const JsonArray& other);
 
-	JsonArray& operator=(const JsonArray& other) = delete;
+	JsonArray& operator=(const JsonArray& other);
 
 	virtual JsonArray* clone() const override;
 
@@ -27,19 +27,20 @@ public:
 
 	virtual void getByValue(const string& str, vector<Jvalue*>& results) override;
 
-	virtual void getByKey(const string& str, vector<Jvalue*>& results) override;
+	virtual void getByKey(const string& str, vector<Jvalue*>& results, bool deepSearch = false) override;
+
+	virtual bool deleteMember(const string& key) override;
+
+	virtual bool setValue(const string& key) override;
+
+	virtual bool addMember(Jvalue* member, const string& key = string("")) override;
 
 	const size_t getSize();
-
-	void add(Jvalue* val);
-
-	void removeByIndex(const size_t index);
 
 	Jvalue* operator[](size_t index);
 
 private:
 	vector<Jvalue*> value;
-	string arrayType;
 };
 
 

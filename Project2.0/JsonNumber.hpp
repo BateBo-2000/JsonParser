@@ -23,7 +23,13 @@ public:
 
 	virtual void getByValue(const string& str, vector<Jvalue*>& results) override;
 
-	virtual void getByKey(const string& str, vector<Jvalue*>& results) override;
+	virtual void getByKey(const string& str, vector<Jvalue*>& results, bool deepSearch = false) override;
+
+	virtual bool deleteMember(const string& key) override;
+
+	virtual bool setValue(const string& key) override;
+
+	virtual bool addMember(Jvalue* member, const string& key = string("")) override;
 
 	double getValue();
 

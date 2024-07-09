@@ -12,6 +12,9 @@
 #include "JsonParser.hpp"
 #include "Utility.hpp"
 
+using std::vector;
+using std::string;
+
 class Receiver {
 public:
     Receiver();
@@ -36,18 +39,12 @@ private:
     Jvalue* root;
 
     //internal helper functions
-    void deleteJsonPairAtTarget(Jvalue* target, const std::string& path);
     void splitPathArgs(const std::string& path, std::vector<std::string>& components);
+
     Jvalue* followPath(Jvalue* root, std::vector<std::string> pathArs);
-    void searchJsonKey(Jvalue* root, const std::string& searchKey, std::vector<Jvalue*>& jValues);
-    void searchJsonValue(Jvalue* root, const std::string& searchValue, std::vector<Jvalue*>& jValues);
+  
     void formatSearchResult(std::string& searchResult, const std::vector<Jvalue*>& jValues);
-    void setValue(Jvalue* target, const std::string& value);
-    bool isNumber(const std::string& str);
-    void moveValue(Jvalue* root, Jvalue* fromValue, Jvalue* toValue, const std::vector<std::string>& toArgs);
-    void moveToArray(Jvalue* array, Jvalue* valueToAdd);
-    Jvalue* copyPair(const std::string& key, Jvalue* value, JsonObject* obj);
-    void clearValue(Jvalue* root, std::vector<std::string>& pathArgs);
+    
     void ensureParsed();
 };
 

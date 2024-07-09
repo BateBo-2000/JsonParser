@@ -61,17 +61,6 @@ const size_t JsonObject::getSize() const {
 	return members.size();
 }
 
-void JsonObject::add(string& key, Jvalue& val) {
-	//todo
-	for (size_t i = 0; i < members.size(); i++)
-	{
-		if (members[i].key == key) {
-			throw std::invalid_argument("Element with key " + key + " already exists.");
-		}
-	}
-	members.push_back(keyValuePair(key, val));
-}
-
 void JsonObject::getByValue(const string& str, vector<Jvalue*>& results) {
 	for (size_t i = 0; i < members.size(); i++)
 	{
@@ -79,27 +68,44 @@ void JsonObject::getByValue(const string& str, vector<Jvalue*>& results) {
 	}
 }
 
-void JsonObject::getByKey(const string& str, vector<Jvalue*>& results) {
+void JsonObject::getByKey(const string& str, vector<Jvalue*>& results, bool deepSearch) {
 	for (size_t i = 0; i < members.size(); i++)
 	{
 		if (Utility::matchingPattern(str, members[i].key)) {	
-			results.push_back(static_cast<Jvalue*>(this));
+			results.push_back(members[i].value);
 		}
-		else {
+		else if(deepSearch){
 			//search in it if not it
 			members[i].value->getByKey(str, results);
 		}
 	}
 }
 
-void JsonObject::removeByKey(const string& key) {
+bool JsonObject::deleteMember(const string& key) {
 	for (size_t i = 0; i < members.size(); ++i) {
 		if (Utility::matchingPattern(key, members[i].key)) {	//it workis with wildCards "*". Should be good to leave a warning later.
 			members.erase(members.begin() + i);					//to delete specifically the i element.
-			return;
+			i--;
 		}
 	}
-	throw std::invalid_argument("Key not found: cannot erase element");
+	return true;
+}
+
+bool JsonObject::setValue(const string& key) {
+	return false;	//cannot really setValue here.
+}
+
+bool JsonObject::addMember(Jvalue* member, const string& key) {
+	for (size_t i = 0; i < members.size(); i++)
+	{
+		if (members[i].key == key) {
+			throw std::invalid_argument("Element with key " + key + " already exists.");
+		}
+	}
+	members.push_back(keyValuePair(key, *member));
+	delete member;
+	member = members.back().value;	//make the pointer point towards the cloned value in the obj
+	return true;
 }
 
 string JsonObject::toString() const{

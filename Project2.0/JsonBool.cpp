@@ -19,8 +19,30 @@ void JsonBool::getByValue(const string& str, vector<Jvalue*>& results) {
 	return;
 }
 
-void JsonBool::getByKey(const string& str, vector<Jvalue*>& results) {
+void JsonBool::getByKey(const string& str, vector<Jvalue*>& results, bool deepSearch) {
 	return; //there is no key
+}
+
+bool JsonBool::deleteMember(const string& key) {
+	return false; //there are no members
+}
+
+bool JsonBool::setValue(const string& key) {
+	if (key == "false") {
+		value = false;
+		return true;
+	}
+	else if (key == "true") {
+		value = true;
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool JsonBool::addMember(Jvalue* member, const string& key) {
+	return false;	//no members
 }
 
 bool JsonBool::getValue() {
