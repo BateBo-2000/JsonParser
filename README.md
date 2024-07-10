@@ -7,6 +7,7 @@ This project implements a console application that works with JSON format files.
 The application allows reading and manipulating JSON files, performing various operations on the loaded JSON object in memory. It adheres to the following specifications:
 
 - **No External Libraries**: The project does not utilize external libraries for JSON handling, focusing instead on implementing data representation and operations internally.
+- **CPP vesrion**: ISO C++20 Standard (/std:c++20). Go to JsonParser> Properties> Configurational Properties> General> C++ Language Standart to change.
 - **Input Simplifications**: Certain simplifications are not allowed in input handling. Maybe coming soon...
 
 ## Features
