@@ -53,30 +53,34 @@ const string JsonObject::getType() const{
 	return "JObject";
 }
 
-/*	const vector<Jvalue*>& getValue() const {
-		return value;
-	}*/
-
 const size_t JsonObject::getSize() const {
 	return members.size();
 }
 
-void JsonObject::getByValue(const string& str, vector<Jvalue*>& results) {
+bool JsonObject::getByValue(const string& str, vector<Jvalue*>& results, vector<string>& name) {
 	for (size_t i = 0; i < members.size(); i++)
 	{
-		members[i].value->getByValue(str, results);
+		bool gotIt = members[i].value->getByValue(str, results, name);
+		if (gotIt && results.size()-1 == name.size()) {	//if there is a new name therefore the value was primitive and hasnt assigned itself a name.
+				name.push_back(members[i].key);			//so here its assigned.
+		}
+		else if(gotIt && results.size() == name.size()) {
+			name.back() = members[i].key + "." + name.back();
+		}
 	}
+	return false; //no need for absolute path or is there?
 }
 
-void JsonObject::getByKey(const string& str, vector<Jvalue*>& results, bool deepSearch) {
+void JsonObject::getByKey(const string& str, vector<Jvalue*>& results, vector<string>& name, bool deepSearch) {
 	for (size_t i = 0; i < members.size(); i++)
 	{
-		if (Utility::matchingPattern(str, members[i].key)) {	
+		if (Utility::matchingPattern(str, members[i].key, true)) {	
 			results.push_back(members[i].value);
+			name.push_back(members[i].key);
 		}
 		else if(deepSearch){
 			//search in it if not it
-			members[i].value->getByKey(str, results);
+			members[i].value->getByKey(str, results, name, true);
 		}
 	}
 }

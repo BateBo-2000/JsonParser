@@ -12,14 +12,15 @@ const string JsonBool::getType() const {
 	return "JBool";
 }
 
-void JsonBool::getByValue(const string& str, vector<Jvalue*>& results) {
+bool JsonBool::getByValue(const string& str, vector<Jvalue*>& results, vector<string>& name) {
 	if (Utility::matchingPattern(str, value ? "true" : "false")) {
 		results.push_back(static_cast<Jvalue*>(this));
+		return true;
 	}
-	return;
+	return false;
 }
 
-void JsonBool::getByKey(const string& str, vector<Jvalue*>& results, bool deepSearch) {
+void JsonBool::getByKey(const string& str, vector<Jvalue*>& results, vector<string>& name, bool deepSearch) {
 	return; //there is no key
 }
 

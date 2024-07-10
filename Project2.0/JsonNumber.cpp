@@ -12,14 +12,15 @@ const string JsonNumber::getType() const {
 	return "JNumber";
 }
 
-void JsonNumber::getByValue(const string& str, vector<Jvalue*>& results) {
+bool JsonNumber::getByValue(const string& str, vector<Jvalue*>& results, vector<string>& name) {
 	if (Utility::matchingPattern(str, toString())) {
 		results.push_back(static_cast<Jvalue*>(this));
+		return true;
 	}
-	return;
+	return false;
 }
 
-void JsonNumber::getByKey(const string& str, vector<Jvalue*>& results, bool deepSearch) {
+void JsonNumber::getByKey(const string& str, vector<Jvalue*>& results, vector<string>& name, bool deepSearch) {
 	return; //there is no key
 }
 

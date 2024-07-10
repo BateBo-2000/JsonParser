@@ -50,7 +50,7 @@ string Utility::prettifyJson(const string& input) {
 }
 
 //helper for searching
-bool Utility::matchingPattern(const string& str, const string& value){
+bool Utility::matchingPattern(const string& str, const string& value, bool startsWith){
 	bool wildCard = str.back() == '*';
 	if (!wildCard) {
 		return value == str;
@@ -58,6 +58,11 @@ bool Utility::matchingPattern(const string& str, const string& value){
 	else {
 		string pattern = str;
 		pattern.pop_back();
-		return value.starts_with(pattern);
+		if (startsWith) {
+			return value.starts_with(pattern);
+		}
+		else {
+			return value.find(pattern) != std::string::npos;
+		}
 	}
 }

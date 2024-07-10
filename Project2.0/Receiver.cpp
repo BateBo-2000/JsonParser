@@ -122,10 +122,11 @@ void Receiver::searchJson(const std::string& key, std::string& searchResult) {
 
         // Search for the key and collect results
         vector<Jvalue*> results;
-        root->getByKey(key, results, true);
+        vector<string> names;
+        root->getByKey(key, results, names, true);
 
         //convert from objects to string
-        formatSearchResult(searchResult, results);
+        formatSearchResult(searchResult, results, names);
     }
     catch (const std::exception&)
     {
@@ -142,11 +143,11 @@ void Receiver::containsValue(const std::string& searchValue, std::string& search
 
         //search for the value and collect results
         std::vector<Jvalue*> results;
-        root->getByValue(searchValue, results);
-        //searchJsonValue(root, searchValue, jValues);
+        vector<string> names;
+        root->getByValue(searchValue, results, names);
 
         //convert from objects to string
-        formatSearchResult(searchResult, results);
+        formatSearchResult(searchResult, results, names);
     }
     catch (const std::exception&)
     {
@@ -289,7 +290,7 @@ void Receiver::move(const std::string& from, const std::string& to) {
     } 
 }
 
-void Receiver::formatSearchResult(std::string& searchResult, const std::vector<Jvalue*>& jValues) {
+void Receiver::formatSearchResult(string& searchResult, const vector<Jvalue*>& jValues, const vector<string> names) {
     if (jValues.empty()) {
         //return empty array
         searchResult = "[]";
@@ -297,8 +298,15 @@ void Receiver::formatSearchResult(std::string& searchResult, const std::vector<J
     else {
         //format the found data
         searchResult += "[";
-        for (size_t i = 0; i < jValues.size(); ++i) {
-            searchResult += jValues[i]->toString() + ",";
+        if (names.empty()) {
+            for (size_t i = 0; i < jValues.size(); ++i) {
+                searchResult += jValues[i]->toString() + ",";
+            }
+        }
+        else {
+            for (size_t i = 0; i < jValues.size(); ++i) {
+                searchResult += "\""+ names[i] + "\" : " + jValues[i]->toString() + ",";
+            }
         }
         searchResult.pop_back(); //remove the last comma 
         searchResult += "]";
@@ -346,10 +354,11 @@ Jvalue* Receiver::followPath(Jvalue* root, std::vector<std::string> pathArs) {
     }
 
     vector<Jvalue*> results;
+    vector<string> names; //just for the reference. its not used
     Jvalue* current = root;
     for (int i = 0; i < pathArs.size(); i++) {
         results.clear();
-        current->getByKey(pathArs[i], results);
+        current->getByKey(pathArs[i], results, names, false);
         if (results.empty()) {
             throw std::invalid_argument("Path does not exist.");
         }

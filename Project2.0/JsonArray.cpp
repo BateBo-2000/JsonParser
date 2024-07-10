@@ -42,18 +42,28 @@ const size_t JsonArray::getSize() {
 	return value.size();
 }
 
-void JsonArray::getByValue(const string& str, vector<Jvalue*>& results) {
+bool JsonArray::getByValue(const string& str, vector<Jvalue*>& results, vector<string>& name) {
+	bool hasWorked = false;
 	for (size_t i = 0; i < value.size(); i++)
 	{
-		value[i]->getByValue(str, results);
+		bool gotIt = value[i]->getByValue(str, results, name);
+		if (gotIt && results.size() - 1 == name.size()) {
+			hasWorked = true;
+			name.push_back(std::to_string(i));
+		}
+		else if (gotIt && results.size() == name.size()) {
+			name.back() = std::to_string(i) + "." + name.back();
+			hasWorked = true;
+		}
 	}
+	return hasWorked;
 }
 
-void JsonArray::getByKey(const string& str, vector<Jvalue*>& results, bool deepSearch) {
+void JsonArray::getByKey(const string& str, vector<Jvalue*>& results, vector<string>& name, bool deepSearch) {
 	if (deepSearch) {
 		for (size_t i = 0; i < value.size(); i++)
 		{
-			value[i]->getByKey(str, results);
+			value[i]->getByKey(str, results, name, true);
 		}
 	}
 	else {
@@ -61,6 +71,7 @@ void JsonArray::getByKey(const string& str, vector<Jvalue*>& results, bool deepS
 		{
 			size_t index = std::stoi(str);
 			results.push_back(value[index]);
+			name.push_back(std::to_string(index));
 		}
 		catch (const std::exception&)
 		{

@@ -43,7 +43,7 @@ private:
 
     Jvalue* followPath(Jvalue* root, std::vector<std::string> pathArs);
   
-    void formatSearchResult(std::string& searchResult, const std::vector<Jvalue*>& jValues);
+    void formatSearchResult(std::string& searchResult, const std::vector<Jvalue*>& jValues, const vector<string> names = vector<string>());
     
     void ensureParsed();
 };

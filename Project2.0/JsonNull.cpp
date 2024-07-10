@@ -4,14 +4,15 @@ JsonNull::JsonNull() {}
 
 JsonNull::JsonNull(const JsonNull& other) {}
 
-void JsonNull::getByValue(const string& str, vector<Jvalue*>& results) {
+bool JsonNull::getByValue(const string& str, vector<Jvalue*>& results, vector<string>& name) {
 	if (Utility::matchingPattern(str, "null")) {
 		results.push_back(static_cast<Jvalue*>(this));
+		return true;
 	}
-	return;
+	return false;
 }
 
-void JsonNull::getByKey(const string& str, vector<Jvalue*>& results, bool deepSearch) {
+void JsonNull::getByKey(const string& str, vector<Jvalue*>& results, vector<string>& name, bool deepSearch) {
 	return; //there is no key
 }
 

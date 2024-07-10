@@ -1,17 +1,22 @@
 #include "JsonString.hpp"
 
 JsonString::JsonString(string value) :value(value) {}
+
 JsonString::JsonString(const JsonString& other) : value(other.value) {}
+
 JsonString* JsonString::clone() const {
 	return new JsonString(*this);
 }
-void JsonString::getByValue(const string& str, vector<Jvalue*>& results) {
+
+bool JsonString::getByValue(const string& str, vector<Jvalue*>& results, vector<string>& name) {
 	if (Utility::matchingPattern(str, value)) {
 		results.push_back(static_cast<Jvalue*>(this));
+		return true;
 	}
-	return;
+	return false;
 }
-void JsonString::getByKey(const string& str, vector<Jvalue*>& results, bool deepSearch) {
+
+void JsonString::getByKey(const string& str, vector<Jvalue*>& results, vector<string>& name, bool deepSearch) {
 	return; //there is no key
 }
 
