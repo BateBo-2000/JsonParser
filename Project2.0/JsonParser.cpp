@@ -142,6 +142,7 @@ Jvalue* JsonParser::parseArray() {
 		skipWhitespace();
 		if (!firstElement) {
 			if (file[index] != ',') {
+				delete arr;
 				throw std::invalid_argument("Invalid JSON format: expected ','. Line:" + std::to_string(getCurrentLineNumber()));
 			}
 			++index;
@@ -156,12 +157,14 @@ Jvalue* JsonParser::parseArray() {
 		}
 		catch (const std::exception& e)
 		{
+			delete arr;
 			throw std::invalid_argument("Invalid JSON format: "+ string(e.what()) + " Line:" + std::to_string(getCurrentLineNumber()));
 		}
 		skipWhitespace();
 	}
 
 	if (index >= file.size()) {
+		delete arr;
 		throw std::invalid_argument("Invalid JSON format: unterminated array. Expected ']' Line:" + std::to_string(getCurrentLineNumber()));
 	}
 	++index; //move past the closing bracket "]"
@@ -179,10 +182,12 @@ Jvalue* JsonParser::parseObject() {
 
 		//handling the key
 		if (file[index] != '"') {
+			delete obj;
 			throw std::invalid_argument("Invalid JSON format: expected '\"'. Line:" + std::to_string(getCurrentLineNumber()));
 		}
 		string nestedKey = parseStringFragment();
 		if (file[index] != '"') {
+			delete obj;
 			throw std::invalid_argument("Invalid JSON format: expected '\"'. Line:" + std::to_string(getCurrentLineNumber()));
 		}
 		++index;
@@ -191,6 +196,7 @@ Jvalue* JsonParser::parseObject() {
 
 		//handle the value
 		if (file[index] != ':') {
+			delete obj;
 			throw std::invalid_argument("Invalid JSON format: expected ':'. Line:" + std::to_string(getCurrentLineNumber()));
 		}
 		++index;
@@ -207,15 +213,17 @@ Jvalue* JsonParser::parseObject() {
 			++index;
 		}
 		else if (file[index] != '}') {	//if there is no comma there should be a "}"
+			delete obj;
 			throw std::invalid_argument("Invalid JSON format: expected ',' or '}'. Line:" + std::to_string(getCurrentLineNumber()));
 		}
 	}
 
 	//ensures that we have found the "}" and not the end of the string
 	if (index >= file.size() || file[index] != '}') {
+		delete obj;
 		throw std::invalid_argument("Invalid JSON format: unterminated object. Line:" + std::to_string(getCurrentLineNumber()));
 	}
-	++index; // Move past '}'
+	++index; //move past '}'
 	skipWhitespace();
 	return obj;
 }

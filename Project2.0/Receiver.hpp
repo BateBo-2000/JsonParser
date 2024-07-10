@@ -19,31 +19,31 @@ class Receiver {
 public:
     Receiver();
     ~Receiver();
-    bool loadFile(const std::string& filePath, std::string& message);
-    bool writeFile(const std::string& newFilePath, std::string& message);
-    std::string getFileLocation() const;
-    bool isValidJson(std::string& errorMsg);
-    const std::string& getJson();
-    void searchJson(const std::string& key, std::string& searchResult);
-    void deleteJsonValue(const std::string& path);
-    void containsValue(const std::string& value, std::string& searchResult);
-    void setJsonValue(const std::string& path, const std::string& value);
-    void create(const std::string& path, const std::string& value);
-    void move(const std::string& from, const std::string& to);
+    bool loadFile(const string& filePath, string& message);
+    bool writeFile(const string& newFilePath, string& message);
+    const string& getFileLocation() const;
+    bool isValidJson(string& errorMsg);
+    const string& getJson();
+    void searchJson(const string& key, string& searchResult);
+    void deleteJsonValue(const string& path);
+    void containsValue(const string& value, string& searchResult);
+    void setJsonValue(const string& path, const string& value);
+    void create(const string& path, const string& value);
+    void move(const string& from, const string& to);
     const bool isChanged() const;
 
 private:
-    std::string jsonContent;
-    std::string currentFileLocation;
+    string jsonContent;
+    string currentFileLocation;
     bool hasChanges;
     Jvalue* root;
 
     //internal helper functions
-    void splitPathArgs(const std::string& path, std::vector<std::string>& components);
+    void splitPathArgs(const string& path, vector<string>& components);
 
-    Jvalue* followPath(Jvalue* root, std::vector<std::string> pathArs);
+    Jvalue* followPath(Jvalue* root, const vector<string>& pathArs) const;
   
-    void formatSearchResult(std::string& searchResult, const std::vector<Jvalue*>& jValues, const vector<string> names = vector<string>());
+    void formatSearchResult(string& searchResult, const vector<Jvalue*>& jValues, const vector<string> names = vector<string>());
     
     void ensureParsed();
 };

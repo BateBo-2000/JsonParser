@@ -9,7 +9,7 @@ Receiver::~Receiver() {
     }
 }
 
-bool Receiver::loadFile(const std::string& filePath, std::string& message) {
+bool Receiver::loadFile(const string& filePath, string& message) {
    
     FileReader fileReader;
     try {
@@ -28,13 +28,12 @@ bool Receiver::loadFile(const std::string& filePath, std::string& message) {
         return true;
     }
     catch (const std::exception& e) {
-        message = "Error opening file: " + std::string(e.what());
-        if (!filePath.empty() && !jsonContent.empty())  message += "\nStill working with file: " + filePath;
+        message = "Error opening file: " + string(e.what());
         return false;
     }
 }
 
-bool Receiver::writeFile(const std::string& newFilePath, std::string& message) {
+bool Receiver::writeFile(const string& newFilePath, string& message) {
     if (jsonContent.empty()) {
         message = "There is no open file.";
         return false;
@@ -58,12 +57,12 @@ bool Receiver::writeFile(const std::string& newFilePath, std::string& message) {
         return false;
     }
     catch (const std::exception& e) {
-        message = "Error saving JSON to file: " + std::string(e.what());
+        message = "Error saving JSON to file: " + string(e.what());
         return false;
     }
 }
 
-std::string Receiver::getFileLocation() const {
+const string& Receiver::getFileLocation() const {
     return currentFileLocation;
 }
 
@@ -71,7 +70,7 @@ const bool Receiver::isChanged() const {
     return hasChanges;
 }
 
-const std::string& Receiver::getJson() {
+const string& Receiver::getJson() {
     if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
     
     if (root == nullptr) {
@@ -86,7 +85,7 @@ const std::string& Receiver::getJson() {
     }
 }
 
-bool Receiver::isValidJson(std::string& errorMsg) { //to make it optional to get the error
+bool Receiver::isValidJson(string& errorMsg) { //to make it optional to get the error
     if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
     try {
         if (root == nullptr) {
@@ -113,7 +112,7 @@ bool Receiver::isValidJson(std::string& errorMsg) { //to make it optional to get
     }
 }
 
-void Receiver::searchJson(const std::string& key, std::string& searchResult) {
+void Receiver::searchJson(const string& key, string& searchResult) {
     if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
     try
     {
@@ -134,7 +133,7 @@ void Receiver::searchJson(const std::string& key, std::string& searchResult) {
     }
 }
 
-void Receiver::containsValue(const std::string& searchValue, std::string& searchResult) {
+void Receiver::containsValue(const string& searchValue, string& searchResult) {
     if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
     try
     {
@@ -142,7 +141,7 @@ void Receiver::containsValue(const std::string& searchValue, std::string& search
         ensureParsed();
 
         //search for the value and collect results
-        std::vector<Jvalue*> results;
+        vector<Jvalue*> results;
         vector<string> names;
         root->getByValue(searchValue, results, names);
 
@@ -155,7 +154,7 @@ void Receiver::containsValue(const std::string& searchValue, std::string& search
     }
 }
 
-void Receiver::deleteJsonValue(const std::string& path) {
+void Receiver::deleteJsonValue(const string& path) {
     if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
     try
     {
@@ -163,13 +162,13 @@ void Receiver::deleteJsonValue(const std::string& path) {
         ensureParsed();
 
         //split the path arguments
-        std::vector<std::string> pathArgs;
+        vector<string> pathArgs;
         splitPathArgs(path, pathArgs);
         if (pathArgs.empty()) {
             throw std::runtime_error("Invalid path.");
         }
         //separate the target and parent
-        std::string target = pathArgs.back();
+        string target = pathArgs.back();
         pathArgs.pop_back();
 
         //follow the path to the parent
@@ -186,7 +185,7 @@ void Receiver::deleteJsonValue(const std::string& path) {
     }
 }
 
-void Receiver::setJsonValue(const std::string& path, const std::string& value) {
+void Receiver::setJsonValue(const string& path, const string& value) {
     if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
     try
     {
@@ -194,7 +193,7 @@ void Receiver::setJsonValue(const std::string& path, const std::string& value) {
         ensureParsed();
 
         //split the path arguments
-        std::vector<std::string> pathArgs;
+        vector<string> pathArgs;
         splitPathArgs(path, pathArgs);
         if (pathArgs.empty()) {
             throw std::runtime_error("Invalid path.");
@@ -215,20 +214,20 @@ void Receiver::setJsonValue(const std::string& path, const std::string& value) {
     }
 }
 
-void Receiver::create(const std::string& path, const std::string& value) {
+void Receiver::create(const string& path, const string& value) {
     if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
     try
     {
         //parse the JSON string
         ensureParsed();
 
-        std::vector<std::string> pathArgs;
+        vector<string> pathArgs;
         splitPathArgs(path, pathArgs);
 
         if (pathArgs.empty()) {
             throw std::runtime_error("Invalid path.");
         }
-        std::string key = pathArgs.back();
+        string key = pathArgs.back();
         pathArgs.pop_back();
         Jvalue* target = followPath(root, pathArgs);
 
@@ -248,7 +247,7 @@ void Receiver::create(const std::string& path, const std::string& value) {
     }
 }
 
-void Receiver::move(const std::string& from, const std::string& to) {
+void Receiver::move(const string& from, const string& to) {
     if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
     try
     {
@@ -256,13 +255,13 @@ void Receiver::move(const std::string& from, const std::string& to) {
         //parse the JSON string
         ensureParsed();
         //from path
-        std::vector<std::string> fromArgs;
+        vector<string> fromArgs;
         splitPathArgs(from, fromArgs);
         if (fromArgs.empty()) {
             throw std::runtime_error("Invalid <from> path.");
         }
         //to path
-        std::vector<std::string> toArgs;
+        vector<string> toArgs;
         splitPathArgs(to, toArgs);
         if (toArgs.empty()) {
             throw std::runtime_error("Invalid <to> path.");
@@ -314,7 +313,7 @@ void Receiver::formatSearchResult(string& searchResult, const vector<Jvalue*>& j
     }
 }
 
-void Receiver::splitPathArgs(const std::string& path, std::vector<std::string>& components) {
+void Receiver::splitPathArgs(const string& path, vector<string>& components) {
     size_t pos = 0;
     size_t start = 0;
 
@@ -332,7 +331,7 @@ void Receiver::splitPathArgs(const std::string& path, std::vector<std::string>& 
                 start = pos + 1;
             }
             else {
-                components.push_back(std::string(1, path[pos]));
+                components.push_back(string(1, path[pos]));
                 start = pos + 1;
             }
         }
@@ -345,7 +344,7 @@ void Receiver::splitPathArgs(const std::string& path, std::vector<std::string>& 
     return;
 }
 
-Jvalue* Receiver::followPath(Jvalue* root, std::vector<std::string> pathArs) {
+Jvalue* Receiver::followPath(Jvalue* root, const vector<string>& pathArs) const {
 
     if (pathArs.size() == 0) return root;
 
