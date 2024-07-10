@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Commands">
+      <UniqueIdentifier>{5c869cdf-a699-4860-99d2-7ee65f04aa6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\File Handlers">
+      <UniqueIdentifier>{7f526691-8851-460c-a2cf-6dd200b543b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Json Types">
+      <UniqueIdentifier>{76b1c5d9-bca0-4fb6-b7b3-55e76560cd42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Commands">
+      <UniqueIdentifier>{47040da9-be11-4a25-a643-46bcc0f578f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\File Handler">
+      <UniqueIdentifier>{372eaf84-a9c9-4961-a77b-4ff30a185d8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Json Types">
+      <UniqueIdentifier>{7a8a3cbe-0f24-449e-9966-57962816f3b5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Header Files\Commands\Command.hpp">
+      <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Commands\ContainsCommand.hpp">
+      <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Commands\CreateCommand.hpp">
+      <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Commands\DeleteCommand.hpp">
+      <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Commands\ExitCommand.hpp">
+      <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Commands\HelpCommand.hpp">
+      <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Commands\MoveCommand.hpp">
+      <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Commands\OpenCommand.hpp">
+      <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Commands\PrintCommand.hpp">
+      <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Commands\SaveAsCommand.hpp">
+      <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Commands\SaveCommand.hpp">
+      <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Commands\SearchCommand.hpp">
+      <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Commands\SetCommand.hpp">
+      <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Commands\ValidateCommand.hpp">
+      <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\File Handlers\FileReader.hpp">
+      <Filter>Header Files\File Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\File Handlers\FileWriter.hpp">
+      <Filter>Header Files\File Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Json Types\JsonArray.hpp">
+      <Filter>Header Files\Json Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Json Types\JsonBool.hpp">
+      <Filter>Header Files\Json Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Json Types\JsonNull.hpp">
+      <Filter>Header Files\Json Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Json Types\JsonNumber.hpp">
+      <Filter>Header Files\Json Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Json Types\JsonObject.hpp">
+      <Filter>Header Files\Json Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Json Types\JsonString.hpp">
+      <Filter>Header Files\Json Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Json Types\JValue.hpp">
+      <Filter>Header Files\Json Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\ApplicationController.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Invoker.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\JsonParser.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Logger.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Receiver.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\UserInterface.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Header Files\Utility.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source Files\Commands\ContainsCommand.cpp">
+      <Filter>Source Files\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Commands\CreateCommand.cpp">
+      <Filter>Source Files\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Commands\DeleteCommand.cpp">
+      <Filter>Source Files\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Commands\ExitCommand.cpp">
+      <Filter>Source Files\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Commands\HelpCommand.cpp">
+      <Filter>Source Files\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Commands\MoveCommand.cpp">
+      <Filter>Source Files\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Commands\OpenCommand.cpp">
+      <Filter>Source Files\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Commands\PrintCommand.cpp">
+      <Filter>Source Files\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Commands\SaveAsCommand.cpp">
+      <Filter>Source Files\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Commands\SaveCommand.cpp">
+      <Filter>Source Files\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Commands\SearchCommand.cpp">
+      <Filter>Source Files\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Commands\SetCommand.cpp">
+      <Filter>Source Files\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Commands\ValidateCommand.cpp">
+      <Filter>Source Files\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\File Handlers\FileReader.cpp">
+      <Filter>Source Files\File Handler</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\File Handlers\FileWriter.cpp">
+      <Filter>Source Files\File Handler</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Json Types\JsonArray.cpp">
+      <Filter>Source Files\Json Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Json Types\JsonBool.cpp">
+      <Filter>Source Files\Json Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Json Types\JsonNull.cpp">
+      <Filter>Source Files\Json Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Json Types\JsonNumber.cpp">
+      <Filter>Source Files\Json Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Json Types\JsonObject.cpp">
+      <Filter>Source Files\Json Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Json Types\JsonString.cpp">
+      <Filter>Source Files\Json Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\ApplicationController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\HelpGuide.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Invoker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\JsonParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Receiver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source Files\Utility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+</Project>
