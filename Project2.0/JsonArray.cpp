@@ -118,11 +118,27 @@ bool JsonArray::addMember(Jvalue* member, const string& key) {
 		return true;
 	}
 	else if (value.size() != 0 && member->getType() == value[0]->getType()) {	//the type is determined by the first element
-		value.push_back(member->clone());
+		size_t insertPos;
+		try
+		{
+			insertPos = std::stoi(key);
+		}
+		catch (const std::exception&)
+		{
+			//cannot convert key to position so default to the back
+			insertPos = value.size() - 1;
+		}
 
-		delete member;
-		member = value.back();
-		return true;
+		if (insertPos < value.size()) {
+			value.insert(value.begin() + insertPos, member->clone());	//
+
+			delete member;
+			member = value.back();
+			return true;
+		}
+		else {
+			throw std::invalid_argument("Index out of bounds.");
+		}
 	}
 	else {
 		throw std::invalid_argument("Value type does not match the array type.");
