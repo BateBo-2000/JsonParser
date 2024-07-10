@@ -1,7 +1,9 @@
 #include "JsonArray.hpp"
 
 JsonArray::JsonArray() {}
+
 JsonArray::~JsonArray() {
+
 	for (size_t i = 0; i < value.size(); i++)
 	{
 		delete value[i];
@@ -46,13 +48,17 @@ bool JsonArray::getByValue(const string& str, vector<Jvalue*>& results, vector<s
 	bool hasWorked = false;
 	for (size_t i = 0; i < value.size(); i++)
 	{
+		size_t initialNames = name.size();
 		bool gotIt = value[i]->getByValue(str, results, name);
 		if (gotIt && results.size() - 1 == name.size()) {
 			hasWorked = true;
 			name.push_back(std::to_string(i));
 		}
 		else if (gotIt && results.size() == name.size()) {
-			name.back() = std::to_string(i) + "." + name.back();
+			for (size_t j = initialNames; j < name.size(); j++)
+			{
+				name[j] = std::to_string(i) + "." + name[j];
+			}
 			hasWorked = true;
 		}
 	}

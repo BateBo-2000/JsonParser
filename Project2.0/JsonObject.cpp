@@ -60,16 +60,23 @@ const size_t JsonObject::getSize() const {
 bool JsonObject::getByValue(const string& str, vector<Jvalue*>& results, vector<string>& name) {
 	for (size_t i = 0; i < members.size(); i++)
 	{
+		size_t initialNames = name.size();
+
 		bool gotIt = members[i].value->getByValue(str, results, name);
 		if (gotIt && results.size()-1 == name.size()) {	//if there is a new name therefore the value was primitive and hasnt assigned itself a name.
 				name.push_back(members[i].key);			//so here its assigned.
 		}
 		else if(gotIt && results.size() == name.size()) {
-			name.back() = members[i].key + "." + name.back();
+			for (size_t j = initialNames; j < name.size(); j++)
+			{
+				name[j] = members[i].key + "." + name[j];
+			}
 		}
 	}
-	return false; //no need for absolute path or is there?
+	return true; //no need for absolute path or is there?
 }
+
+
 
 void JsonObject::getByKey(const string& str, vector<Jvalue*>& results, vector<string>& name, bool deepSearch) {
 	for (size_t i = 0; i < members.size(); i++)
