@@ -34,27 +34,12 @@ JsonObject::JsonObject(const JsonObject& other) {
 	//members = other.members
 }
 
-JsonObject& JsonObject::operator=(const JsonObject& other) {
-	if (this != &other) {
-		members.clear(); //delete the old elements
-		for (size_t i = 0; i < other.members.size(); i++)
-		{
-			members.push_back(other.members[i]);
-		}
-	}
-	return *this;
-}
-
 JsonObject* JsonObject::clone() const {
 	return new JsonObject(*this);
 }
 
 const string JsonObject::getType() const{
 	return "JObject";
-}
-
-const size_t JsonObject::getSize() const {
-	return members.size();
 }
 
 bool JsonObject::getByValue(const string& str, vector<Jvalue*>& results, vector<string>& name) {
@@ -75,8 +60,6 @@ bool JsonObject::getByValue(const string& str, vector<Jvalue*>& results, vector<
 	}
 	return true; //no need for absolute path or is there?
 }
-
-
 
 void JsonObject::getByKey(const string& str, vector<Jvalue*>& results, vector<string>& name, bool deepSearch) {
 	for (size_t i = 0; i < members.size(); i++)

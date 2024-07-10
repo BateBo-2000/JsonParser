@@ -46,14 +46,6 @@ bool JsonBool::addMember(Jvalue* member, const string& key) {
 	return false;	//no members
 }
 
-bool JsonBool::getValue() {
-	return value;
-}
-
-void JsonBool::setValue(const bool newValue) {
-	value = newValue;
-}
-
 string JsonBool::toString() const {
 	return value ? "true" : "false";
 }

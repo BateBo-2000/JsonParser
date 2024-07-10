@@ -36,9 +36,6 @@ bool JsonString::addMember(Jvalue* member, const string& key) {
 const string JsonString::getType() const {
 	return "JString";
 }
-string& JsonString::getValue() {
-	return value;
-}
 
 string JsonString::toString() const {
 	return "\"" + value + "\"";

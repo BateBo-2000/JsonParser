@@ -44,14 +44,6 @@ bool JsonNumber::addMember(Jvalue* member, const string& key) {
 	return false;	//no members
 }
 
-double JsonNumber::getValue() {
-	return value;
-}
-
-void JsonNumber::setValue(const double newValue) {
-	value = newValue;
-}
-
 string JsonNumber::toString() const {
 	std::string number = std::to_string(value);
 	size_t lastNotZero = number.find_last_not_of('0'); //find last non zero

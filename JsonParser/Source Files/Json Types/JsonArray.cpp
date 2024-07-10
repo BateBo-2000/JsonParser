@@ -21,27 +21,12 @@ JsonArray::JsonArray(const JsonArray& other) {
 	}
 }
 
-JsonArray& JsonArray::operator=(const JsonArray& other) {
-	if (this != &other){
-		value.clear();
-		for (size_t i = 0; i < other.value.size(); i++)
-		{
-			value.push_back(other.value[i]->clone());
-		}
-	}
-	return *this;
-}
-
 JsonArray* JsonArray::clone() const {
 	return new JsonArray(*this);
 }
 
 const string JsonArray::getType() const {
 	return "JArray";
-}
-
-const size_t JsonArray::getSize() {
-	return value.size();
 }
 
 bool JsonArray::getByValue(const string& str, vector<Jvalue*>& results, vector<string>& name) {
@@ -143,13 +128,6 @@ bool JsonArray::addMember(Jvalue* member, const string& key) {
 	else {
 		throw std::invalid_argument("Value type does not match the array type.");
 	}
-}
-
-Jvalue* JsonArray::operator[](size_t index) {
-	if (index >= value.size()) {
-		throw std::out_of_range("Index out of range");
-	}
-	return value[index];
 }
 
 string JsonArray::toString() const {

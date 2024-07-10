@@ -17,8 +17,6 @@ public:
 	
 	JsonArray(const JsonArray& other);
 
-	JsonArray& operator=(const JsonArray& other);
-
 	virtual JsonArray* clone() const override;
 
 	virtual string toString() const override;
@@ -34,10 +32,6 @@ public:
 	virtual bool setValue(const string& key) override;
 
 	virtual bool addMember(Jvalue* member, const string& key = string("")) override;
-
-	const size_t getSize();
-
-	Jvalue* operator[](size_t index);
 
 private:
 	vector<Jvalue*> value;

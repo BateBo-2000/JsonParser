@@ -31,10 +31,6 @@ public:
 
 	virtual bool addMember(Jvalue* member, const string& key = string("")) override;
 
-	double getValue();
-
-	void setValue(const double newValue);
-
 private:
 	double value;
 };

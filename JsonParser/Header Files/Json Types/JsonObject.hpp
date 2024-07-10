@@ -15,7 +15,6 @@ public:
 	JsonObject();
 	~JsonObject();
 	JsonObject(const JsonObject& other);
-	JsonObject& operator=(const JsonObject& other);
 
 	virtual JsonObject* clone() const override;
 
@@ -32,8 +31,6 @@ public:
 	virtual bool setValue(const string& key) override;
 
 	virtual bool addMember(Jvalue* member, const string& key = string("")) override;
-
-	const size_t getSize() const;
 
 private:
 	struct keyValuePair;
