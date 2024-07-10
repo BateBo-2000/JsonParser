@@ -59,8 +59,8 @@ To use the application, follow these steps:
    - Use `help` to display available commands and their usage.
 
 3. **Example Usage**
- validate organization.json
- print
- search "employee"
- set "employees[0].name" "John Doe"
- save organization-updated.json
+ - validate organization.json
+ - print
+ - search "employee"
+ - set "employees[0].name" "John Doe"
+ - save organization-updated.json
