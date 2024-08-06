@@ -5,7 +5,7 @@ DeleteCommand::DeleteCommand(ConsoleLogger& console, Receiver& receiver)
 
 void DeleteCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 2) {
-        throw std::invalid_argument("Missing arguments.\nCommand syntax: delete <path>");
+        throw CommandException("Missing arguments.\nCommand syntax: delete <path>");
     }
     else {
         if (args.size() > 2) {

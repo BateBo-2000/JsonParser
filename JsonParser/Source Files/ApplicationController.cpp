@@ -52,8 +52,16 @@ void AppController::processCommand(const std::string& commandLine) {
     {
         invoker.executeCommand(commandLine);
     }
-    catch (const std::exception& e)
+    catch (const CommandException& e)
+    {
+        consoleLogger.logError("Error while executing command: " + string(e.what()));
+    }
+    catch (const InvokerException& e)
     {
         consoleLogger.logError(e.what());
+    }
+    catch (const std::exception&)
+    {
+        consoleLogger.logError("Something went wrong!");
     }
 }

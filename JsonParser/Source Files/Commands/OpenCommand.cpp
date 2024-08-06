@@ -5,7 +5,7 @@ OpenCommand::OpenCommand(ConsoleLogger& console, Receiver& receiver)
 
 void OpenCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 2) {
-        throw std::invalid_argument("Missing arguments.\nCommand syntax: open <path>");
+        throw CommandException("Missing arguments.\nCommand syntax: open <path>");
     }else if (args.size() > 2) {
         //warning
         console.logWarning("Too many arguments.");
@@ -14,21 +14,26 @@ void OpenCommand::setArguments(const std::vector<std::string>& args) {
 }
 
 void OpenCommand::execute() {
-    std::string message;
     if (filePath.empty()) {
-        throw std::invalid_argument("Invalid argument: File path is empty.");
+        throw CommandException("Invalid argument: File path is empty.");
     }
     if (receiver.isChanged() && dontSave == false) {
         console.logWarning("Are you sure you dont want to save the changes?\nIf you want to exit without saving type the command again.");
         dontSave = true;
     }
     else {
-        bool success = receiver.loadFile(filePath, message);
-        if (success) {
-            console.logInfo(message);
+        try
+        {
+            receiver.loadFile(filePath);
+            console.logInfo("File opened successfully: "+ filePath);
         }
-        else {
-            console.logError(message);
+        catch (const ReceiverException& e)
+        {
+            console.logError(e.what());
         }
+        catch (const std::exception&)
+        {
+            console.logError("Something went wrong!");
+        }  
     }
 }

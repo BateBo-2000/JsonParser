@@ -6,6 +6,7 @@
 #include "../../Header Files/Receiver.hpp"
 #include "Command.hpp"
 #include "../../Header Files/Logger.hpp"
+#include "../../Header Files/Exceptions.hpp"
 
 class ContainsCommand : public Command {
 public:

@@ -5,41 +5,38 @@ SaveCommand::SaveCommand(ConsoleLogger& console, Receiver& receiver)
 
 void SaveCommand::setArguments(const std::vector<std::string>& args) {
     if (args.size() < 1) {
-        throw std::invalid_argument("Missing arguments.\nCommand syntax: save [<path>]");
+        throw CommandException("Missing arguments.\nCommand syntax: save [<path>]");
     }
     else if (args.size() == 1) {
         //default path
         filePath = receiver.getFileLocation();
-        if(filePath.empty()) throw std::invalid_argument("Missing argument. File path has not been added yet.");
+        if(filePath.empty()) throw CommandException("Missing argument. File path has not been added yet.");
     }
     else{  
         if (args.size() > 2) {
             console.logWarning("Too many arguments.");
         }
-        try
-        {
-            filePath = args[1];
-        }
-        catch (const std::exception& e)
-        {
-            throw e;
-        }
-        
+        filePath = args[1];
     }
 }
 
 void SaveCommand::execute() {
-    std::string message;
-
     if (filePath.empty()) {
-        throw std::invalid_argument("Invalid argument: File path is empty.");
+        throw CommandException("Invalid argument: File path is empty.");
     }
-    bool success = receiver.writeFile(filePath, message);
-    if (success) {
-        console.logInfo(message);
+
+    try
+    {
+        receiver.writeFile(filePath);
+        console.logInfo("JSON saved to file: "+ filePath);
     }
-    else {
-        console.logError(message);
+    catch (const ReceiverException& e)
+    {
+        console.logError(e.what());
+    }
+    catch (const std::exception&)
+    {
+        console.logError("Something went wrong!");
     }
 }
 

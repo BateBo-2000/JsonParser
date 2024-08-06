@@ -36,9 +36,13 @@ void Invoker::executeCommand(const std::string& commandLine) {
                 commandObjects[i]->execute();
                 return;
             }
+            catch (const CommandException&)
+            {
+                throw;
+            }
             catch (const std::exception& e)
             {
-                throw InvokerException(e.what());
+                throw InvokerException("Something went wrong while trying to set and execute command.");
             }
         }
     }

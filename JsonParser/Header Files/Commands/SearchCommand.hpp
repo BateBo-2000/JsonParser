@@ -6,6 +6,8 @@
 #include "../../Header Files/Receiver.hpp"
 #include "Command.hpp"
 #include "../../Header Files/Logger.hpp"
+#include "../../Header Files/Exceptions.hpp"
+
 class SearchCommand : public Command {
 public:
     SearchCommand(ConsoleLogger& console, Receiver& receiver);

@@ -11,6 +11,7 @@
 #include "File Handlers/FileWriter.hpp"
 #include "JsonParser.hpp"
 #include "Utility.hpp"
+#include "Exceptions.hpp"
 
 using std::vector;
 using std::string;
@@ -19,10 +20,10 @@ class Receiver {
 public:
     Receiver();
     ~Receiver();
-    bool loadFile(const string& filePath, string& message);
-    bool writeFile(const string& newFilePath, string& message);
+    void loadFile(const string& filePath);
+    void writeFile(const string& newFilePath);
     const string& getFileLocation() const;
-    bool isValidJson(string& errorMsg);
+    bool isValidJson();
     const string& getJson();
     void searchJson(const string& key, string& searchResult);
     void deleteJsonValue(const string& path);

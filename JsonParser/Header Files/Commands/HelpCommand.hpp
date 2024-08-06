@@ -5,6 +5,7 @@
 #include "Command.hpp"
 #include "../../Header Files/Logger.hpp"
 #include "../../Source Files/HelpGuide.cpp";
+#include "../../Header Files/Exceptions.hpp"
 
 class HelpCommand : public Command {
 public:

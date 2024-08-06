@@ -9,7 +9,7 @@ Receiver::~Receiver() {
     }
 }
 
-bool Receiver::loadFile(const string& filePath, string& message) {
+void Receiver::loadFile(const string& filePath) {
    
     FileReader fileReader;
     try {
@@ -17,7 +17,6 @@ bool Receiver::loadFile(const string& filePath, string& message) {
         fileReader.readFile(filePath, jsonContent);
         //auto saving the location
         currentFileLocation = filePath;
-        message = "File opened successfully: " + filePath;
         //clean the old data
         if (root != nullptr) {
             delete root;
@@ -25,19 +24,15 @@ bool Receiver::loadFile(const string& filePath, string& message) {
         }
         hasChanges = false;
 
-        return true;
     }
     catch (const std::exception& e) {
-        message = "Error opening file: " + string(e.what());
-        return false;
+        throw ReceiverException(e.what());
     }
 }
 
-bool Receiver::writeFile(const string& newFilePath, string& message) {
-    if (jsonContent.empty()) {
-        message = "There is no open file.";
-        return false;
-    }
+void Receiver::writeFile(const string& newFilePath) {
+    if (jsonContent.empty()) throw ReceiverException("There is no open file.");
+
     FileWriter fileWriter;
     try {
         if (hasChanges) {
@@ -47,18 +42,13 @@ bool Receiver::writeFile(const string& newFilePath, string& message) {
 
         }
         fileWriter.writeFile(newFilePath, jsonContent);
-        message = "JSON saved to file: " + newFilePath;
-
         hasChanges = false;
-        return true;
     }
     catch (const std::invalid_argument&) {
-        message = "There is no open file to save.";
-        return false;
+        throw ReceiverException("There is no open file to save.");
     }
     catch (const std::exception& e) {
-        message = "Error saving JSON to file: " + string(e.what());
-        return false;
+        throw ReceiverException("Error saving JSON to file: " + string(e.what()));
     }
 }
 
@@ -71,7 +61,7 @@ const bool Receiver::isChanged() const {
 }
 
 const string& Receiver::getJson() {
-    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
+    if (jsonContent.empty()) throw ReceiverException("There is no open file.");
     
     if (root == nullptr) {
         return jsonContent;
@@ -85,208 +75,169 @@ const string& Receiver::getJson() {
     }
 }
 
-bool Receiver::isValidJson(string& errorMsg) { //to make it optional to get the error
-    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
+bool Receiver::isValidJson() { //to make it optional to get the error
+    if (jsonContent.empty()) throw ReceiverException("There is no open file.");
     try {
         if (root == nullptr) {
             //we dont have changes
             //just try to parse and if all is good save it
             JsonParser parser(jsonContent);
             root = parser.parse();
-            errorMsg += "Data has been parsed.";
             return true;  //leave it parsed for future 
         }
         else {
             //there should be strong error checking and typization in the Jvalue classes so it should be fine if its already compiled.
             //other idea: deparse then try to parse again?
-            return true;
+            return false;
         }
     }
-    catch (const std::exception& e) {
+    catch (const std::exception&) {
         if (root != nullptr) {  //if not valid delete all
             delete root;
             root = nullptr;
         }
-        errorMsg = e.what();
-        return false;
+        throw;
     }
 }
 
 void Receiver::searchJson(const string& key, string& searchResult) {
-    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
-    try
-    {
-        //parse the JSON string
-        ensureParsed();
+    if (jsonContent.empty()) throw ReceiverException("There is no open file.");
 
-        // Search for the key and collect results
-        vector<Jvalue*> results;
-        vector<string> names;
-        root->getByKey(key, results, names, true);
+    //parse the JSON string
+    ensureParsed();
 
-        //convert from objects to string
-        formatSearchResult(searchResult, results, names);
-    }
-    catch (const std::exception&)
-    {
-        throw;
-    }
+    // Search for the key and collect results
+    vector<Jvalue*> results;
+    vector<string> names;
+    root->getByKey(key, results, names, true);
+
+    //convert from objects to string
+    formatSearchResult(searchResult, results, names);
 }
 
 void Receiver::containsValue(const string& searchValue, string& searchResult) {
-    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
-    try
-    {
-        //parse the JSON string
-        ensureParsed();
+    if (jsonContent.empty()) throw ReceiverException("There is no open file.");
 
-        //search for the value and collect results
-        vector<Jvalue*> results;
-        vector<string> names;
-        root->getByValue(searchValue, results, names);
+    //parse the JSON string
+    ensureParsed();
 
-        //convert from objects to string
-        formatSearchResult(searchResult, results, names);
-    }
-    catch (const std::exception&)
-    {
-        throw;
-    }
+    //search for the value and collect results
+    vector<Jvalue*> results;
+    vector<string> names;
+    root->getByValue(searchValue, results, names);
+
+    //convert from objects to string
+    formatSearchResult(searchResult, results, names);
+
 }
 
 void Receiver::deleteJsonValue(const string& path) {
-    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
-    try
-    {
-        //parse the JSON string
-        ensureParsed();
+    if (jsonContent.empty()) throw ReceiverException("There is no open file.");
 
-        //split the path arguments
-        vector<string> pathArgs;
-        splitPathArgs(path, pathArgs);
-        if (pathArgs.empty()) {
-            throw std::runtime_error("Invalid path.");
-        }
-        //separate the target and parent
-        string target = pathArgs.back();
-        pathArgs.pop_back();
+    //parse the JSON string
+    ensureParsed();
 
-        //follow the path to the parent
-        Jvalue* parent = followPath(root, pathArgs);
-
-        //delete the key/value pair
-        parent->deleteMember(target);
-
-        hasChanges = true;
+    //split the path arguments
+    vector<string> pathArgs;
+    splitPathArgs(path, pathArgs);
+    if (pathArgs.empty()) {
+        throw ReceiverException("Invalid path.");
     }
-    catch (const std::exception&)
-    {
-        throw;
-    }
+    //separate the target and parent
+    string target = pathArgs.back();
+    pathArgs.pop_back();
+
+    //follow the path to the parent
+    Jvalue* parent = followPath(root, pathArgs);
+
+    //delete the key/value pair
+    parent->deleteMember(target);
+
+    hasChanges = true;
 }
 
 void Receiver::setJsonValue(const string& path, const string& value) {
-    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
-    try
-    {
-        //parse the JSON string
-        ensureParsed();
+    if (jsonContent.empty()) throw ReceiverException("There is no open file.");
+    
+    //parse the JSON string
+    ensureParsed();
 
-        //split the path arguments
-        vector<string> pathArgs;
-        splitPathArgs(path, pathArgs);
-        if (pathArgs.empty()) {
-            throw std::runtime_error("Invalid path.");
-        }
-
-        //followThePath
-        Jvalue* target = followPath(root, pathArgs);
-
-        // Set the new value
-        bool isOk = target->setValue(value);
-        if (!isOk) throw std::invalid_argument("Cannot to set value " + value + " to " + pathArgs.back());
-
-        hasChanges = true;
+    //split the path arguments
+    vector<string> pathArgs;
+    splitPathArgs(path, pathArgs);
+    if (pathArgs.empty()) {
+        throw ReceiverException("Invalid path.");
     }
-    catch (const std::exception&)
-    {
-        throw;
-    }
+
+    //followThePath
+    Jvalue* target = followPath(root, pathArgs);
+
+    // Set the new value
+    bool isOk = target->setValue(value);
+    if (!isOk) throw ReceiverException("Cannot to set value " + value + " to " + pathArgs.back());
+
+    hasChanges = true;
 }
 
 void Receiver::create(const string& path, const string& value) {
-    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
-    try
-    {
-        //parse the JSON string
-        ensureParsed();
+    if (jsonContent.empty()) throw ReceiverException("There is no open file.");
+    //parse the JSON string
+    ensureParsed();
 
-        vector<string> pathArgs;
-        splitPathArgs(path, pathArgs);
+    vector<string> pathArgs;
+    splitPathArgs(path, pathArgs);
 
-        if (pathArgs.empty()) {
-            throw std::runtime_error("Invalid path.");
-        }
-        string key = pathArgs.back();
-        pathArgs.pop_back();
-        Jvalue* target = followPath(root, pathArgs);
-
-        //parse the value
-        JsonParser parser(value);
-        Jvalue* member = parser.parse();
-
-        //add the value
-        bool isOk = target->addMember(member, key);
-        if (!isOk) throw std::invalid_argument("Cannot add " + value +" to " + pathArgs.back());
-
-        hasChanges = true;
+    if (pathArgs.empty()) {
+        throw ReceiverException("Invalid path.");
     }
-    catch (const std::exception&)
-    {
-        throw;
-    }
+    string key = pathArgs.back();
+    pathArgs.pop_back();
+    Jvalue* target = followPath(root, pathArgs);
+
+    //parse the value
+    JsonParser parser(value);
+    Jvalue* member = parser.parse();
+
+    //add the value
+    bool isOk = target->addMember(member, key);
+    if (!isOk) throw ReceiverException("Cannot add " + value +" to " + pathArgs.back());
+
+    hasChanges = true;
 }
 
 void Receiver::move(const string& from, const string& to) {
-    if (jsonContent.empty()) throw std::runtime_error("There is no open file.");
-    try
-    {
+    if (jsonContent.empty()) throw ReceiverException("There is no open file.");
 
-        //parse the JSON string
-        ensureParsed();
-        //from path
-        vector<string> fromArgs;
-        splitPathArgs(from, fromArgs);
-        if (fromArgs.empty()) {
-            throw std::runtime_error("Invalid <from> path.");
-        }
-        //to path
-        vector<string> toArgs;
-        splitPathArgs(to, toArgs);
-        if (toArgs.empty()) {
-            throw std::runtime_error("Invalid <to> path.");
-        }
-        //follow path "from"
-        Jvalue* fromValue = followPath(root, fromArgs);
-        //follow path "to"
-        Jvalue* toValue = followPath(root, toArgs);
-
-        Jvalue* tempCopy = fromValue->clone();
-        //get the key if any
-        string key = fromArgs.back();
-        fromArgs.pop_back();
-        //copy the new instance
-        toValue->addMember(tempCopy, key);
-        //delete the old instance
-        Jvalue* parent = followPath(root, fromArgs);
-        parent->deleteMember(key);
-
-        hasChanges = true;
+    //parse the JSON string
+    ensureParsed();
+    //from path
+    vector<string> fromArgs;
+    splitPathArgs(from, fromArgs);
+    if (fromArgs.empty()) {
+        throw ReceiverException("Invalid <from> path.");
     }
-    catch (const std::exception&)
-    {
-        throw;
-    } 
+    //to path
+    vector<string> toArgs;
+    splitPathArgs(to, toArgs);
+    if (toArgs.empty()) {
+        throw ReceiverException("Invalid <to> path.");
+    }
+    //follow path "from"
+    Jvalue* fromValue = followPath(root, fromArgs);
+    //follow path "to"
+    Jvalue* toValue = followPath(root, toArgs);
+
+    Jvalue* tempCopy = fromValue->clone();
+    //get the key if any
+    string key = fromArgs.back();
+    fromArgs.pop_back();
+    //copy the new instance
+    toValue->addMember(tempCopy, key);
+    //delete the old instance
+    Jvalue* parent = followPath(root, fromArgs);
+    parent->deleteMember(key);
+
+    hasChanges = true;
 }
 
 void Receiver::formatSearchResult(string& searchResult, const vector<Jvalue*>& jValues, const vector<string> names) {
@@ -359,14 +310,14 @@ Jvalue* Receiver::followPath(Jvalue* root, const vector<string>& pathArs) const 
         results.clear();
         current->getByKey(pathArs[i], results, names, false);
         if (results.empty()) {
-            throw std::invalid_argument("Path does not exist.");
+            throw ReceiverException("Path does not exist.");
         }
         current = results[0];
     }
     if (!results.empty()) {
         return results[0];
     }
-    throw std::invalid_argument("Final path argument does not exist.");
+    throw ReceiverException("Final path argument does not exist.");
 }
 
 void Receiver::ensureParsed() {

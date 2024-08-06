@@ -8,6 +8,7 @@
 #include "Invoker.hpp"
 #include "Receiver.hpp"
 #include "Logger.hpp"
+#include "Exceptions.hpp"
 
 class AppController {
 public:
