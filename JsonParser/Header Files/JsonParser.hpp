@@ -13,6 +13,7 @@
 #include "Json Types/JsonString.hpp"
 #include "Json Types/JsonArray.hpp"
 #include "Json Types/JsonObject.hpp"
+#include "Exceptions.hpp"
 
 using std::string;
 

@@ -143,6 +143,7 @@
     <ClInclude Include="Header Files\Commands\SearchCommand.hpp" />
     <ClInclude Include="Header Files\Commands\SetCommand.hpp" />
     <ClInclude Include="Header Files\Commands\ValidateCommand.hpp" />
+    <ClInclude Include="Header Files\Exceptions.hpp" />
     <ClInclude Include="Header Files\File Handlers\FileReader.hpp" />
     <ClInclude Include="Header Files\File Handlers\FileWriter.hpp" />
     <ClInclude Include="Header Files\Invoker.hpp" />
@@ -175,6 +176,7 @@
     <ClCompile Include="Source Files\Commands\SearchCommand.cpp" />
     <ClCompile Include="Source Files\Commands\SetCommand.cpp" />
     <ClCompile Include="Source Files\Commands\ValidateCommand.cpp" />
+    <ClCompile Include="Source Files\Exceptions.cpp" />
     <ClCompile Include="Source Files\File Handlers\FileReader.cpp" />
     <ClCompile Include="Source Files\File Handlers\FileWriter.cpp" />
     <ClCompile Include="Source Files\HelpGuide.cpp" />

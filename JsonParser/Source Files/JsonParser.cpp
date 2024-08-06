@@ -2,7 +2,7 @@
 
 JsonParser::JsonParser(const string& JsonContent) : JsonContent(JsonContent), index(0), lineNumber(0) {
 	if (JsonContent.empty()) {
-		throw std::invalid_argument("No JSON content found. Line:" + std::to_string(getCurrentLineNumber()));
+		throw ParsingError("No JSON content found." ,getCurrentLineNumber());
 	}
 }
 
@@ -10,7 +10,7 @@ Jvalue* JsonParser::parse() {
 	skipWhitespace(); // Skip any whitespace characters
 
 	if (index >= JsonContent.size()) {
-		throw std::invalid_argument("Empty JSON string. Line:" + std::to_string(getCurrentLineNumber()));
+		throw ParsingError("Empty JSON string.");
 	}
 
 	char ch = JsonContent[index];
@@ -33,13 +33,13 @@ Jvalue* JsonParser::parse() {
 		return parseObject();
 	}
 	else {
-		throw std::invalid_argument("Invalid JSON format. Line:" + std::to_string(getCurrentLineNumber()));
+		throw ParsingError("Could not read: " + JsonContent[index] , getCurrentLineNumber());
 	}
 }
 
 std::string JsonParser::deparse(Jvalue* root) {
 	if (!root) {
-		throw std::invalid_argument("Root is null.");
+		throw ParsingError("Root is null.");
 	}
 	return root->toString();
 }
@@ -68,7 +68,7 @@ string JsonParser::parseStringFragment() {
 			result += ch;
 		}
 	}
-	throw std::invalid_argument("Invalid JSON format: unterminated string. Line:" + std::to_string(getCurrentLineNumber()));
+	throw ParsingError("Unterminated string.", getCurrentLineNumber());
 }
 
 bool JsonParser::isDigit(char ch) {
@@ -82,7 +82,7 @@ Jvalue* JsonParser::parseNull() {
 		return new JsonNull();
 	}
 	else {
-		throw std::invalid_argument("Invalid JSON format: expected 'null'. Line:" + std::to_string(getCurrentLineNumber()));
+		throw ParsingError("Expected 'null'.", getCurrentLineNumber());
 	}
 }
 
@@ -95,7 +95,7 @@ Jvalue* JsonParser::parseBool() {
 		index += 5;
 		return new JsonBool(false);
 	}
-	throw std::invalid_argument("Invalid JSON format: expected 'true' or 'false'. Line:" + std::to_string(getCurrentLineNumber()));
+	throw ParsingError("Expected 'true' or 'false'.", getCurrentLineNumber());
 }
 
 Jvalue* JsonParser::parseNumber() {
@@ -105,7 +105,7 @@ Jvalue* JsonParser::parseNumber() {
 		++index;
 		if (JsonContent[index] == '.') {
 			if (hasDecimal) {
-				throw std::invalid_argument("Invalid JSON format: multiple decimal points or decimal point after exponent. Line:" + std::to_string(getCurrentLineNumber()));
+				throw ParsingError("Multiple decimal points or decimal point after exponent.", getCurrentLineNumber());
 			}
 			hasDecimal = true;
 		}
@@ -117,12 +117,12 @@ Jvalue* JsonParser::parseNumber() {
 
 Jvalue* JsonParser::parseString() {
 	if (JsonContent[index] != '"') {
-		throw std::invalid_argument("Invalid JSON format: expected '\"'. Line:" + std::to_string(getCurrentLineNumber()));
+		throw ParsingError("Expected '\"'.", getCurrentLineNumber());
 	}
 	// reusing the method for reading names
 	std::string value = parseStringFragment();
 	if (JsonContent[index] != '"') {
-		throw std::invalid_argument("Invalid JSON format: expected '\"'. Line:" + std::to_string(getCurrentLineNumber()));
+		throw ParsingError("Expected '\"'.", getCurrentLineNumber());
 	}
 	index++;
 	return new JsonString(value);
@@ -143,7 +143,7 @@ Jvalue* JsonParser::parseArray() {
 		if (!firstElement) {
 			if (JsonContent[index] != ',') {
 				delete arr;
-				throw std::invalid_argument("Invalid JSON format: expected ','. Line:" + std::to_string(getCurrentLineNumber()));
+				throw ParsingError("Expected ','.", getCurrentLineNumber());
 			}
 			++index;
 			skipWhitespace();
@@ -158,14 +158,14 @@ Jvalue* JsonParser::parseArray() {
 		catch (const std::exception& e)
 		{
 			delete arr;
-			throw std::invalid_argument("Invalid JSON format: "+ string(e.what()) + " Line:" + std::to_string(getCurrentLineNumber()));
+			throw ParsingError(e.what(), getCurrentLineNumber());
 		}
 		skipWhitespace();
 	}
 
 	if (index >= JsonContent.size()) {
 		delete arr;
-		throw std::invalid_argument("Invalid JSON format: unterminated array. Expected ']' Line:" + std::to_string(getCurrentLineNumber()));
+		throw ParsingError("Unterminated array. Expected ']'", getCurrentLineNumber());
 	}
 	++index; //move past the closing bracket "]"
 	skipWhitespace();
@@ -183,12 +183,12 @@ Jvalue* JsonParser::parseObject() {
 		//handling the key
 		if (JsonContent[index] != '"') {
 			delete obj;
-			throw std::invalid_argument("Invalid JSON format: expected '\"'. Line:" + std::to_string(getCurrentLineNumber()));
+			throw ParsingError("Expected '\"'.", getCurrentLineNumber());
 		}
 		string nestedKey = parseStringFragment();
 		if (JsonContent[index] != '"') {
 			delete obj;
-			throw std::invalid_argument("Invalid JSON format: expected '\"'. Line:" + std::to_string(getCurrentLineNumber()));
+			throw ParsingError("Expected '\"'.", getCurrentLineNumber());
 		}
 		++index;
 
@@ -197,7 +197,7 @@ Jvalue* JsonParser::parseObject() {
 		//handle the value
 		if (JsonContent[index] != ':') {
 			delete obj;
-			throw std::invalid_argument("Invalid JSON format: expected ':'. Line:" + std::to_string(getCurrentLineNumber()));
+			throw ParsingError("Expected ':'.", getCurrentLineNumber());
 		}
 		++index;
 
@@ -214,14 +214,14 @@ Jvalue* JsonParser::parseObject() {
 		}
 		else if (JsonContent[index] != '}') {	//if there is no comma there should be a "}"
 			delete obj;
-			throw std::invalid_argument("Invalid JSON format: expected ',' or '}'. Line:" + std::to_string(getCurrentLineNumber()));
+			throw ParsingError("Expected ',' or '}'.", getCurrentLineNumber());
 		}
 	}
 
 	//ensures that we have found the "}" and not the end of the string
 	if (index >= JsonContent.size() || JsonContent[index] != '}') {
 		delete obj;
-		throw std::invalid_argument("Invalid JSON format: unterminated object. Line:" + std::to_string(getCurrentLineNumber()));
+		throw ParsingError("Unterminated object.", getCurrentLineNumber());
 	}
 	++index; //move past '}'
 	skipWhitespace();
