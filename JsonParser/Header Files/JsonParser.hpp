@@ -18,7 +18,7 @@ using std::string;
 
 class JsonParser {
 public:
-	JsonParser(const string& file);
+	JsonParser(const string& JsonContent);
 
 	Jvalue* parse(); //default arg
 	std::string deparse(Jvalue* root);
@@ -26,12 +26,12 @@ public:
 private:
 	size_t index; //really important
 	size_t lineNumber;
-	const string& file;
+	const string& JsonContent;
 
 	void skipWhitespace();
 	//method to get the current line number
 	size_t getCurrentLineNumber() const;
-	//extracts string from the file
+	//extracts string from the JsonContent
 	string parseStringFragment();
 	bool isDigit(char ch);
 	//parses null value

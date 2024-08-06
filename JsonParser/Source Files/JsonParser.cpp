@@ -1,19 +1,19 @@
 #include "../Header Files/JsonParser.hpp"
 
-JsonParser::JsonParser(const string& file) : file(file), index(0), lineNumber(0) {
-	if (file.empty()) {
-		throw std::invalid_argument("File cannot be empty. Line:" + std::to_string(getCurrentLineNumber()));
+JsonParser::JsonParser(const string& JsonContent) : JsonContent(JsonContent), index(0), lineNumber(0) {
+	if (JsonContent.empty()) {
+		throw std::invalid_argument("No JSON content found. Line:" + std::to_string(getCurrentLineNumber()));
 	}
 }
 
 Jvalue* JsonParser::parse() {
 	skipWhitespace(); // Skip any whitespace characters
 
-	if (index >= file.size()) {
+	if (index >= JsonContent.size()) {
 		throw std::invalid_argument("Empty JSON string. Line:" + std::to_string(getCurrentLineNumber()));
 	}
 
-	char ch = file[index];
+	char ch = JsonContent[index];
 	if (ch == 'n') {
 		return parseNull();
 	}
@@ -45,8 +45,8 @@ std::string JsonParser::deparse(Jvalue* root) {
 }
 
 void JsonParser::skipWhitespace() {
-	while (index < file.size() && (file[index] == ' ' || file[index] == '\t' || file[index] == '\n' || file[index] == '\r')) {
-		if (file[index] == '\n') {
+	while (index < JsonContent.size() && (JsonContent[index] == ' ' || JsonContent[index] == '\t' || JsonContent[index] == '\n' || JsonContent[index] == '\r')) {
+		if (JsonContent[index] == '\n') {
 			++lineNumber;
 		}
 		++index;
@@ -59,8 +59,8 @@ size_t JsonParser::getCurrentLineNumber() const {
 
 string JsonParser::parseStringFragment() {
 	string result;
-	while (index < file.size()) {
-		char ch = file[++index];
+	while (index < JsonContent.size()) {
+		char ch = JsonContent[++index];
 		if (ch == '"') {
 			return result;
 		}
@@ -76,8 +76,8 @@ bool JsonParser::isDigit(char ch) {
 }
 
 Jvalue* JsonParser::parseNull() {
-	//check if the next characters in file are "null"
-	if (file.substr(index, 4) == "null") {
+	//check if the next characters in JsonContent are "null"
+	if (JsonContent.substr(index, 4) == "null") {
 		index += 4; // Move index past "null"
 		return new JsonNull();
 	}
@@ -87,11 +87,11 @@ Jvalue* JsonParser::parseNull() {
 }
 
 Jvalue* JsonParser::parseBool() {
-	if (file.substr(index, 4) == "true") {
+	if (JsonContent.substr(index, 4) == "true") {
 		index += 4;
 		return new JsonBool(true);
 	}
-	else if (file.substr(index, 5) == "false") {
+	else if (JsonContent.substr(index, 5) == "false") {
 		index += 5;
 		return new JsonBool(false);
 	}
@@ -101,27 +101,27 @@ Jvalue* JsonParser::parseBool() {
 Jvalue* JsonParser::parseNumber() {
 	size_t start = index;
 	bool hasDecimal = false;
-	while (index < file.size() && (isDigit(file[index]) || file[index] == '.')) {
+	while (index < JsonContent.size() && (isDigit(JsonContent[index]) || JsonContent[index] == '.')) {
 		++index;
-		if (file[index] == '.') {
+		if (JsonContent[index] == '.') {
 			if (hasDecimal) {
 				throw std::invalid_argument("Invalid JSON format: multiple decimal points or decimal point after exponent. Line:" + std::to_string(getCurrentLineNumber()));
 			}
 			hasDecimal = true;
 		}
 	}
-	std::string numberStr = file.substr(start, index - start);
+	std::string numberStr = JsonContent.substr(start, index - start);
 	double value = stod(numberStr);
 	return new JsonNumber(value);
 }
 
 Jvalue* JsonParser::parseString() {
-	if (file[index] != '"') {
+	if (JsonContent[index] != '"') {
 		throw std::invalid_argument("Invalid JSON format: expected '\"'. Line:" + std::to_string(getCurrentLineNumber()));
 	}
 	// reusing the method for reading names
 	std::string value = parseStringFragment();
-	if (file[index] != '"') {
+	if (JsonContent[index] != '"') {
 		throw std::invalid_argument("Invalid JSON format: expected '\"'. Line:" + std::to_string(getCurrentLineNumber()));
 	}
 	index++;
@@ -132,16 +132,16 @@ Jvalue* JsonParser::parseArray() {
 
 	JsonArray* arr = new JsonArray(); //create a new JsonArray object
 
-	if (file[index] == '[') {
+	if (JsonContent[index] == '[') {
 		++index;
 	}
 	skipWhitespace();
 	bool firstElement = true;	//for tracking ","
-	while (index < file.size() && file[index] != ']') {
+	while (index < JsonContent.size() && JsonContent[index] != ']') {
 		//no need to handle names because the values are accessed with indexing
 		skipWhitespace();
 		if (!firstElement) {
-			if (file[index] != ',') {
+			if (JsonContent[index] != ',') {
 				delete arr;
 				throw std::invalid_argument("Invalid JSON format: expected ','. Line:" + std::to_string(getCurrentLineNumber()));
 			}
@@ -163,7 +163,7 @@ Jvalue* JsonParser::parseArray() {
 		skipWhitespace();
 	}
 
-	if (index >= file.size()) {
+	if (index >= JsonContent.size()) {
 		delete arr;
 		throw std::invalid_argument("Invalid JSON format: unterminated array. Expected ']' Line:" + std::to_string(getCurrentLineNumber()));
 	}
@@ -174,19 +174,19 @@ Jvalue* JsonParser::parseArray() {
 
 Jvalue* JsonParser::parseObject() {
 	JsonObject* obj = new JsonObject();
-	if (file[index] == '{') {
+	if (JsonContent[index] == '{') {
 		++index;
 	}
-	while (index < file.size() && file[index] != '}') {
+	while (index < JsonContent.size() && JsonContent[index] != '}') {
 		skipWhitespace();
 
 		//handling the key
-		if (file[index] != '"') {
+		if (JsonContent[index] != '"') {
 			delete obj;
 			throw std::invalid_argument("Invalid JSON format: expected '\"'. Line:" + std::to_string(getCurrentLineNumber()));
 		}
 		string nestedKey = parseStringFragment();
-		if (file[index] != '"') {
+		if (JsonContent[index] != '"') {
 			delete obj;
 			throw std::invalid_argument("Invalid JSON format: expected '\"'. Line:" + std::to_string(getCurrentLineNumber()));
 		}
@@ -195,7 +195,7 @@ Jvalue* JsonParser::parseObject() {
 		skipWhitespace();
 
 		//handle the value
-		if (file[index] != ':') {
+		if (JsonContent[index] != ':') {
 			delete obj;
 			throw std::invalid_argument("Invalid JSON format: expected ':'. Line:" + std::to_string(getCurrentLineNumber()));
 		}
@@ -209,17 +209,17 @@ Jvalue* JsonParser::parseObject() {
 		skipWhitespace();
 
 		//handle multiple nested types (just checks the comma)
-		if (file[index] == ',') {
+		if (JsonContent[index] == ',') {
 			++index;
 		}
-		else if (file[index] != '}') {	//if there is no comma there should be a "}"
+		else if (JsonContent[index] != '}') {	//if there is no comma there should be a "}"
 			delete obj;
 			throw std::invalid_argument("Invalid JSON format: expected ',' or '}'. Line:" + std::to_string(getCurrentLineNumber()));
 		}
 	}
 
 	//ensures that we have found the "}" and not the end of the string
-	if (index >= file.size() || file[index] != '}') {
+	if (index >= JsonContent.size() || JsonContent[index] != '}') {
 		delete obj;
 		throw std::invalid_argument("Invalid JSON format: unterminated object. Line:" + std::to_string(getCurrentLineNumber()));
 	}
